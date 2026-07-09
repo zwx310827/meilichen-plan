@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新奥·工作安排与落地方案</title>
+<style>
+:root{color-scheme:light;--green:#1f6b3b;--deep:#143d24;--gold:#b8860b;--text:#1f2937;--muted:#6b7280;--line:#e2ece6;--bg:#eef5f0;--card:#fff;--red:#c0392b;--blue:#2563eb;--orange:#d97706}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+header.top{background:linear-gradient(135deg,#143d24,#2e8b57);color:#fff;border-radius:18px;padding:26px 24px;margin:12px 0}
+header.top h1{font-size:24px;margin-bottom:8px}
+header.top p{opacity:.92;font-size:14px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tags span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:4px 11px;border-radius:999px;font-size:13px}
+.editbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.editbar button{border:1px solid var(--line);background:#fff;color:var(--green);padding:8px 14px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px}
+.editbar button.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.editbar .tip{font-size:12px;color:var(--muted)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+nav.tabs button{border:1px solid var(--line);background:#fff;color:var(--deep);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600}
+nav.tabs button.active{background:var(--green);color:#fff;border-color:var(--green)}
+section.panel{display:none}
+section.panel.show{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0;box-shadow:0 4px 14px rgba(31,107,59,.05)}
+h2{color:var(--deep);font-size:20px;margin-bottom:12px;border-left:5px solid var(--green);padding-left:11px}
+h3{color:#1f6b3b;margin:16px 0 8px;font-size:15px}
+p{margin:8px 0}
+ul{padding-left:20px;margin:8px 0}li{margin:5px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#e8f4ec;color:var(--deep)}
+.hl{background:#f0f9f3;border-left:4px solid var(--green);padding:12px 15px;border-radius:10px;margin:12px 0}
+.warn{background:#fff7ed;border-left:4px solid var(--orange);padding:12px 15px;border-radius:10px;margin:12px 0}
+.red{background:#fdf0f0;border-left:4px solid var(--red);padding:12px 15px;border-radius:10px;margin:12px 0}
+.pill{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:700;color:#fff}
+.p-hot{background:var(--red)}.p-mid{background:var(--orange)}.p-long{background:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.mini{background:#f6fbf8;border:1px solid var(--line);border-radius:12px;padding:14px}
+.mini b{color:var(--deep)}
+.check{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.check:last-child{border-bottom:0}
+.check input{margin-top:5px;width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.check.done span{text-decoration:line-through;color:var(--muted)}
+.note-card{border:1px dashed var(--gold);background:#fffdf5}
+.note-card h3{color:var(--gold);margin-top:0}
+.note-box{min-height:70px;border:1px solid #f0e4c0;border-radius:9px;padding:11px;background:#fff;font-size:15px;line-height:1.7;white-space:pre-wrap}
+.note-box:empty::before{content:"点这里随手写：进展、卡点、老板反馈、要改的…（随时能写，自动存）";color:#c8b98a}
+.note-box:focus{outline:2px solid var(--gold)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
+body.editing [data-edit]{outline:1.5px dashed var(--gold);outline-offset:2px;border-radius:4px;background:#fffdf5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 data-edit>新奥 · 工作安排与落地方案</h1>
+    <p data-edit>2026-07-09 会议纪要落地版 · 严格对照老板工作准则</p>
+    <div class="tags"><span>现场实证</span><span>结果导向</span><span>内容绑业务</span><span>70/30精力</span><span>汇报带数据</span></div>
+  </header>
+
+  <div class="editbar">
+    <button id="editBtn" onclick="toggleEdit()">✏️ 进入编辑</button>
+    <button onclick="saveEdits()">💾 保存修改</button>
+    <button onclick="resetEdits()">↩️ 恢复原版</button>
+    <span class="tip">正文可编辑；底部黄框随时能记；勾选项能打勾。都存本机。</span>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="active" data-t="big">业务全貌</button>
+    <button data-t="sell">🔥三件要尽快卖</button>
+    <button data-t="content">内容打法</button>
+    <button data-t="week">本周落地</button>
+    <button data-t="rule">工作准则</button>
+    <button data-t="todo">待确认+汇报</button>
+  </nav>
+
+  <!-- 业务全貌 -->
+  <section class="panel show" data-p="big">
+    <div class="card">
+      <h2>公司业务全貌（先看清主次）</h2>
+      <div class="hl" data-edit>公司真正的战略重心是 <b>犊牛腹泻防控 + 全球化</b>；鸭/鸭蛋/面馆是"内循环验证 + 要尽快清的库存"。我的内容要往核心业务靠，不脱离业务做纯创意。</div>
+      <table>
+        <tr><th>层级</th><th>是什么</th><th>和我的关系</th></tr>
+        <tr><td><span class="pill p-long">战略核心</span></td><td data-edit>犊牛腹泻防控，国内约4亿市场，目标抢10%(四五千万营收)，用丁壮素/脂壮素"替抗"</td><td data-edit>内容重心永久倾斜：犊牛腹泻科普/牧场实景/招商案例。缺画面感，必须下沉现场</td></tr>
+        <tr><td><span class="pill p-long">长线</span></td><td data-edit>全球化：土耳其已做、新西兰要开始、9月底王辉赴美国威斯康星奶业展</td><td data-edit>展会提前定制专属宣传视频，现场拍行业素材，整理跨境短视频储备</td></tr>
+        <tr><td><span class="pill p-mid">内循环故事</span></td><td data-edit>面馆(自家料药膳鸭)←饲料厂(脂来安替抗)←养殖场(立体生态净养)</td><td data-edit>从面馆往上讲产业链，是很好的内容主线："自家人用自家料、自己验证自己方案"</td></tr>
+        <tr><td><span class="pill p-hot">要尽快卖</span></td><td data-edit>成品鸭(几百只库存)、年卡(还剩97张)</td><td data-edit>短期最急，要方案+尽快出结果</td></tr>
+      </table>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充</h3><div class="note-box" data-note="big"></div></div>
+  </section>
+
+  <!-- 三件要尽快卖 -->
+  <section class="panel" data-p="sell">
+    <div class="card">
+      <h2>🔥 三件要尽快落地卖的（结果导向）</h2>
+      <div class="warn" data-edit>老板要结果、要落地、要客户、要交付。这三件是短期最能出结果的，优先推进。</div>
+
+      <h3><span class="pill p-hot">① 成品鸭（几百只库存，最急）</span></h3>
+      <ul>
+        <li data-edit>主战场：面馆线下群(已有客户、质量不错、有银行职员)+线上小店</li>
+        <li data-edit>打法：不硬发广告，用"面馆同款药膳鸭在家也能炖"当钩子 + 限量 + 群专属价 + 老板娘(鸭蛋姐)带头发</li>
+        <li data-edit>内容配合：清水炖鸭全过程(勾食欲)、产品展示、面馆场景</li>
+        <li data-edit>⚠️必须先确认：价格、规格、发货方式、付款方式(未定)</li>
+        <li data-edit>目标：本周先出前几单，验证群能转化，给老板看结果</li>
+      </ul>
+
+      <h3><span class="pill p-hot">② 年卡（还剩97张，已卖3张）</span></h3>
+      <div class="red" data-edit>⚠️ 我还不清楚年卡是什么！先搞清：年卡是什么产品/权益？定价多少？卖给谁？之前怎么卖出去那3张的？搞清楚才能做方案。</div>
+      <ul>
+        <li data-edit>先问郑总/老板娘：年卡内容、定价、目标客户、现有销售话术</li>
+        <li data-edit>大概率也能在面馆群/老客里转化，跟成品鸭打包考虑</li>
+      </ul>
+
+      <h3><span class="pill p-mid">③ 犊牛腹泻业务内容（长线核心，缺画面感）</span></h3>
+      <ul>
+        <li data-edit>难点：没画面感，需下沉牧场现场直观观察、实地演示才能理清怎么拍</li>
+        <li data-edit>先驻场学习(龙岩/连城/南平等)，建立现场感，吃透真实业务场景</li>
+        <li data-edit>先不急着大批量出片，先囤现场素材 + 摸清养殖户痛点</li>
+      </ul>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充</h3><div class="note-box" data-note="sell"></div></div>
+  </section>
+
+  <!-- 内容打法 -->
+  <section class="panel" data-p="content">
+    <div class="card">
+      <h2>内容打法（内容绑业务，无实景不出片）</h2>
+      <div class="hl" data-edit>准则红线：不没跑现场就大批量产商业宣传视频。所有脚本贴合犊牛腹泻/无抗养殖/产品销售，不做无关赛道。</div>
+      <h3>两个账号分工</h3>
+      <table>
+        <tr><th></th><th>赖博士养鸭</th><th>鸭蛋姐</th></tr>
+        <tr><td>出镜</td><td data-edit>赖博士，专业/技术</td><td data-edit>老板娘，宝妈共情；我幕后拍剪</td></tr>
+        <tr><td>主打</td><td data-edit>成品鸭+产业链+专业背书</td><td data-edit>鸭蛋+面馆+辅食向</td></tr>
+        <tr><td>我出镜</td><td data-edit colspan="2">尽量幕后/第一视角不露脸；真人脸让赖博士、老板娘上</td></tr>
+      </table>
+      <h3>现成可用素材（老板给的+要拍的）</h3>
+      <ul>
+        <li data-edit>赖博士创业史：1998回国养兔子失败 → 06年受接见(敏感词模糊处理) → 做成连城白鸭。可做"高-低-高"成长史系列</li>
+        <li data-edit>成品鸭卖点：全球唯一药鸭、三无(无抗生素/无免疫注射/无笼养)、脂来安5年无疫病、日本捡蛋机全国仅2台、清水一锅出美味</li>
+        <li data-edit>产业链内循环：面馆→饲料厂→养殖场，一条线讲清"自家料喂自家鸭"</li>
+      </ul>
+      <div class="warn" data-edit>敏感词红线：涉及领导人不点名不用画面，产品不用治疗/治愈/功效词，药膳≠药品，无认证不说认证。发前自检。</div>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充</h3><div class="note-box" data-note="content"></div></div>
+  </section>
+
+  <!-- 本周落地 -->
+  <section class="panel" data-p="week">
+    <div class="card">
+      <h2>本周落地清单（可勾选）</h2>
+      <div id="weekList">
+        <label class="check"><input type="checkbox"><span>搞清年卡是什么：内容/定价/客户/现有话术</span></label>
+        <label class="check"><input type="checkbox"><span>确认成品鸭：价格/规格/发货/付款方式</span></label>
+        <label class="check"><input type="checkbox"><span>拿到两个账号后台权限，看历史数据</span></label>
+        <label class="check"><input type="checkbox"><span>找回上一个运营剪好的旧视频，看能不能用</span></label>
+        <label class="check"><input type="checkbox"><span>进面馆群，观察人群，跟老板娘对转化方式</span></label>
+        <label class="check"><input type="checkbox"><span>出成品鸭第一波群转化素材+话术</span></label>
+        <label class="check"><input type="checkbox"><span>下沉牧场现场，囤犊牛/养殖/鸭子素材</span></label>
+        <label class="check"><input type="checkbox"><span>整理赖博士创业史系列脚本(高-低-高)</span></label>
+        <label class="check"><input type="checkbox"><span>给老板/带我的人一份带成果的进度汇报</span></label>
+      </div>
+    </div>
+    <div class="card">
+      <h2>精力分配（准则：70/30）</h2>
+      <div class="grid">
+        <div class="mini"><b>70% 短视频本职</b><br><span data-edit>脚本、拍摄、剪辑、账号流量、转化运营</span></div>
+        <div class="mini"><b>30% 现场+业务</b><br><span data-edit>牧场驻场调研、展会、行业学习</span></div>
+      </div>
+      <div class="hl" data-edit>新增非内容杂项，同步告知对账号更新/视频产出的影响，协商优先级，避免本职被挤压。</div>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充</h3><div class="note-box" data-note="week"></div></div>
+  </section>
+
+  <!-- 工作准则 -->
+  <section class="panel" data-p="rule">
+    <div class="card">
+      <h2>工作准则（对照老板思维）</h2>
+      <table>
+        <tr><th>规则</th><th>怎么做</th></tr>
+        <tr><td>业务认知</td><td data-edit>不做纯剪辑，吃透牧场/犊牛/产业链；出行绑素材拍摄一次双产出；脚本贴合核心业务</td></tr>
+        <tr><td>现场落地</td><td data-edit>重大视频优先赴牧场实地取景，无实景不出片；复杂脚本线下当面确认</td></tr>
+        <tr><td>多线分配</td><td data-edit>70%本职+30%现场；每月提前提交规划标注时长</td></tr>
+        <tr><td>汇报沟通</td><td data-edit>带成片/实拍/转化数据，少讲术语多讲引流招商成果；工作量用台账</td></tr>
+        <tr><td>目标聚焦</td><td data-edit>内容倾斜犊牛腹泻/牧场/招商，长线穿插无抗养殖；展会定制方案</td></tr>
+        <tr><td>避坑红线</td><td data-edit>不没跑现场大批量出片、不无限接商务杂项、不做无关赛道、不只线上文字确认重要方案</td></tr>
+      </table>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充</h3><div class="note-box" data-note="rule"></div></div>
+  </section>
+
+  <!-- 待确认+汇报 -->
+  <section class="panel" data-p="todo">
+    <div class="card">
+      <h2>待确认清单（可勾选）</h2>
+      <div id="todoList">
+        <label class="check"><input type="checkbox"><span>年卡是什么、定价、进展</span></label>
+        <label class="check"><input type="checkbox"><span>成品鸭价格/规格/发货/付款</span></label>
+        <label class="check"><input type="checkbox"><span>账号权限、历史数据、旧视频</span></label>
+        <label class="check"><input type="checkbox"><span>面馆群怎么进、老板娘怎么配合</span></label>
+        <label class="check"><input type="checkbox"><span>我下沉哪个牧场、什么时候去</span></label>
+        <label class="check"><input type="checkbox"><span>带我对接的到底是王辉还是郑总</span></label>
+      </div>
+    </div>
+    <div class="card">
+      <h2>汇报模板（带成果、不空谈）</h2>
+      <div class="hl" data-edit>格式：今天做了什么(带实物/数据) → 发现什么 → 明天怎么做 → 需要什么支持。少讲平台术语，多讲引流招商和销售结果。</div>
+      <div class="note-box" data-note="report"></div>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充</h3><div class="note-box" data-note="todo"></div></div>
+  </section>
+
+  <footer>新奥工作安排落地方案 · 内容/勾选/补充都存本机浏览器 · 涉密信息对外前请核对</footer>
+</div>
+
+<script>
+document.getElementById('tabs').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;const t=e.target.dataset.t;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+  document.querySelectorAll('section.panel').forEach(p=>p.classList.toggle('show',p.dataset.p===t));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+function bindChecks(id,pfx){const box=document.getElementById(id);if(!box)return;
+  box.querySelectorAll('input').forEach((cb,i)=>{
+    if(localStorage.getItem(pfx+i)==='1'){cb.checked=true;cb.closest('.check').classList.add('done');}
+    cb.addEventListener('change',()=>{cb.closest('.check').classList.toggle('done',cb.checked);localStorage.setItem(pfx+i,cb.checked?'1':'0');});
+  });}
+bindChecks('weekList','wk_');bindChecks('todoList','td_');
+let editing=false;
+function toggleEdit(){editing=!editing;document.body.classList.toggle('editing',editing);
+  document.querySelectorAll('[data-edit]').forEach(el=>el.contentEditable=editing);
+  const b=document.getElementById('editBtn');b.textContent=editing?'✏️ 编辑中(点此退出)':'✏️ 进入编辑';b.classList.toggle('on',editing);}
+function saveEdits(){const m={};document.querySelectorAll('[data-edit]').forEach((el,i)=>{m['e'+i]=el.innerHTML;});localStorage.setItem('wa_edits',JSON.stringify(m));alert('已保存到本机');}
+function loadEdits(){const s=localStorage.getItem('wa_edits');if(!s)return;try{const m=JSON.parse(s);document.querySelectorAll('[data-edit]').forEach((el,i)=>{if(m['e'+i]!=null)el.innerHTML=m['e'+i];});}catch(e){}}
+function resetEdits(){if(confirm('恢复原始内容？你的修改会清掉。')){localStorage.removeItem('wa_edits');location.reload();}}
+loadEdits();
+document.querySelectorAll('.note-box').forEach(box=>{const key='wa_note_'+box.dataset.note;const s=localStorage.getItem(key);if(s!=null)box.innerHTML=s;box.contentEditable=true;box.addEventListener('input',()=>localStorage.setItem(key,box.innerHTML));});
+</script>
+</body>
+</html>
