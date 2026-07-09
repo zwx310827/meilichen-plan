@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赖博士养鸭 × 鸭蛋姐 · 双账号方案</title>
+<style>
+:root{color-scheme:light;--green:#1f6b3b;--deep:#143d24;--gold:#b8860b;--text:#1f2937;--muted:#6b7280;--line:#e2ece6;--bg:#eef5f0;--card:#fff;--s:#c0392b;--a:#2563eb;--b:#0f9d58;--pink:#c2185b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+header.top{background:linear-gradient(135deg,#143d24,#2e8b57);color:#fff;border-radius:18px;padding:28px 26px;margin:12px 0}
+header.top h1{font-size:25px;margin-bottom:8px}
+header.top p{opacity:.92;font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tags span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:4px 11px;border-radius:999px;font-size:13px}
+.editbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.editbar button{border:1px solid var(--line);background:#fff;color:var(--green);padding:8px 14px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px}
+.editbar button.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.editbar .tip{font-size:12px;color:var(--muted)}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+nav.tabs button{border:1px solid var(--line);background:#fff;color:var(--deep);padding:8px 13px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600}
+nav.tabs button.active{background:var(--green);color:#fff;border-color:var(--green)}
+section.panel{display:none}
+section.panel.show{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0;box-shadow:0 4px 14px rgba(31,107,59,.05)}
+h2{color:var(--deep);font-size:21px;margin-bottom:12px;border-left:5px solid var(--green);padding-left:11px}
+h3{color:#1f6b3b;margin:16px 0 8px;font-size:16px}
+p{margin:8px 0}
+ul{padding-left:20px;margin:8px 0}li{margin:5px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#e8f4ec;color:var(--deep)}
+.hl{background:#f0f9f3;border-left:4px solid var(--green);padding:12px 15px;border-radius:10px;margin:12px 0}
+.warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:12px 15px;border-radius:10px;margin:12px 0}
+.pill{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:700;color:#fff}
+.pill.s{background:var(--s)}.pill.a{background:var(--a)}.pill.b{background:var(--b)}.pill.y{background:var(--pink)}.pill.d{background:var(--green)}
+.check{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.check:last-child{border-bottom:0}
+.check input{margin-top:5px;width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.check.done span{text-decoration:line-through;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.mini{background:#f6fbf8;border:1px solid var(--line);border-radius:12px;padding:14px}
+.mini b{color:var(--deep)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
+.note-card{border:1px dashed var(--gold);background:#fffdf5}
+.note-card h3{color:var(--gold);margin-top:0}
+.note-box{min-height:80px;border:1px solid #f0e4c0;border-radius:9px;padding:12px;background:#fff;font-size:15px;line-height:1.7;white-space:pre-wrap}
+.note-box:empty::before{content:"点这里直接写：这页哪里有问题、沟通后要改什么、你的想法…（随时能写，自动存）";color:#c8b98a}
+.note-box:focus{outline:2px solid var(--gold);background:#fffdf8}
+/* 编辑模式：可编辑元素高亮 */
+body.editing [data-edit]{outline:1.5px dashed var(--gold);outline-offset:2px;border-radius:4px;background:#fffdf5}
+body.editing [data-edit]:focus{outline:2px solid var(--gold);background:#fff}
+[data-edit]{transition:.15s}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 data-edit>赖博士养鸭 × 鸭蛋姐 · 双账号方案</h1>
+    <p data-edit>两个号并行 · 不分主次 · 一次拍摄喂两号</p>
+    <div class="tags"><span>并行运营</span><span>一次拍摄喂两号</span><span>鸭蛋姐宝妈共情</span><span>赖博士专业硬核</span></div>
+  </header>
+
+  <div class="editbar">
+    <button id="editBtn" onclick="toggleEdit()">✏️ 进入编辑</button>
+    <button onclick="saveEdits()">💾 保存修改</button>
+    <button onclick="resetEdits()">↩️ 恢复原版</button>
+    <span class="tip" id="editTip">点"进入编辑"后，正文文字可直接点着改；改完点保存，存在本机浏览器。</span>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="active" data-t="cmp">两号分工</button>
+    <button data-t="ydj">🥚鸭蛋姐</button>
+    <button data-t="lbs">🦆赖博士养鸭</button>
+    <button data-t="link">两号联动</button>
+    <button data-t="todo">待确认</button>
+  </nav>
+
+  <!-- 两号分工 -->
+  <section class="panel show" data-p="cmp">
+    <div class="card">
+      <h2>两个号怎么分工（不打架）</h2>
+      <p data-edit>两个号靠"产品 + 人设 + 气质"分家。同一批注重食品安全的家庭客户，一个用专业说服，一个用共情打动，两条腿走路。</p>
+      <table>
+        <tr><th>维度</th><th><span class="pill d">赖博士养鸭</span></th><th><span class="pill y">鸭蛋姐</span></th></tr>
+        <tr><td>出镜</td><td data-edit>老板赖博士（偶尔露脸）</td><td data-edit>老板娘为主，老板偶尔；我纯幕后拍剪</td></tr>
+        <tr><td>人设</td><td data-edit>博士/技术权威/专家</td><td data-edit>三娃高知宝妈/懂食材的妈妈</td></tr>
+        <tr><td>主打产品</td><td data-edit>药膳鸭（清库存急）+鸭蛋</td><td data-edit>鸭蛋（辅食向）+生态蔬菜</td></tr>
+        <tr><td>打什么人</td><td data-edit>中高端/送礼/信技术的人</td><td data-edit>城市宝妈/做辅食/要安全食材的家庭</td></tr>
+        <tr><td>内容气质</td><td data-edit>专业硬核、技术背书</td><td data-edit>温柔接地气、宝妈共情</td></tr>
+        <tr><td>主对标</td><td data-edit>杨博士（博士返乡养鸡）</td><td data-edit>赖玲瑶70% + 陈皇凤30%</td></tr>
+      </table>
+      <div class="hl" data-edit>不打架的关键：产品分家（一个主药膳鸭、一个主鸭蛋）、人设分家（专家 vs 宝妈）、气质分家（硬核 vs 共情）。</div>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充 / 待改（沟通后随手记，不用马上改正文）</h3><div class="note-box" data-note="cmp"></div></div>
+  </section>
+
+  <!-- 鸭蛋姐 -->
+  <section class="panel" data-p="ydj">
+    <div class="card">
+      <h2>🥚 鸭蛋姐 · 定位</h2>
+      <table>
+        <tr><th>项</th><th>内容</th></tr>
+        <tr><td>账号是谁</td><td data-edit>厦门三娃宝妈，博士老公搞养殖技术，连城自有基地，给孩子做放心辅食的高知妈妈</td></tr>
+        <tr><td>给谁看</td><td data-edit>一二线城市宝妈、母婴辅食人群、注重食品安全愿为品质付溢价的家庭</td></tr>
+        <tr><td>解决什么</td><td data-edit>给宝宝找安全无抗辅食蛋、不知道怎么挑好鸭蛋、怕饲料蛋添加剂</td></tr>
+        <tr><td>差异化</td><td data-edit>宝妈亲和力 + 博士老公专利背书 + 自有200亩基地（别的蛋品号没有的双重优势）</td></tr>
+        <tr><td>变现</td><td data-edit>引流款鲜鸭蛋、利润款流油咸鸭蛋、高客单鸭蛋+生态蔬菜礼盒</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h2>对标复用</h2>
+      <h3>主抄 赖玲瑶（70%）</h3>
+      <p data-edit>养殖溯源实景、品控分拣流程、辅食科普、鸭场/车间实景直播、蛋品分层礼盒、破损包赔售后。你们条件几乎一样（高知+自有基地+无抗+精品+宝妈客群）。</p>
+      <h3>辅抄 陈皇凤（30%）</h3>
+      <p data-edit>日常捡蛋喂鸭原生态短视频（无滤镜）、温柔宝妈共情话术、鲜蛋低价引流玩法。</p>
+    </div>
+    <div class="card">
+      <h2>内容与直播</h2>
+      <h3>短视频模板（15-45秒）</h3>
+      <ul>
+        <li data-edit>3秒钩子：鸭蛋流油切开 / 成群白鸭基地散养 / 金黄鸭蛋开箱</li>
+        <li data-edit>中段：专利养殖投喂、每日捡蛋、水煮蛋黄拉丝对比、给自家三娃做辅食</li>
+        <li data-edit>结尾：直播间现捡鲜鸭蛋、生态蔬菜组合福利</li>
+      </ul>
+      <h3>内容配比</h3>
+      <p data-edit>日常纪实70%（捡蛋喂鸭做辅食，拉流量）+ 对比科普20%（无抗vs饲料蛋，打信任）+ 共情10%（宝妈给娃做放心食材，涨粉）</p>
+      <h3>直播（对标赖玲瑶）</h3>
+      <p data-edit>场景=基地/分拣车间实景。分层=引流鲜鸭蛋 → 利润流油咸鸭蛋 → 高客单鸭蛋+蔬菜礼盒。话术=博士老公专利、全程无抗、破损包赔、宝妈放心辅食。</p>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充 / 待改</h3><div class="note-box" data-note="ydj"></div></div>
+  </section>
+
+  <!-- 赖博士养鸭 -->
+  <section class="panel" data-p="lbs">
+    <div class="card">
+      <h2>🦆 赖博士养鸭 · 定位</h2>
+      <table>
+        <tr><th>项</th><th>内容</th></tr>
+        <tr><td>账号是谁</td><td data-edit>农大博士返乡养鸭，用技术做好食材的专家</td></tr>
+        <tr><td>给谁看</td><td data-edit>中高端、送礼人群、信任技术和专业的家庭采购者</td></tr>
+        <tr><td>差异化</td><td data-edit>博士本人IP + 可验证技术 + 药膳鸭地标稀缺</td></tr>
+        <tr><td>出镜</td><td data-edit>赖博士为主，我辅助拍摄；我自己出镜走第一视角不露脸</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h2>短期急事：清库存药膳鸭</h2>
+      <div class="warn" data-edit>几百只药膳鸭库存要尽快清。主战场=面馆群私域（限量+群专属价+老板娘带头）。内容配合=清水炖鸭做法/产品展示/面馆场景。小店同步挂药膳鸭。</div>
+    </div>
+    <div class="card">
+      <h2>SABC 内容（主推药膳鸭）</h2>
+      <p><span class="pill s">S</span> 畅讲后期重组</p>
+      <ul><li data-edit>博士为什么养鸭 / 得罪同行大实话 / 药膳鸭凭什么值这价</li></ul>
+      <p><span class="pill a">A</span> 采访框架</p>
+      <ul><li data-edit>药膳鸭怎么吃 / 无抗拿报告说话 / 送礼为什么选这个</li></ul>
+      <p><span class="pill b">B</span> 拆爆款写稿</p>
+      <ul><li data-edit>博士养鸭反差 / 6万只鸭一人管 / 鸭蛋三文鱼纹</li></ul>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充 / 待改</h3><div class="note-box" data-note="lbs"></div></div>
+  </section>
+
+  <!-- 两号联动 -->
+  <section class="panel" data-p="link">
+    <div class="card">
+      <h2>一次拍摄喂两号（一人运营关键）</h2>
+      <p data-edit>去基地一次，把两个号的素材一起拍了。同一批画面，两号不同剪法、不同配音、不同人设。这是一个人扛两个号唯一可行的办法。</p>
+      <table>
+        <tr><th>共用素材</th><th>赖博士怎么用</th><th>鸭蛋姐怎么用</th></tr>
+        <tr><td>基地散养空镜</td><td data-edit>配"立体生态净养"(专业)</td><td data-edit>配"我家鸭子这样养的"(宝妈)</td></tr>
+        <tr><td>捡蛋/产蛋</td><td data-edit>讲无抗技术</td><td data-edit>讲每天现捡给娃吃</td></tr>
+        <tr><td>鸭蛋切开流油</td><td data-edit>DHA科普</td><td data-edit>辅食营养</td></tr>
+        <tr><td>分拣车间</td><td data-edit>品控技术</td><td data-edit>干净放心给孩子</td></tr>
+      </table>
+      <div class="hl" data-edit>错开原则：同一个点，赖博士用专业术语讲，鸭蛋姐用妈妈大白话讲。两号不发一模一样的，至少换开头、换配音、换字幕。</div>
+    </div>
+    <div class="card">
+      <h2>一人精力分配</h2>
+      <div class="grid">
+        <div class="mini"><b>拍摄</b><br><span data-edit>集中去基地一次，两号素材一起囤（最省力的地方）</span></div>
+        <div class="mini"><b>剪辑</b><br><span data-edit>一条基地素材，剪两个版本（赖博士版+鸭蛋姐版）</span></div>
+        <div class="mini"><b>发布</b><br><span data-edit>鸭蛋姐日常纪实为主(好剪量大)，赖博士深度为主(量少精)</span></div>
+        <div class="mini"><b>前期</b><br><span data-edit>别追量，各自先跑通一条线出结果，再加量</span></div>
+      </div>
+    </div>
+    <div class="card note-card"><h3>📝 本页补充 / 待改</h3><div class="note-box" data-note="link"></div></div>
+  </section>
+
+  <!-- 待确认 -->
+  <section class="panel" data-p="todo">
+    <div class="card">
+      <h2>待确认（入职核实，点一下打勾）</h2>
+      <div id="todoList">
+        <label class="check"><input type="checkbox"><span>两号是否都归我运营，还是老板娘自己发鸭蛋姐</span></label>
+        <label class="check"><input type="checkbox"><span>鸭蛋姐和赖博士养鸭是否同一基地同一批鸭</span></label>
+        <label class="check"><input type="checkbox"><span>药膳鸭库存量 / 价格 / 发货 / 收款</span></label>
+        <label class="check"><input type="checkbox"><span>两号现有粉丝 / 数据 / 是否已开小店</span></label>
+        <label class="check"><input type="checkbox"><span>面馆群多少人、老板娘想怎么转化</span></label>
+      </div>
+      <p style="margin-top:12px;color:var(--muted);font-size:13px">补充记录：</p>
+      <div class="note-box" data-note="todo"></div>
+    </div>
+  </section>
+
+  <footer>双账号方案 · 编辑内容和勾选状态存在本机浏览器</footer>
+</div>
+
+<script>
+// 标签切换
+document.getElementById('tabs').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;const t=e.target.dataset.t;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+  document.querySelectorAll('section.panel').forEach(p=>p.classList.toggle('show',p.dataset.p===t));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+// 勾选
+const tl=document.getElementById('todoList');
+if(tl){tl.querySelectorAll('input').forEach((cb,i)=>{
+  if(localStorage.getItem('dz_chk_'+i)==='1'){cb.checked=true;cb.closest('.check').classList.add('done');}
+  cb.addEventListener('change',()=>{cb.closest('.check').classList.toggle('done',cb.checked);localStorage.setItem('dz_chk_'+i,cb.checked?'1':'0');});
+});}
+// 编辑模式
+let editing=false;
+function toggleEdit(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  document.querySelectorAll('[data-edit]').forEach(el=>el.contentEditable=editing);
+  const btn=document.getElementById('editBtn');
+  btn.textContent=editing?'✏️ 编辑中(点此退出)':'✏️ 进入编辑';
+  btn.classList.toggle('on',editing);
+  document.getElementById('editTip').textContent=editing?'现在可以点着正文直接改、加字。改完点"保存修改"。':'点"进入编辑"后，正文文字可直接点着改；改完点保存。';
+}
+// 保存/恢复编辑
+function saveEdits(){
+  const m={};
+  document.querySelectorAll('[data-edit]').forEach((el,i)=>{m['e'+i]=el.innerHTML;});
+  localStorage.setItem('dz_edits',JSON.stringify(m));
+  alert('已保存到本机浏览器');
+}
+function loadEdits(){
+  const s=localStorage.getItem('dz_edits');if(!s)return;
+  try{const m=JSON.parse(s);document.querySelectorAll('[data-edit]').forEach((el,i)=>{if(m['e'+i]!=null)el.innerHTML=m['e'+i];});}catch(e){}
+}
+function resetEdits(){
+  if(confirm('恢复到原始内容？你的修改会清掉。')){localStorage.removeItem('dz_edits');location.reload();}
+}
+loadEdits();
+// 补充框：始终可编辑、自动存、独立于编辑模式
+document.querySelectorAll('.note-box').forEach(box=>{
+  const key='dz_note_'+box.dataset.note;
+  const saved=localStorage.getItem(key);
+  if(saved!=null)box.innerHTML=saved;
+  box.contentEditable=true;
+  box.addEventListener('input',()=>{localStorage.setItem(key,box.innerHTML);});
+});
+</script>
+</body>
+</html>
