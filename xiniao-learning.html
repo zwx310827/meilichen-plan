@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新奥·曼纽考 内部学习交流资料</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --primary: #1a5c3a;
+    --primary-light: #2d8659;
+    --primary-dark: #0d3d24;
+    --accent: #c89b3c;
+    --accent-light: #e0b856;
+    --bg: #faf9f6;
+    --card-bg: #ffffff;
+    --text: #2c2c2c;
+    --text-light: #666;
+    --border: #e0ddd5;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --purple: #8e44ad;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* ===== Cover Page ===== */
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(200,155,60,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover h1 {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  .cover h2 {
+    font-size: 20px;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 2px;
+  }
+
+  .cover-divider {
+    width: 80px;
+    height: 3px;
+    background: var(--accent);
+    margin: 0 auto 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-meta-item { text-align: center; }
+  .cover-meta-item .label { font-size: 12px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 6px; }
+  .cover-meta-item .value { font-size: 16px; font-weight: 500; }
+
+  /* ===== Page Layout ===== */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 50px;
+    background: var(--card-bg);
+    box-shadow: 0 0 40px rgba(0,0,0,0.05);
+  }
+  .page + .page { border-top: 1px solid var(--border); }
+
+  /* ===== Section Headers ===== */
+  .section-header { margin-bottom: 35px; position: relative; }
+  .section-number {
+    font-size: 80px; font-weight: 900; color: var(--primary);
+    opacity: 0.08; position: absolute; top: -30px; left: -10px;
+    line-height: 1; pointer-events: none;
+  }
+  .section-header h2 { font-size: 26px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; position: relative; }
+  .section-header .subtitle { font-size: 14px; color: var(--text-light); letter-spacing: 1px; }
+  .section-header::after { content: ''; display: block; width: 50px; height: 3px; background: var(--accent); margin-top: 15px; }
+
+  /* ===== Typography ===== */
+  h3 { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin: 30px 0 15px; padding-left: 14px; border-left: 4px solid var(--primary-light); }
+  h4 { font-size: 16px; font-weight: 600; color: var(--text); margin: 20px 0 10px; }
+  p { margin-bottom: 14px; }
+  strong { color: var(--primary-dark); font-weight: 600; }
+
+  .highlight { background: linear-gradient(120deg, rgba(200,155,60,0.15) 0%, rgba(200,155,60,0.05) 100%); padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+  ul, ol { margin: 10px 0 20px 20px; }
+  li { margin-bottom: 8px; }
+
+  /* ===== Stat Cards ===== */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin: 30px 0; }
+  .stat-card { background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center; transition: transform 0.2s; position: relative; overflow: hidden; }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); }
+  .stat-card.accent::before { background: var(--accent); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-card .number { font-size: 32px; font-weight: 900; color: var(--primary-dark); line-height: 1.2; }
+  .stat-card.accent .number { color: #9a7820; }
+  .stat-card.red .number { color: var(--red); }
+  .stat-card.blue .number { color: var(--blue); }
+  .stat-card .unit { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+  .stat-card .label { font-size: 12px; color: var(--text-light); margin-top: 8px; line-height: 1.4; }
+
+  /* ===== Data Tables ===== */
+  .data-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .data-table thead { background: var(--primary); color: white; }
+  .data-table th { padding: 12px 16px; text-align: left; font-weight: 500; font-size: 13px; letter-spacing: 1px; }
+  .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .data-table tbody tr:nth-child(even) { background: #f9f8f5; }
+  .data-table tbody tr:hover { background: #f0efe8; }
+
+  /* ===== Callout Boxes ===== */
+  .callout { border-radius: 10px; padding: 20px 24px; margin: 24px 0; position: relative; }
+  .callout-info { background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%); border-left: 4px solid var(--blue); }
+  .callout-success { background: linear-gradient(135deg, #e8f8e8 0%, #f0faf0 100%); border-left: 4px solid var(--green); }
+  .callout-warning { background: linear-gradient(135deg, #fff8e1 0%, #fffde7 100%); border-left: 4px solid var(--accent); }
+  .callout-danger { background: linear-gradient(135deg, #fde8e8 0%, #fff0f0 100%); border-left: 4px solid var(--red); }
+  .callout-title { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+  .callout-info .callout-title { color: var(--blue); }
+  .callout-success .callout-title { color: var(--green); }
+  .callout-warning .callout-title { color: #9a7820; }
+  .callout-danger .callout-title { color: var(--red); }
+
+  /* ===== Timeline ===== */
+  .timeline { position: relative; padding-left: 30px; margin: 30px 0; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%); }
+  .timeline-item { position: relative; margin-bottom: 24px; }
+  .timeline-item::before { content: ''; position: absolute; left: -28px; top: 6px; width: 12px; height: 12px; background: var(--card-bg); border: 3px solid var(--primary); border-radius: 50%; }
+  .timeline-date { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .timeline-content { font-size: 14px; color: var(--text); }
+  .timeline-content strong { color: var(--primary-dark); }
+
+  /* ===== Tags ===== */
+  .tag { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; margin: 2px; }
+  .tag-primary { background: #e8f5e9; color: var(--primary); border: 1px solid #a5d6a7; }
+  .tag-accent { background: #fff8e1; color: #9a7820; border: 1px solid #ffe082; }
+  .tag-blue { background: #e3f2fd; color: var(--blue); border: 1px solid #90caf9; }
+  .tag-red { background: #fde8e8; color: var(--red); border: 1px solid #ef9a9a; }
+
+  /* ===== Flow Diagram Box ===== */
+  .flow-box { background: linear-gradient(135deg, #f5f7f5 0%, #ffffff 100%); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; font-family: 'Noto Sans SC', monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; color: var(--text); overflow-x: auto; }
+  .flow-box-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px; }
+
+  /* ===== Relationship Chain ===== */
+  .chain-box { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+  .chain-item { padding: 20px 24px; border-radius: 12px; position: relative; }
+  .chain-item.parent { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; }
+  .chain-item.child { background: linear-gradient(135deg, var(--primary-light) 0%, #3da070 100%); color: white; margin-left: 40px; }
+  .chain-item.grandchild { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: white; margin-left: 80px; }
+  .chain-item::after { content: ''; position: absolute; }
+  .chain-item .chain-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .chain-item .chain-desc { font-size: 13px; opacity: 0.9; }
+  .chain-arrow { text-align: center; color: var(--primary); font-size: 24px; margin: -4px 0; }
+
+  /* ===== Step Cards ===== */
+  .step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+  .step-card { background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 1px solid var(--border); border-radius: 10px; padding: 20px; position: relative; }
+  .step-card .step-num { font-size: 36px; font-weight: 900; color: var(--primary); opacity: 0.15; position: absolute; top: 8px; right: 16px; }
+  .step-card h4 { color: var(--primary-dark); margin-bottom: 8px; }
+  .step-card p { font-size: 13px; color: var(--text-light); margin: 0; }
+
+  /* ===== FAQ ===== */
+  .faq-item { background: #f9f8f5; border-radius: 10px; padding: 20px 24px; margin: 16px 0; border-left: 4px solid var(--primary-light); }
+  .faq-q { font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; font-size: 15px; }
+  .faq-a { font-size: 14px; color: var(--text); }
+
+  /* ===== Quote ===== */
+  .quote-box { border-left: 4px solid var(--accent); padding: 16px 24px; margin: 24px 0; background: #faf8f0; border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-light); }
+  .quote-box strong { font-style: normal; }
+
+  /* ===== Source Note ===== */
+  .source-note { font-size: 12px; color: var(--text-light); border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 16px; }
+
+  /* ===== Footer ===== */
+  .report-footer { background: var(--primary-dark); color: rgba(255,255,255,0.7); text-align: center; padding: 40px 20px; font-size: 13px; }
+  .report-footer strong { color: white; }
+
+  /* ===== TOC ===== */
+  .toc { list-style: none; margin: 0; padding: 0; }
+  .toc li { padding: 12px 0; border-bottom: 1px dashed var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .toc li:last-child { border: none; }
+  .toc-num { font-size: 12px; color: var(--accent); font-weight: 700; margin-right: 12px; }
+  .toc-title { flex: 1; font-weight: 500; }
+  .toc-page { font-size: 13px; color: var(--text-light); }
+
+  /* ===== Bar Chart ===== */
+  .bar-chart { margin: 24px 0; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 12px; gap: 12px; }
+  .bar-label { width: 140px; font-size: 13px; color: var(--text); text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 28px; background: #f0eee8; border-radius: 6px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 12px; font-weight: 600; color: white; }
+  .bar-fill.primary { background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%); }
+  .bar-fill.accent { background: linear-gradient(90deg, #b8862e 0%, var(--accent) 100%); }
+  .bar-fill.red { background: linear-gradient(90deg, #a93226 0%, var(--red) 100%); }
+  .bar-fill.blue { background: linear-gradient(90deg, #1f6391 0%, var(--blue) 100%); }
+
+  @media (max-width: 768px) {
+    .page { padding: 30px 20px; }
+    .cover h1 { font-size: 28px; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .bar-label { width: 80px; font-size: 12px; }
+    .chain-item.child { margin-left: 20px; }
+    .chain-item.grandchild { margin-left: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<div class="cover">
+  <div class="cover-badge">INTERNAL STUDY MATERIAL</div>
+  <h1>新奥 · 曼纽考<br>内部学习交流资料</h1>
+  <div class="cover-divider"></div>
+  <h2>公司架构 · 基地运作 · 产品体系 · 未来规划</h2>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="label">版本</div>
+      <div class="value">2026年7月 ·</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">用途</div>
+      <div class="value">内部团队学习交流</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">数据来源</div>
+      <div class="value">公司PPT / GIAHS / 运营手册 / 行业调研</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">00</span>
+    <h2>目录</h2>
+    <div class="subtitle">TABLE OF CONTENTS</div>
+  </div>
+  <ul class="toc">
+    <li><span class="toc-num">01</span><span class="toc-title">公司关系与组织架构</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">02</span><span class="toc-title">基地全景：5个鸭场 + 配套</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">03</span><span class="toc-title">立体生态净养模式：完整工艺流程</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">04</span><span class="toc-title">鸭场一日运作详解</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">05</span><span class="toc-title">产品体系与市面对比</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">06</span><span class="toc-title">行业背景与竞争格局</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">07</span><span class="toc-title">未来规划与增长点</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">08</span><span class="toc-title">内容素材速查表</span><span class="toc-page">—</span></li>
+    <li><span class="toc-num">09</span><span class="toc-title">附录：关键术语与 FAQ</span><span class="toc-page">—</span></li>
+  </ul>
+</div>
+
+<!-- ===== 01 COMPANY STRUCTURE ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>公司关系与组织架构</h2>
+    <div class="subtitle">COMPANY STRUCTURE & ORGANIZATION</div>
+  </div>
+
+  <h3>1.1 三层关系链</h3>
+
+  <div class="chain-box">
+    <div class="chain-item parent">
+      <div class="chain-name">新奥（厦门）农牧发展有限公司</div>
+      <div class="chain-desc">母公司 · 1998年成立 · 27年脂质营养技术积淀 · 出口36国 · 丁壮素产销亚洲首位 · 国家级专精特新企业</div>
+    </div>
+    <div class="chain-arrow">│</div>
+    <div class="chain-item child">
+      <div class="chain-name">龙岩曼纽考生物科技有限公司</div>
+      <div class="chain-desc">运营主体 · 连城白鸭产业化执行者 · 在新奥4年无抗养殖+DHA富集蛋实验成功基础上成立 · 品牌：欧米伽博士（中高端）+ 三文红（亲民）</div>
+    </div>
+    <div class="chain-arrow">│</div>
+    <div class="chain-item grandchild">
+      <div class="chain-name">欧米伽博士 / Dr.Omega</div>
+      <div class="chain-desc">产品品牌 + 卡通IP形象 · 立体生态健康净养模式倡导者</div>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">一句话理解</div>
+    <p style="margin:0">新奥做<strong>"药"</strong>（脂质营养添加剂），曼纽考做<strong>"菜篮子"</strong>（鸭、蛋、菜、餐），欧米伽博士是<strong>"代言人"</strong>。</p>
+  </div>
+
+  <h3>1.1.1 创始人故事与公司沿革</h3>
+
+  <div class="callout callout-success">
+    <div class="callout-title">创始人：赖州文</div>
+    <p style="margin:0">新奥与曼纽考均为其创办。技术先行，产业落地——先有新奥的"药"（1998年），后有5年养鸭实验，再有曼纽考的"蛋和鸭"。</p>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">1998年</div>
+      <div class="timeline-content">赖州文在厦门创办<strong>新奥（厦门）农牧发展有限公司</strong>，定位饲用脂质营养添加剂研发生产。拳头产品：丁壮素（丁酸制剂·肠道健康）、脂壮素（纳米级微乳液·抑菌抗病毒）、脂来安（微囊包被型MCT）、高融99（脂肪粉）。<strong>27年技术积淀，丁壮素产销亚洲首位，出口36国，国家级专精特新企业</strong>。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">~5年前</div>
+      <div class="timeline-content">产品线稳定后，赖州文希望将脂质营养技术从"饲料添加剂"延伸到"实际养殖应用"。研究后发现连城白鸭是极佳载体——①连城地理位置特殊（武夷山脉南麓，山泉水丰富）；②中国唯一药用鸭（药膳同源，元代《十药神书》记载）；③国家地理标志品种，离开连城会性状退化；④曾濒临灭绝（一度不足30只），有保种故事和情感价值。<strong>在龙岩连城县办了鸭场</strong>，用新奥的脂质营养方案养连城白鸭。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">~5年实验期</div>
+      <div class="timeline-content">5年下来发现鸭子确实不一样——①<strong>全程无抗（NAE）</strong>，5年未发生疫病；②鸭蛋<strong>不腥</strong>（傲清腥+清洁水源+藻生态）；③<strong>DHA成功富集</strong>到蛋黄（≥200mg/100g，三文鱼刺身样圈纹）；④鸭粪被微藻消纳，<strong>鸭场不臭</strong>，实现碳中和。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">在此基础上</div>
+      <div class="timeline-content">创办<strong>龙岩曼纽考生物科技有限公司</strong>（龙岩），定位连城白鸭产业化运营主体。品牌：欧米伽博士（中高端）+ 三文红（亲民）。新奥做"药和料"，曼纽考做"鸭蛋菜餐"，形成完整闭环。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">近期</div>
+      <div class="timeline-content">在厦门新奥公司附近开了一家<strong>面馆</strong>，定位对外宣传窗口 + 私域转化触点（详见第七章）。</div>
+    </div>
+  </div>
+
+  
+  <table class="data-table">
+    <thead>
+      <tr><th>部门/岗位</th><th>负责人</th><th>与线上运营协作点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>总经理</strong></td><td>赖州文</td><td>品牌大方向、重大项目审批</td></tr>
+      <tr><td><strong>副总</strong></td><td>杨金英（赖总夫人）</td><td>公司高层决策、跨部门协调</td></tr>
+      <tr><td><strong>总经理助理</strong></td><td>王辉</td><td>日常协调、线上运营</strong></td></tr>
+      <tr><td><strong>养殖</strong></td><td>邓贵华</td><td>基地拍摄协调、技术口径确认</td></tr>
+      <tr><td><strong>筹建发展</strong></td><td>范丁寿</td><td>项目进展素材、政府接待</td></tr>
+      <tr><td><strong>市场</strong></td><td>郑定邦</td><td>活动策划、产品推广、价格体系</td></tr>
+      <tr><td><strong>对外关系</strong></td><td>范丁寿、王辉、赖仲经</td><td>政府/媒体/高校接待、公关审核</td></tr>
+      <tr><td><strong>线上运营</strong></td><td>王辉</td><td><strong>所属/主要协作部门</strong></td></tr>
+      <tr><td><strong>QA&QC 技术中心</strong></td><td>虞业凌</td><td>检测报告、专利数据、技术背书</td></tr>
+      <tr><td><strong>综合行政人力</strong></td><td>赖仲经</td><td>人事、行政、品牌物料</td></tr>
+      <tr><td><strong>财务</strong></td><td>段平泽</td><td>预算、报销、电商价格体系</td></tr>
+    </tbody>
+  </table>
+
+  <h4>养殖板块细分</h4>
+  <table class="data-table">
+    <thead>
+      <tr><th>模块</th><th>负责人</th><th>现状</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>种鸭</td><td>黄承柱</td><td>芷红场2000-3000只种鸭</td></tr>
+      <tr><td>孵化</td><td>黄承柱</td><td>3台孵化机，月孵超18000只鸭苗</td></tr>
+      <tr><td>5个养殖场</td><td>邓贵华兼</td><td>仙坪/芷红①②/芷民/南坑</td></tr>
+      <tr><td>供应链</td><td>江桥凤</td><td>供应链管理</td></tr>
+      <tr><td>屠宰</td><td>赖仲奇</td><td>屠宰加工（新泉厂规划中）</td></tr>
+      <tr><td>饲料</td><td>杨红英</td><td>饲料生产</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 新奥母公司核心产品</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>产品</th><th>定位</th><th>关键数据</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>丁壮素</strong></td><td>丁酸制剂·肠道健康</td><td>月销近千吨，中国前12饲料集团中8家是合作伙伴，亚洲首位</td></tr>
+      <tr><td><strong>脂壮素</strong></td><td>纳米级微乳液·抑菌抗病毒</td><td>美国发明专利，全程养殖无抗NAE的核心产品</td></tr>
+      <tr><td><strong>脂来安</strong></td><td>MCT（中链甘油三酯）</td><td>微囊包被型MCT，国内首创</td></tr>
+      <tr><td><strong>高融99</strong></td><td>脂肪粉</td><td>产能5.6万吨</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">关键联系</div>
+    <p style="margin:0">新奥的脂壮素/脂来安就是曼纽考鸭场<strong>"全程无抗"的技术底座</strong>。没有新奥的"药"，就没有曼纽考的"无抗鸭"。</p>
+  </div>
+</div>
+
+<!-- ===== 02 BASE OVERVIEW ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>基地全景：5个鸭场 + 配套</h2>
+    <div class="subtitle">BASE PANORAMA</div>
+  </div>
+
+  <p>曼纽考目前在连城县运营<strong>5个鸭场</strong>，分布于庙前镇和文亨镇，形成"种鸭→孵化→育雏→商品鸭/蛋鸭→屠宰"的完整链条。</p>
+
+  <h3>2.1 五大鸭场一览</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>编号</th><th>名称</th><th>位置</th><th>功能</th><th>设计容量</th><th>当前存栏</th><th>日产蛋</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>①</td><td>芷红场</td><td>芷红村</td><td>种鸭场+孵化场</td><td>3000只种鸭</td><td>2000-3000只种鸭</td><td>—</td></tr>
+      <tr><td>②</td><td>芷红场②</td><td>芷红村</td><td>育雏场</td><td>20000只鸭苗</td><td>6000+只鸭苗</td><td>—</td></tr>
+      <tr><td><strong>③</strong></td><td><strong>仙坪场</strong></td><td>水北村（仙坪自然村）</td><td><strong>商品蛋鸭（旗舰基地）</strong></td><td>100000只（最优60000只）</td><td>20000+只</td><td>约15000枚</td></tr>
+      <tr><td>④</td><td>芷民场</td><td>芷名村</td><td>育成场+部分蛋鸭</td><td>50000+只</td><td>建设中</td><td>—</td></tr>
+      <tr><td>⑤</td><td>南坑场</td><td>文亨镇南坑村</td><td>商品鸭+蛋鸭+育种基地</td><td>—</td><td>6000+只商品鸭</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 旗舰基地——仙坪场详解</h3>
+
+  <p>仙坪场是对外接待、参观调研的核心基地，也是"立体生态净养模式"的样板。</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="number">10<span style="font-size:18px">万只</span></div>
+      <div class="label">设计最大容量（最优满负载6万只）</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="number">2<span style="font-size:18px">万+只</span></div>
+      <div class="label">目前存栏</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="number">15000<span style="font-size:18px">枚</span></div>
+      <div class="label">日产蛋量</div>
+    </div>
+    <div class="stat-card red">
+      <div class="number">20<span style="font-size:18px">倍</span></div>
+      <div class="label">人均效率提升（10万只需2人管理）</div>
+    </div>
+  </div>
+
+  <h4>基地核心设施</h4>
+
+  <div class="flow-box">
+<div class="flow-box-title">仙坪基地俯瞰</div>
+     ┌──────────────────────────────────┐
+     │          4层立体鸭舍              │
+     │  （漏粪板平养，非笼养）           │
+     │  1-2层鸭子→南池   3-4层鸭子→北池 │
+     └──────────┬───────────────────────┘
+                │ 天桥连接
+     ┌──────────▼───────────────────────┐
+     │        戏水池（火山石围墙）       │
+     │  绿色浮萍 + 墨色池水 + 白色鸭羽  │
+     │  最深处约9米                      │
+     │  藻-鱼-萍水生生态系统             │
+     └──────────┬───────────────────────┘
+                │ 水系连通
+    ┌───────────▼──────────┬───────────────┐
+    │   藻工厂（微藻管道） │  产蛋区        │
+    │   水质净化+藻类扩繁  │  自动集蛋      │
+    │   每日"以1变8"繁殖   │  每小时万枚    │
+    └──────────────────────┴───────────────┘
+                │
+    ┌───────────▼───────────────────────┐
+    │   无土栽培区（30亩）               │
+    │   每天产出约10吨有机蔬菜           │
+    │   出水达到4级地表水排放标准        │
+    └───────────────────────────────────┘
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">水源</div>
+    <p style="margin:0">山泉水，常年流水，水质是养鸭第一要素。</p>
+  </div>
+
+  <h4>配套特色设施</h4>
+  <ul>
+    <li><strong>涵管通风系统</strong>（"鸭场的鼻子"）：地气隧道式通风，自下而上，利用地下水温度调节舍内温度。冬暖夏凉，不惧停电，生态节能。（传统水帘通风完全依赖供电，能耗大、噪音高）</li>
+    <li><strong>屋顶喷淋</strong>（夏季降温）+ <strong>卷帘</strong>（冬季防寒）</li>
+    <li><strong>加拿大生物有机处理设备</strong>：病死鸭投入后一周转化为生物质肥料，生物安全、不污染</li>
+    <li><strong>瞭望台</strong>（拟建）：可俯瞰整个种养结合区域</li>
+  </ul>
+</div>
+
+<!-- ===== 03 ECO-FARMING MODEL ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>立体生态净养模式：完整工艺流程</h2>
+    <div class="subtitle">VERTICAL ECO-FARMING SYSTEM</div>
+  </div>
+
+  <h3>3.1 核心理念</h3>
+
+  <div class="callout callout-success">
+    <div class="callout-title">道法自然</div>
+    <p style="margin:0">不是用工厂化控制系统去"制造"有机食品，而是遵循自然规律，以水为介质，将养殖和种植通过"一根管道"联通，形成闭环循环。</p>
+  </div>
+
+  <h4>1-2-3-4-5-6-7 口诀</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>数字</th><th>内容</th><th>详解</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>1</strong> 种模式</td><td>立体生态农业（净养）</td><td>养、种、一管道联合</td></tr>
+      <tr><td><strong>2</strong> 个区域</td><td>养殖区 + 种植区</td><td>之间仅一根管道联通</td></tr>
+      <tr><td><strong>3</strong> 维立体养殖</td><td>人均效率/地均产出提升20倍</td><td>4层立体鸭舍</td></tr>
+      <tr><td><strong>4</strong> 道生物转化</td><td>饲料→禽产品→微藻/浮萍→鱼→蔬菜</td><td>详见下文</td></tr>
+      <tr><td><strong>5</strong> 大技术专利</td><td>立体禽舍/组装产蛋箱/球藻扩繁/DHA富集蛋/全程无抗NAE</td><td>—</td></tr>
+      <tr><td><strong>6</strong> 无产品</td><td>无抗生素·无笼养·无化肥·无农药·无土壤·无疫苗</td><td>—</td></tr>
+      <tr><td><strong>7</strong> 大特征</td><td>见下文</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h4>7大特征</h4>
+  <ol>
+    <li>鸭子白天嬉水，晚上排队产蛋，自动集蛋分捡</li>
+    <li>隧道式地气通风（非水帘通风），不惧停电</li>
+    <li>充分利用水温调节，鸭子始终舒适</li>
+    <li>碳中和：微藻和蔬菜吸收的CO₂ &gt; 鸭子呼出的CO₂</li>
+    <li>排放水争取达到2级饮用水标准（远超养殖场排放标准）</li>
+    <li>硒、DHA富集蛋和鸭，稳定提供三文鱼刺身样圈纹</li>
+    <li>无农药、无化肥、无土栽培 + 鱼的生态养殖</li>
+  </ol>
+
+  <h3>3.2 三大体系</h3>
+
+  <div class="step-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h4>动物体系</h4>
+      <p>非笼养 · 无抗NAE · 无激素 · 自动集蛋</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h4>植物体系</h4>
+      <p>无土栽培 · 无化肥 · 无农药 · 30亩日产10吨蔬菜</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h4>水生微生物体系</h4>
+      <p>小球藻扩繁 · 每日繁殖8倍 · 吸收CO₂ · 鱼饵料 · 消纳粪便</p>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">一根管道联通，水循环</div>
+    <p style="margin:0">三大体系通过一根管道联通，水循环使用，最终达标地表水排放（争取2级饮用水标准）。</p>
+  </div>
+
+  <h3>3.3 四道生物转化——最核心的技术逻辑</h3>
+
+  <p>这是整个模式的<strong>"灵魂"</strong>，务必理解清楚：</p>
+
+  <div class="callout callout-success">
+    <div class="callout-title">第一道：饲料 → 禽产品（全程无抗NAE）</div>
+    <p style="margin:0">有机饲料 + "养殖无抗 脂来安"脂质制剂，全面替代疫苗、兽药（含抗生素、消毒药）。三大技术支撑：定效配脂技术、纳米脂质制剂技术、液态脂质稳控技术。</p>
+    <p style="margin:8px 0 0"><strong>产出</strong>：连城白鸭（全程无抗，5年未发生疫病）→ 鸭肉（高蛋白、低脂肪、富硒）+ 鸭蛋（DHA富集≥200mg/100g，三文鱼刺身样圈纹，清煮不腥）</p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>对比维度</th><th>传统养殖</th><th>本案</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>抗生素使用</td><td>青年鸭产蛋前必用抗生素，产蛋期继续用药但控制残留不超标</td><td><strong>全程无抗（NAE）</strong>，5年未发生任何疫病，不用疫苗</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-success">
+    <div class="callout-title">第二道：碳排放 + 鸭粪 → 微藻 + 浮萍</div>
+    <p style="margin:0">鸭子呼出的CO₂ + 鸭粪（漏粪板直接排入水中）→ 小球藻每日"以1变8"繁殖，浮萍快速生长。鸭粪一拉出来，藻就"围"上去。<strong>整个鸭场不臭（关键卖点！）</strong></p>
+    <p style="margin:8px 0 0"><strong>产出</strong>：微藻（吸收CO₂，成为鱼饵料）+ 浮萍（反哺饲喂鸭子，蛋黄更自然多彩）</p>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">技术细节</div>
+    <ul style="margin:8px 0 0">
+      <li>藻种经选种→保种→复壮→实验室一级培养→二级扩繁→工厂化生产</li>
+      <li>厦门大学郁昂教授技术支持</li>
+      <li>"气泡机+转动阀+LED灯光"组合，夜间藻类仍可工作（已报请新西兰PCT专利）</li>
+      <li>全程藻的应用使COD、BOD大幅下降</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-success">
+    <div class="callout-title">第三道：微藻 → 鱼类（胡子鲶/非洲鲫鱼）</div>
+    <p style="margin:0">藻体既是鱼饵料，螺蛳也参与消纳。整个农场<strong>"忙着捞鱼，而不是拉粪"</strong>。</p>
+    <p style="margin:8px 0 0"><strong>产出</strong>：胡子鲶 / 非洲鲫鱼 / 螺蛳（经济水产品，额外收入来源）</p>
+  </div>
+
+  <div class="callout callout-success">
+    <div class="callout-title">第四道：富营养水 → 有机蔬菜（无土栽培）</div>
+    <p style="margin:0">含藻、鱼粪的富营养水 → 梯度式无土栽培系统，不同蔬菜对营养素需求不同，逐级榨干滤净。工厂化播种→覆土→浇水→催芽→育苗→投放→采收。</p>
+    <p style="margin:8px 0 0"><strong>产出</strong>：30亩日产约10吨有机蔬菜（无土壤、无化肥、无农药）+ 出水达到4级地表水排放标准（争取2级饮用水标准）</p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>对比维度</th><th>传统无土栽培</th><th>本案</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>营养液</td><td>配方营养液（DFT/NFT/FHT），需催芽后手工移栽入岩棉/珍珠岩，成本高</td><td>工业化播种在土壤上→覆土→催芽→育苗→下水投放，全有机</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.4 水循环路线图</h3>
+
+  <div class="flow-box">
+山泉水入水 → "气泡机+紫外光源"杀菌 → 藻工厂（水质预净化 + 藻类扩繁）
+  → 鸭舍饮水系统 → 鸭子饮用 + 戏水 → 戏水池（鸭粪排入 + 藻类消纳）
+  → 一级消纳池（小球藻 + 浮萍 + 胡子鲶）→ 次级消纳池（继续养鱼）
+  → 多级消纳池（水培菜搭配种植）→ 达标地表水排放 / 水循环使用
+  </div>
+
+  <h3>3.5 碳中和逻辑</h3>
+
+  <div class="stat-grid">
+    <div class="stat-card red">
+      <div class="number">排放端</div>
+      <div class="label">鸭子呼出CO₂ + 水面蒸发碳排放</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">吸收端</div>
+      <div class="label">微藻吸收CO₂（每日8倍繁殖）+ 浮萍吸收 + 蔬菜吸收</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="number">结论</div>
+      <div class="label">吸收 &gt; 排放 = 碳中和，符合"3050"计划</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 DAILY OPERATIONS ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>鸭场一日运作详解</h2>
+    <div class="subtitle">A DAY IN THE DUCK FARM</div>
+  </div>
+
+  <p>以仙坪场为例，还原一只连城白鸭的一天：</p>
+
+  <h3>4.1 晨间（天亮 - 8:00）</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>时间</th><th>事件</th><th>技术细节</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>天亮</td><td>卷帘门开启，鸭子出窝</td><td>统一口令驱赶出产蛋箱，关闭卷帘门</td></tr>
+      <tr><td>出舍</td><td>鸭群经天桥跃入戏水池</td><td>天桥连接舍内"席梦思"和舍外泳池，解决4楼鸭子到池子的交通问题</td></tr>
+      <tr><td>嬉水</td><td>梳妆打扮、嬉戏</td><td>连城白鸭天性：晨起第一件事是"梳妆打扮"，释放产蛋疲劳</td></tr>
+      <tr><td>喂料</td><td>自动化喂料系统</td><td>根据生长阶段自动调整饲料比例</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">鸭子天性</div>
+    <p style="margin:0">连城白鸭是水鸭，自由嬉水是天然属性。野性足，不适合笼养或旱养。</p>
+  </div>
+
+  <h3>4.2 日间（8:00 - 17:00）</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>时段</th><th>事件</th><th>技术细节</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>白天</td><td>戏水、觅食、活动</td><td>池中藻-鱼-萍生态系统持续运作</td></tr>
+      <tr><td>白天</td><td>藻工厂运转</td><td>藻每天"以1变8"繁殖，消纳鸭粪，整个鸭场不臭</td></tr>
+      <tr><td>白天</td><td>自动集蛋系统运转</td><td>鸭蛋自动衰落到集蛋带，避免踩踏和粪污污染</td></tr>
+      <tr><td>夏季</td><td>屋顶喷淋启动</td><td>降温，鸭子舒适</td></tr>
+      <tr><td>冬季</td><td>卷帘保温</td><td>连城白鸭皮下脂肪薄，不耐寒</td></tr>
+    </tbody>
+  </table>
+
+  <h4>环境控制</h4>
+  <ul>
+    <li><strong>涵管通风系统</strong>（"鸭场的鼻子"）：空气经过大地温度调节后进入鸭舍，冬暖夏凉</li>
+    <li><strong>错叠式遮阳设计</strong>：防止单面承压过重，空气南北对流但不形成穿堂风</li>
+  </ul>
+
+  <h3>4.3 晚间（17:00 - 次日天亮）</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>时间</th><th>事件</th><th>技术细节</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>22:00后</td><td>卷帘门重新开启</td><td>迎接鸭鸭进产蛋箱</td></tr>
+      <tr><td>0:00-2:00</td><td>产蛋高峰</td><td>鸭子排队进入隐蔽区（产蛋箱）</td></tr>
+      <tr><td>产蛋</td><td>蛋自动落到集蛋带</td><td>产蛋箱区域通过水温调节小气候，冬暖夏凉，吸引鸭鸭</td></tr>
+      <tr><td>深夜</td><td>藻类借灯光继续工作</td><td>消纳白天鸭粪，浮萍和鱼、螺也参与"劳动"</td></tr>
+      <tr><td>深夜</td><td>LED灯 + 气泡机 + 转动阀</td><td>藻夜间仍可生长、絮集</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.4 蛋品加工流程</h3>
+
+  <div class="flow-box">
+新鲜鸭蛋（未被粪便污染）
+  → 清洗 → 消毒 → 烘干 → 检测 → 喷码 → 喷蜡 → 分捡 → 封装
+
+关键设备：日本进口分捡机（中国境内唯二）
+  · 蛋内异物捡出率 > 99.5%（血丝、组织碎片）
+  · 机械手轻敲检出裂纹蛋
+  · 每小时处理1万枚
+  · 传统人工2人每天捡1万枚，机器按电钮即可
+  </div>
+
+  <h3>4.5 五大环节产业链</h3>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">① 育种（芷红场 + 南坑场）</div>
+      <div class="timeline-content">目标：产蛋周期突破300枚，保护纯种基因。现状：产蛋周期280枚左右，连南非核心区出现脚蹼褪色。项目：仙坪三期育种基地 + 南坑场环境实验。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">② 孵化（芷红场）</div>
+      <div class="timeline-content">目标：高标准种蛋受精率与孵化破壳率。现状：3台孵化机，月孵超18000只雏鸭。项目：大数据卵内受精检测 + 性别检测 + 全程监控。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">③ 养殖（仙坪/芷民/南坑）</div>
+      <div class="timeline-content">目标：打通水培菜消纳 + 数智化改造。现状：全力建设南坑、芷民和仙坪二期。项目：水培菜产业 + 组装式自动化产蛋箱 + 数字化改造。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">④ 饲料（配套工厂）</div>
+      <div class="timeline-content">目标：年产12万吨高档鸭饲料。现状：规划设计申请技改备案。项目：脂壮素车间技改备案。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">⑤ 屠宰加工（新泉白鸭文化产业园）</div>
+      <div class="timeline-content">目标：日宰5000只 + 轻食简餐 + 深加工。现状：已确定土地，规划设计厂房。项目：新泉白鸭文化产业园食品加工项目。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 05 PRODUCTS & COMPARISON ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">05</span>
+    <h2>产品体系与市面对比</h2>
+    <div class="subtitle">PRODUCT SYSTEM & MARKET COMPARISON</div>
+  </div>
+
+  <h3>5.1 双品牌战略</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>—</th><th>欧米伽博士 Dr.Omega</th><th>三文红</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>定位</strong></td><td>中高端，标准高，卖点多</td><td>亲民价位</td></tr>
+      <tr><td><strong>核心卖点</strong></td><td>食补DHA蛋，水煮也鲜甜</td><td>无抗不腥，天然好味道</td></tr>
+      <tr><td><strong>目标人群</strong></td><td>注重健康/孕婴/高端消费</td><td>大众消费</td></tr>
+      <tr><td><strong>LOGO内涵</strong></td><td>—</td><td>内核D字型寓意DUCK，红黄圈纹模拟三文鱼刺身视觉特征</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 产品矩阵</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>品类</th><th>产品</th><th>亮点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>鸭蛋</strong></td><td>DHA富集鲜鸭蛋</td><td>DHA≥200mg/100g，三文鱼刺身样圈纹，清煮不腥，蛋白Q弹</td></tr>
+      <tr><td><strong>鸭肉</strong></td><td>无抗连城白鸭（白条鸭）</td><td>全程无抗NAE，高蛋白低脂肪富硒，清水加盐炖煮即可</td></tr>
+      <tr><td><strong>蔬菜</strong></td><td>有机水培菜</td><td>无土壤、无化肥、无农药，30亩日产10吨</td></tr>
+      <tr><td><strong>水产品</strong></td><td>胡子鲶/非洲鲫鱼</td><td>生态养殖，以藻为食</td></tr>
+      <tr><td><strong>深加工</strong></td><td>轻食简餐（鸭汤+水培菜+鸭蛋+水果）</td><td>新泉产业园规划</td></tr>
+      <tr><td><strong>深加工</strong></td><td>卤蛋/水煮蛋/咸蛋/蛋液/蛋糕蛋挞</td><td>蛋品深加工</td></tr>
+      <tr><td><strong>深加工</strong></td><td>-38℃急冻锁鲜白条鸭/分割鸭</td><td>干蒸后急冻</td></tr>
+      <tr><td><strong>衍生</strong></td><td>鸭羽鸭绒产品、蛋黄粉、羽毛产品</td><td>副产品高值化</td></tr>
+      <tr><td><strong>体验</strong></td><td>连城白鸭文化鉴赏 + 生态农产品体验</td><td>农文旅融合</td></tr>
+      <tr><td><strong>草本</strong></td><td>鱼腥草凉茶等功能性饮品</td><td>基地自种鱼腥草</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 线上商城在售产品与定价</h3>
+
+  <div class="callout callout-info">
+    <div class="callout-title">信息来源</div>
+    <p style="margin:0">公司线上商城（微信小程序）截图，2026年7月。以下价格为线上商城当前显示价格，活动价、礼券/消费卡等结算规则以商城实际页面为准。</p>
+  </div>
+
+
+  <h4>在售实物商品</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>商品</th><th>规格</th><th>线上价格</th><th>备注</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>欧米伽博士蛋</strong>（DHA富集鲜鸭蛋）</td><td>30枚</td><td>¥188.00</td><td>中高端主推，三文鱼刺身样圈纹</td></tr>
+      <tr><td><strong>欧米伽博士蛋年卡</strong></td><td>25盒×30枚 + 6份有机蔬菜</td><td>¥2500.00</td><td>高端食补礼盒年卡，全年分送（详见5.3.5）</td></tr>
+      <tr><td><strong>连城白鸭蛋</strong></td><td>20枚</td><td>¥128.00</td><td>亲民尝鲜规格</td></tr>
+      <tr><td><strong>连城白鸭蛋</strong></td><td>40枚</td><td>¥198.00</td><td>家庭囤货装，单枚约¥4.95</td></tr>
+      <tr><td><strong>养生鸭</strong>（白条鸭）</td><td>1只</td><td>¥128.00</td><td>全年销售，商品详情页标注"养生鸭"</td></tr>
+      <tr><td><strong>药膳鸭</strong>（切块/分割）</td><td>1份</td><td>¥298.00</td><td>高端定位，详情页显示切块装盘，可能含药膳包</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">线上运营关注点</div>
+    <ul style="margin:8px 0 0">
+      <li><strong>价格梯度清晰</strong>：从¥128（20枚基础蛋）→¥188（欧米伽博士30枚）→¥198（40枚家庭装）→¥2500（年卡会员），覆盖尝鲜、家庭、高端会员三层需求。</li>
+      <li><strong>鸭肉价格跨度大</strong>：养生鸭¥128 vs 药膳鸭¥298，需明确两者差异，避免内容讲解时口径不一致。</li>
+      <li><strong>销量信号</strong>：截图显示欧米伽博士30枚已售0件，连城白鸭蛋有成交——目前线上以基础鸭蛋为主，<strong>欧米伽博士品牌款需要加强内容推广与信任建设</strong>。</li>
+    </ul>
+  </div>
+
+  <h3>5.3.5 年卡详解（¥2500 核心产品）</h3>
+
+  <div class="callout callout-info">
+    <div class="callout-title">年卡是线上商城客单价最高的产品</div>
+    <p style="margin:0">也是私域转化和礼品场景的核心抓手。</p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>项目</th><th>明细</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>鸭蛋</strong></td><td>25盒 × 30枚连城白鸭蛋礼盒 = <strong>750枚</strong></td></tr>
+      <tr><td><strong>有机蔬菜</strong></td><td>6份当季有机蔬菜</td></tr>
+      <tr><td><strong>配送方式</strong></td><td>全年分25次寄送（每次1盒30枚蛋 + 不定期搭配有机蔬菜）</td></tr>
+      <tr><td><strong>售价</strong></td><td>¥2500.00</td></tr>
+      <tr><td><strong>单枚折算</strong></td><td>约¥3.33/枚（远低于零售价¥6.27/枚，会员锁客价）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠️ 待确认</div>
+    <p style="margin:0">线上商城截图中年卡标题写的是"25件30枚欧米伽博士蛋"，但年卡详细资料描述为"25盒×30枚连城白鸭蛋礼盒"。两个名称需向市场部确认——到底是欧米伽博士品牌款还是连城白鸭蛋基础款，这关系到DHA富集卖点的宣传口径。</p>
+  </div>
+
+  <h4>三大核心定位</h4>
+
+  <div class="step-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h4>高端食补礼品卡</h4>
+      <p>区别普通土鸭蛋，主打富硒、有机、地标连城白鸭，药食同源食补属性，走健康高端礼赠赛道</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h4>全年家庭健康食材订阅</h4>
+      <p>稳定供给高品质鸭蛋+有机蔬菜，适配注重全家饮食健康的中产家庭</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h4>企业长效福利/答谢礼</h4>
+      <p>年卡可分多次配送，不用一次性提货，适合企业分批送客户、员工年度福利</p>
+    </div>
+  </div>
+
+  <h4>四大差异化卖点</h4>
+  <table class="data-table">
+    <thead><tr><th>卖点</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>稀缺地标</strong></td><td>中国唯一连城白鸭（药用白鸭，药膳同源）</td></tr>
+      <tr><td><strong>营养加分</strong></td><td>富硒、有机认证，高Omega，适合老人、孕妈、孩子</td></tr>
+      <tr><td><strong>配送灵活</strong></td><td>全年分25次寄送，搭配时令有机蔬菜，不用一次性囤货</td></tr>
+      <tr><td><strong>礼盒包装</strong></td><td>品牌精致礼盒，送礼体面，自用仪式感足</td></tr>
+    </tbody>
+  </table>
+
+  <h4>精准目标人群（4大类）</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>人群</th><th>特征</th><th>需求/痛点</th><th>转化策略</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>① 企业商务人群</strong><br><span class="tag tag-red">高客单·批量走货</span></td>
+        <td>中小企业老板、行政人事、销售负责人</td>
+        <td>年度客户答谢、员工年终福利；普通烟酒同质化，健康生鲜更有新意；不想一次性囤货</td>
+        <td>年卡分次配送=减轻仓储压力，重点推企业团购</td>
+      </tr>
+      <tr>
+        <td><strong>② 高知中产家庭</strong><br><span class="tag tag-primary">复购强·私域长期单</span></td>
+        <td>30-50岁宝妈、二胎家庭、注重食疗养生，家有老人/孕妇/学龄儿童</td>
+        <td>日常早餐辅食、食补调养，追求无农残有机；散养蛋品质不稳定，买多容易放坏</td>
+        <td>年卡按月配送=新鲜直达，不用频繁采购</td>
+      </tr>
+      <tr>
+        <td><strong>③ 养生中老年群体</strong><br><span class="tag tag-accent">送礼刚需·子女买单</span></td>
+        <td>45岁以上养生长辈，子女为父母采购</td>
+        <td>日常食补、调理身体，富硒/药膳鸭蛋适配三高、体虚</td>
+        <td>线下难买正宗连城白鸭蛋，年卡全年持续供给</td>
+      </tr>
+      <tr>
+        <td><strong>④ 高端私域圈层</strong><br><span class="tag tag-blue">精准圈层裂变</span></td>
+        <td>月子中心、养生馆、瑜伽馆、高端母婴店、银行保险高净值客户、商会社群</td>
+        <td>门店增值会员礼、维护高端客户，搭配自身服务做捆绑套餐</td>
+        <td>B2B2C模式，对方出渠道/客户，我们出产品/分润</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="source-note">以上人群分析来自AI辅助分析，供参考。定价和产品内容是确定的。</div>
+
+  <h3>5.4 核心竞品对比——我们的鸭蛋为什么不同</h3>
+
+  <h4>对比一：与普通鸭蛋对比</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>维度</th><th>市面普通鸭蛋</th><th>曼纽考鸭蛋</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>抗生素</strong></td><td>青年鸭产蛋前必用抗生素，产蛋期继续用药但控制残留不超标（≤5ppm即判定"无抗"）</td><td><strong>全程无抗NAE</strong>，从种鸭到产蛋鸭全程不用，不是"检测时无抗"而是"真的无抗"</td></tr>
+      <tr><td><strong>腥味</strong></td><td>鸭蛋普遍腥，大多用于咸鸭蛋等腌制产品</td><td>清煮不腥，可直接水煮剥壳甚至生吃</td></tr>
+      <tr><td><strong>DHA含量</strong></td><td>普通鸭蛋几乎不含DHA</td><td>DHA≥200mg/100g（三文鱼刺身样圈纹）</td></tr>
+      <tr><td><strong>外观</strong></td><td>普通蛋黄</td><td>蛋黄呈现独特的三文鱼刺身样圈纹，随时间变化颜色渐进性变化</td></tr>
+      <tr><td><strong>口感</strong></td><td>蛋白普通</td><td>蛋白Q弹，蛋黄占比大</td></tr>
+      <tr><td><strong>饲养方式</strong></td><td>笼养或旱养</td><td>立体平养+戏水，遵循水鸭天性</td></tr>
+      <tr><td><strong>饲料</strong></td><td>普通配合饲料</td><td>新奥控缓释、纳米级新型饲用脂质高端制剂（酸乳+傲清腥）</td></tr>
+      <tr><td><strong>环境</strong></td><td>密闭笼养或池塘散养</td><td>山泉水+藻工厂+生态池，不臭</td></tr>
+      <tr><td><strong>加工</strong></td><td>人工分捡</td><td>日本进口设备，异物捡出率>99.5%，每小时万枚</td></tr>
+    </tbody>
+  </table>
+
+  <h4>对比二：与市面DHA鸡蛋对比</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>维度</th><th>市面DHA鸡蛋（多为鸡蛋）</th><th>曼纽考DHA鸭蛋</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>DHA来源</strong></td><td>鸡饲料添加亚麻籽/鱼粉</td><td>新奥脂质营养制剂（纳米级，吸收更好）</td></tr>
+      <tr><td><strong>DHA含量</strong></td><td>普通鸡蛋约20-50mg/100g；强化蛋约111-159mg/100g；高端品牌约178-250mg/100g</td><td>≥200mg/100g</td></tr>
+      <tr><td><strong>宣称真实性</strong></td><td>上海消保委测评：部分品牌DHA实测值仅为宣称值的20-48%</td><td>有检测报告支撑 <span class="tag tag-accent">⚠️需确认</span></td></tr>
+      <tr><td><strong>无抗</strong></td><td>多数宣称"无抗"实为残留不超标</td><td>全程无抗NAE（真正不用）</td></tr>
+      <tr><td><strong>品种</strong></td><td>普通蛋鸡</td><td>连城白鸭（国家地理标志，中国唯一药用鸭）</td></tr>
+      <tr><td><strong>动物福利</strong></td><td>多为笼养</td><td>非笼养，可戏水</td></tr>
+    </tbody>
+  </table>
+
+  <h4>对比三：与普通连城白鸭对比</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>维度</th><th>普通连城白鸭养殖</th><th>曼纽考连城白鸭</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>养殖模式</strong></td><td>池塘散养/稻鸭共生/旱养</td><td>立体生态净养模式</td></tr>
+      <tr><td><strong>抗生素</strong></td><td>有抗养殖</td><td>全程无抗NAE，5年未发生疫病</td></tr>
+      <tr><td><strong>饲料</strong></td><td>普通饲料</td><td>新奥脂质营养健康方案（脂来安等）</td></tr>
+      <tr><td><strong>环保</strong></td><td>鸭粪需集中处理（沼气/发酵/返田）</td><td>鸭粪直接入水→微藻消纳→不臭，无需粪污处理设施</td></tr>
+      <tr><td><strong>鸭汤</strong></td><td>汤浑浊油重</td><td>汤清淡清亮</td></tr>
+      <tr><td><strong>DHA</strong></td><td>无</td><td>富集DHA</td></tr>
+      <tr><td><strong>碳排放</strong></td><td>正排放</td><td>碳中和（藻+菜吸收&gt;鸭排放）</td></tr>
+      <tr><td><strong>规模化</strong></td><td>"散养散销"为主，难以标准化</td><td>立体养殖+自动化，人均效率提升20倍</td></tr>
+      <tr><td><strong>产蛋率</strong></td><td>约280枚/周期</td><td>目标突破300枚/周期</td></tr>
+    </tbody>
+  </table>
+
+  <h4>对比四：养殖模式对比（行业全景）</h4>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>模式</th><th>特点</th><th>优势</th><th>劣势</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>传统水面养殖</strong></td><td>鸭子在水面散养</td><td>鸭肉风味好</td><td>环保压力最大，政策淘汰，一年3-4批</td></tr>
+      <tr><td><strong>笼养</strong></td><td>3-5层H型笼具，全密闭</td><td>土地利用率高2-3倍，疫病风险低</td><td>建设成本高，鸭子生理应激，蛋风味差，不符合动物福利</td></tr>
+      <tr><td><strong>旱养（网上/垫料）</strong></td><td>无水面，只给饮水</td><td>投入低，年5-6批</td><td>鸭子天性被压抑，不适合连城白鸭（野性足）</td></tr>
+      <tr><td><strong>曼纽考立体生态净养</strong></td><td>4层立体平养+戏水池+藻工厂+水培菜</td><td>全程无抗，碳中和，不臭，效率提升20倍，动物福利好</td><td><span class="tag tag-accent">⚠️初期建设成本较高</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">核心差异化</div>
+    <p style="margin:0">连城白鸭是水鸭，野性足，<strong>不适合笼养或旱养</strong>。曼纽考是唯一能在规模化条件下既保留水鸭天性（戏水）、又实现全程无抗、还做到碳中和的模式。</p>
+  </div>
+
+  <h3>5.5 行业痛点 vs 我们的解法</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>行业痛点</th><th>曼纽考解法</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>养殖场抗生素滥用，耐药率超90%</td><td>新奥脂质营养方案全程替抗，5年零疫病</td></tr>
+      <tr><td>鸭蛋腥味重，只能做咸蛋</td><td>脂来安+傲清腥+清洁水源，清煮不腥</td></tr>
+      <tr><td>粪污处理是全球畜牧难题</td><td>鸭粪直接入水→微藻消纳，无需处理设施</td></tr>
+      <tr><td>笼养影响动物福利，欧美逐步禁止</td><td>平养+戏水，遵循水鸭天性</td></tr>
+      <tr><td>养殖场臭味扰民</td><td>藻"围"上去消纳鸭粪，整个鸭场不臭</td></tr>
+      <tr><td>地标产品"不可能三角"（规模-生态-品质）</td><td>立体生态净养模式破解：规模化+生态+高品质同时实现</td></tr>
+      <tr><td>连城白鸭濒临灭绝（曾不足30只）</td><td>产业化反哺保种，纯种基因保护</td></tr>
+      <tr><td>农业碳排放问题</td><td>碳中和（藻+菜吸收&gt;鸭排放）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 06 INDUSTRY BACKGROUND ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">06</span>
+    <h2>行业背景与竞争格局</h2>
+    <div class="subtitle">INDUSTRY BACKGROUND & COMPETITIVE LANDSCAPE</div>
+  </div>
+
+  <h3>6.1 连城白鸭产业现状（2024-2025）</h3>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="number">12<span style="font-size:18px">亿元</span></div>
+      <div class="label">全产业链产值</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="number">550<span style="font-size:18px">万羽</span></div>
+      <div class="label">全县出栏量（2024年）</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="number">2.5<span style="font-size:18px">万吨</span></div>
+      <div class="label">鸭蛋年产量</div>
+    </div>
+    <div class="stat-card red">
+      <div class="number">1.2<span style="font-size:18px">万人</span></div>
+      <div class="label">就业带动（4.9万人从业）</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead><tr><th>指标</th><th>数据</th></tr></thead>
+    <tbody>
+      <tr><td>龙头企业</td><td>5家农业产业化龙头企业</td></tr>
+      <tr><td>合作社</td><td>76个</td></tr>
+      <tr><td>家庭农场</td><td>42个</td></tr>
+      <tr><td>客家美食店</td><td>1180家（县外238家）</td></tr>
+      <tr><td>美食产业年产值</td><td>超10亿元</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">政策支持</div>
+    <p style="margin:0">连城县出台《加快连城白鸭产业化发展的实施意见》，设立产业基金，标准化养殖场给予基础设施投资25%补贴。</p>
+  </div>
+
+  <h3>6.2 连城白鸭的四大关键词</h3>
+
+  <table class="data-table">
+    <thead><tr><th>关键词</th><th>详解</th></tr></thead>
+    <tbody>
+      <tr><td><strong>地标</strong></td><td>国家地理标志保护品种，离开连城会出现性状退化（黑嘴黑脚褪色成黄色）</td></tr>
+      <tr><td><strong>药膳</strong></td><td>元代《十药神书》记载"壬字白凤膏"，主治久虚咳嗽咳血发热；厦门金砖会议国宴菜</td></tr>
+      <tr><td><strong>美味</strong></td><td>清水加盐炖煮即可，无鸭腥味，汤色清爽，肉质鲜美</td></tr>
+      <tr><td><strong>稀缺</strong></td><td>驯养度低野性足，无法旱养笼养，产蛋率低，曾一度不足30只</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.3 行业养殖模式趋势</h3>
+
+  <ul>
+    <li><strong>国家政策方向</strong>：2020年禁抗令全面实施，2025年中央一号文件强调"推进兽用抗菌药减量使用"</li>
+    <li><strong>传统水面养殖</strong>正在被淘汰（环保压力）</li>
+    <li><strong>笼养</strong>适合大规模标准化养殖场，但动物福利问题突出，欧美已逐步禁止</li>
+    <li><strong>旱养</strong>是中小养殖户的主流选择，但连城白鸭不适合</li>
+    <li><strong>曼纽考模式</strong>是唯一兼顾规模化+生态+动物福利+无抗的创新路径</li>
+  </ul>
+
+  <h3>6.4 DHA蛋市场格局</h3>
+
+  <ul>
+    <li>全球Omega-3蛋市场高度分散，大型禽企和有机小品牌并存</li>
+    <li>国内DHA鸡蛋品牌：圣迪乐Omega-3、EGGLAB、东方甄选DHA、彩虹星球等（均为鸡蛋）</li>
+    <li><strong>曼纽考是DHA鸭蛋的稀缺品类</strong>——市面DHA蛋几乎全是鸡蛋，DHA鸭蛋几乎无竞品</li>
+    <li>普通鸡蛋DHA约20-50mg/100g，强化蛋约111-159mg/100g，曼纽考鸭蛋≥200mg/100g</li>
+  </ul>
+
+  <h3>6.5 竞争对手参考</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>企业/品牌</th><th>模式</th><th>与曼纽考的关系</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>冠翔农业（连城隔川镇）</td><td>公司+合作社+农户，日供800只白鸭+3500斤鸭蛋</td><td>同区域竞品，但走传统养殖路线</td></tr>
+      <tr><td>明源合作社（连城文亨镇）</td><td>稻鸭共生，年出栏21万羽</td><td>同区域竞品，生态养殖但非无抗</td></tr>
+      <tr><td>鑫程食品（连城朋口镇）</td><td>白鸭汤/白鸭翅等即食产品</td><td>深加工竞品</td></tr>
+      <tr><td>冯小鸭（浙江金华）</td><td>无抗鸭蛋，14.5万羽，盒马供应商</td><td>跨区域竞品，同为无抗路线，但无DHA富集</td></tr>
+      <tr><td>圣迪乐/彩虹星球等</td><td>DHA鸡蛋</td><td>跨品类竞品，鸡蛋非鸭蛋</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">曼纽考的独特定位</div>
+    <p style="margin:0">唯一同时具备"连城白鸭地标品种 + 全程无抗NAE + DHA富集 + 立体生态净养 + 碳中和"的品牌。</p>
+  </div>
+</div>
+
+<!-- ===== 07 FUTURE PLANS ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">07</span>
+    <h2>未来规划与增长点</h2>
+    <div class="subtitle">FUTURE PLANS & GROWTH DRIVERS</div>
+  </div>
+
+  <h3>7.1 三年规划（五-七年目标）</h3>
+
+  <div class="callout callout-success">
+    <div class="callout-title">总目标</div>
+    <p style="margin:0">五-七年全面打通连城白鸭三产上下游环节，打造享誉全球的地方特色品牌。</p>
+  </div>
+
+  <ul>
+    <li><strong>育种</strong>：产蛋周期突破300枚</li>
+    <li><strong>孵化</strong>：智能化数字化孵化</li>
+    <li><strong>养殖</strong>：打通水培菜消纳 + 数智化改造</li>
+    <li><strong>饲料</strong>：年产12万吨高档鸭饲料</li>
+    <li><strong>屠宰</strong>：日宰5000只 + 轻食简餐 + 深加工</li>
+  </ul>
+
+  <h3>7.2 新泉生态化工厂（重点在建项目）</h3>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="number">5000<span style="font-size:18px">只/日</span></div>
+      <div class="label">日屠宰产能</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="number">1.05<span style="font-size:18px">亿元</span></div>
+      <div class="label">总投资</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="number">1.387<span style="font-size:18px">亿元</span></div>
+      <div class="label">年产值（预计）</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">4.5<span style="font-size:18px">年</span></div>
+      <div class="label">投资回收期</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead><tr><th>指标</th><th>数据</th></tr></thead>
+    <tbody>
+      <tr><td>选址</td><td>新泉白鸭文化产业园</td></tr>
+      <tr><td>年屠宰</td><td>约100万只 <span class="tag tag-accent">⚠️待确认</span></td></tr>
+      <tr><td>轻食简餐</td><td>每日1万份</td></tr>
+      <tr><td>年均利润（预计）</td><td>约2333万元</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.3 产品体系七大模块（GIAHS规划）</h3>
+  <ol>
+    <li>鸭肉及预制菜（-38℃急冻锁鲜）、轻食简餐、鸭杂、鸭血</li>
+    <li>鸭蛋及深加工（卤蛋/水煮蛋/咸蛋/蛋液/蛋糕蛋挞）+ 蛋壳蛋膜高值化</li>
+    <li>鸭副产品（鸭羽、鸭绒）</li>
+    <li>水培蔬菜、鲜蔬及菜干</li>
+    <li>鱼腥草凉茶等功能性草本饮品</li>
+    <li>连城白鸭文化鉴赏与生态农产品体验</li>
+    <li>碳中和示范基地与生态循环农业研学中心</li>
+  </ol>
+
+  <h3>7.4 模式推广三种形式</h3>
+
+  <table class="data-table">
+    <thead><tr><th>形式</th><th>面向</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>仙坪模式</td><td>政府</td><td>示范基地模式，接待参观调研</td></tr>
+      <tr><td>南坑模式</td><td>养殖户</td><td>体系服务模式，带动农户参与</td></tr>
+      <tr><td>宠物模型</td><td>家庭</td><td>宠物鸭模式，立体生态宠物系统家家尝鲜</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.5 未来增长点</h3>
+  <ul>
+    <li>有机菜（鱼腥草、西洋芹等）</li>
+    <li>泥鳅、蛙类养殖</li>
+    <li>轻食简餐、鸭蛋蛋糕</li>
+    <li>羽毛产品加工</li>
+    <li>皮划艇、果园采摘、钓鱼、网红打卡（农文旅）</li>
+    <li>-38℃急冻锁鲜预制菜</li>
+    <li>数字化孪生与线上直播平台</li>
+    <li>GIAHS（联合国全球重要农业文化遗产）申报</li>
+  </ul>
+
+  <h3>7.6 智能化养殖管理系统（规划中）</h3>
+
+  <table class="data-table">
+    <thead><tr><th>系统</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td>IoT多源传感监测</td><td>温度/湿度/氨气/CO₂/溶氧/氮磷/COD/光照实时监测</td></tr>
+      <tr><td>AI视觉监测</td><td>鸭群数量密度/行为识别/异常预警/健康评估</td></tr>
+      <tr><td>智能饲喂</td><td>自动输送分配/阶段化饲料比例/消耗数据管理</td></tr>
+      <tr><td>机器人辅助</td><td>巡检/捡蛋/无人机监测水质</td></tr>
+      <tr><td>云平台</td><td>疾病预测/生产分析/效率优化/碳中和可视化/数据孪生</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.7 厦门面馆：私域体验与转化窗口（待确认）</h3>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">状态：待确认</div>
+    <p style="margin:0">厦门面馆/体验店的具体定位、名称、地址、菜单、开业状态、运营目标<strong>尚未最终确定</strong>。以下内容仅作为内部讨论方向，需以公司最终决策为准。</p>
+  </div>
+
+  <p>据了解，公司正在厦门新奥附近筹备一家以连城白鸭为特色的面馆或体验店，可能承担<strong>品牌展示 + 私域体验 + 用户转化</strong>的功能，但具体形式还需进一步确认。</p>
+
+  <p><strong>定位方向（供内部讨论）</strong>：</p>
+  <ul>
+    <li>不以单一门店盈利为核心考核，而作为品牌与用户的<strong>线下触点</strong>；</li>
+    <li>让周边居民、私域客户、来访嘉宾能够<strong>看得见、吃得到</strong>，增强对连城白鸭和DHA蛋的直观体验；</li>
+    <li>与线上内容、私域社群、年卡/礼盒形成联动。</li>
+  </ul>
+
+  <h4>可能承担的功能</h4>
+  <table class="data-table">
+    <thead><tr><th>功能方向</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>居民触达</strong></td><td>让周边居民吃到连城白鸭做的面/汤，建立"好吃→信任→了解产品"的链路</td></tr>
+      <tr><td><strong>私域接待</strong></td><td>私域里的老板、业务伙伴来厦门时，可带去面馆体验，形成"参观→用餐→转化"的闭环</td></tr>
+      <tr><td><strong>产品展示</strong></td><td>线下实物展示鸭蛋、鸭肉、有机菜，比线上图文更有说服力</td></tr>
+      <tr><td><strong>口碑传播</strong></td><td>食客自发拍照、发朋友圈/小红书，形成自然传播</td></tr>
+      <tr><td><strong>内容场景</strong></td><td>现煮鸭汤、切蛋黄圈纹、顾客反应等，都是天然短视频素材</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-success">
+    <div class="callout-title">预期转化链路（供参考）</div>
+    <p style="margin:0">面馆体验 → 好吃/好奇 → 了解连城白鸭故事 → 买蛋/买鸭/买年卡 → 进入私域 → 持续复购</p>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">待确认清单</div>
+    <ul style="margin:8px 0 0">
+      <li>面馆名称、具体地址、菜单定价</li>
+      <li>是否正式开业、是否对外开放</li>
+      <li>日均客流目标、与线上商城的联动机制</li>
+      <li>负责人是谁</li>
+    </ul>
+    <p style="margin:8px 0 0">建议相关会议确认后再对外发布任何内容。</p>
+  </div>
+
+  <h3>7.8 创始人IP方案（讨论中）</h3>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">状态：讨论中</div>
+    <p style="margin:0">创始人IP账号的定位、名称、出镜人、内容方向<strong>仍在讨论中</strong>，尚未最终确定。以下内容汇总了目前讨论中的方向，供内部开会参考。</p>
+  </div>
+
+  <p><strong>背景</strong>：</p>
+  <ul>
+    <li>创始人赖州文具备天然的IP素材：27年脂质营养技术积淀、丁壮素亚洲首位、把技术落地到连城白鸭养殖、连城白鸭保种故事等；</li>
+    <li>赖总本人出镜，能否以本人为主角打造个人IP；</li>
+    <li>据了解，目前讨论中有两个主要方向。</li>
+  </ul>
+
+  <h4>目前讨论中的两个方向</h4>
+  <table class="data-table">
+    <thead><tr><th>方向</th><th>账号设想</th><th>角色分工</th><th>优势</th><th>待讨论点</th></tr></thead>
+    <tbody>
+      <tr><td><strong>方向A：专业背书型</strong></td><td>"赖博士养鸭"等</td><td>赖总以专业身份做内容背书，科普讲解出镜</td><td>专业性强、可信度高、反差感足</td><td>出镜频率、账号名称、内容风格</td></tr>
+      <tr><td><strong>方向B：老板娘接地气型</strong></td><td>"鸭蛋姐"等</td><td>由老板娘杨金英（赖总夫人）出镜，赖总做专业背书</td><td>更亲切、更生活化，可与面馆/门店直接关联</td><td>人设定位、出镜频率、与面馆等如何联动</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-title">赖总倾向（待开会确认）</div>
+    <p style="margin:0">据了解，赖总本人更倾向<strong>方向B</strong>，即以老板娘账号（如"鸭蛋姐"）作为前端形象，自己退居专业背书角色。该方向更接地气，也便于与面馆/门店体验结合。<strong>但此说法仅为初步想法，需开会共同确认。</strong></p>
+  </div>
+
+  <h4>应对思路（供内部讨论参考）</h4>
+  <ol>
+    <li><strong>账号定位</strong>：先明确"出镜人是谁""讲什么故事""卖给谁"，再定账号名；</li>
+    <li><strong>创始人可退居专业背书</strong>：无论最终谁来出镜，赖总的专业身份和技术故事都可以作为内容背书；</li>
+    <li><strong>“鸭蛋姐”账号需明确人设</strong>：是"鸭蛋姐"（亲切卖货）、"老板娘的养鸭日记"（生活记录）……需确认；</li>
+    <li><strong>与面馆联动</strong>：若最终确定老板娘账号，可与面馆探店、门店日常、顾客互动做内容结合；</li>
+    <li><strong>关键节点再请创始人出镜</strong>：如大型直播、品牌宣传、媒体报道等，可邀请赖总少量出镜以提升信任度；</li>
+
+  </ol>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">决策前不要对外发布</div>
+    <p style="margin:0">创始人IP账号名、出镜人、内容方向等，需相关会议确认后再执行。线上运营团队可先准备两套选题方案（赖博士版 / 鸭蛋姐版），待决策后快速启动。</p>
+  </div>
+
+  <h3>7.9 连城在地资源挖掘与农文旅融合规划</h3>
+
+  <div class="callout callout-info">
+    <div class="callout-title">核心发现</div>
+    <p style="margin:0">曼纽考鸭场所在的位置，恰好是连城旅游资源最密集的区域——鸭场、温泉、红色遗址、古村落几乎"挨着"，天然具备"一条龙体验"的地理条件。</p>
+  </div>
+
+  <h4>连城美誉一览</h4>
+
+  <table class="data-table">
+    <thead><tr><th>称号</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>中国连城白鸭之乡</td><td>连城白鸭得到<strong>习近平总书记亲自点赞</strong></td></tr>
+      <tr><td>中国温泉之城</td><td>温泉出水温度70-81℃，新泉镇日出水量9000吨</td></tr>
+      <tr><td>中国客家美食名城</td><td>120多种传统客家美食，48种全国名菜，680余家美食店</td></tr>
+      <tr><td>中国客家硒都</td><td>福建省四个富硒县之一——连城白鸭"富硒"的地理基础</td></tr>
+      <tr><td>中国优秀旅游县</td><td>1个5A+2个4A+11个3A景区</td></tr>
+      <tr><td>中央苏区县</td><td>124处158个点红色文化遗存</td></tr>
+      <tr><td>森林覆盖率81.47%</td><td>"三江源头"（九龙江、汀江、闽江）</td></tr>
+    </tbody>
+  </table>
+
+  <h4>曼纽考基地与旅游资源的地理关系</h4>
+
+  <div class="flow-box">
+<div class="flow-box-title">连城县旅游资源 × 曼纽考基地分布</div>
+┌─────────────────────────────────────────────────┐
+│  庙前镇                                          │
+│  ├── 芷溪村：74座古宗祠+139幢古民居，芷溪花灯300年历史 │
+│  │   ★ 芷红场①②（曼纽考种鸭场+育雏场就在这里）       │
+│  ├── 芷民场③（曼纽考育成场）                        │
+│  └── 仙坪场（曼纽考旗舰基地，水北村）                 │
+│                                                  │
+│  文亨镇                                           │
+│  ├── 南坑场⑤（曼纽考商品鸭+育种基地）                │
+│  ├── 清水天一温泉度假村（国家五星级温泉·省劳模疗休养基地）│
+│  └── 冠豸山机场                                    │
+│                                                  │
+│  新泉镇                                           │
+│  ├── ★ 曼纽考新泉生态化工厂（在建·日宰5000只）        │
+│  ├── 新泉整训纪念馆（2024年7月揭牌·红色旅游核心）     │
+│  ├── 松毛岭战役遗址（红军长征前最后一场战役）          │
+│  ├── 萨瓦迪卡温泉度假村（泰式风情·年轻网红地）         │
+│  ├── 天赐温泉休闲山庄                               │
+│  └── 42处温泉服务场所（出水温度70-81℃）              │
+│                                                  │
+│  其他周边                                          │
+│  ├── 冠豸山景区（5A·丹霞地貌·龙岩世界地质公园核心）    │
+│  ├── 培田古村落（800年·"民间故宫"·有品白鸭汤体验）    │
+│  ├── 四角井历史文化街区（非遗奇妙夜主舞台）           │
+│  ├── 四堡雕版印刷古镇（全国唯一仅存雕版印刷基地）      │
+│  ├── 赖源溶洞群（"华东罕见"）                       │
+│  └── 姑田游大龙（世界最长游行花车·国家级非遗）        │
+└─────────────────────────────────────────────────┘
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">一句话理解</div>
+    <p style="margin:0">曼纽考的鸭场和新泉工厂，被温泉、红色遗址、古村落、5A景区"包围"了。</p>
+  </div>
+
+  <h4>可构建的旅游线路（4条参考）</h4>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">线路一：红色淬心 + 白鸭食补 + 温泉疗愈（新泉线）</div>
+    <p style="margin:0">松毛岭战役遗址 → 新泉整训纪念馆（VR还原1929年整训）→ 曼纽考新泉工厂/白鸭文化产业园 → 品白鸭汤/白鸭宴 → 萨瓦迪卡/天赐温泉泡汤</p>
+    <p style="margin:8px 0 0"><strong>适合</strong>：党建团建、企业研学、政府接待。政府契合点：新泉镇正打造"红色旅游为龙头，温泉康养+美食为两翼"。</p>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">线路二：生态净养 + 白鸭溯源 + 温泉康养（文亨线）</div>
+    <p style="margin:0">冠豸山景区（5A丹霞·登山徒步）→ 仙坪场（曼纽考旗舰基地·立体生态净养参观）→ 品白鸭蛋/有机水培菜 → 清水天一温泉（五星级·省劳模疗休养基地）</p>
+    <p style="margin:8px 0 0"><strong>适合</strong>：疗休养团队、中老年康养、亲子研学。政府契合点：天一温泉已是省劳模疗休养基地，2024年疗休养团队同比增长50%。</p>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">线路三：古村非遗 + 白鸭美食（庙前-培田线）</div>
+    <p style="margin:0">芷溪村（74座古宗祠·芷溪花灯·客家大宅门）→ 芷红场（曼纽考种鸭场·看种鸭+孵化）→ 培田古村落（800年·"民间故宫"·品连城白鸭汤·古村剧本杀）→ 四堡雕版印刷古镇（体验拓印）</p>
+    <p style="margin:8px 0 0"><strong>适合</strong>：文化研学、亲子游、外国/港澳台游客。政府契合点：培田已有"吾家宴"客家美食项目，白鸭汤是招牌。</p>
+  </div>
+
+  <div class="callout callout-success">
+    <div class="callout-title">线路四：全域康养 + 白鸭食补周（多日深度线）</div>
+    <p style="margin:0">Day1：冠豸山+石门湖 → 四角井街区（非遗奇妙夜）<br>Day2：仙坪场（生态净养基地）→ 天一温泉（康养理疗）<br>Day3：新泉整训纪念馆 → 新泉工厂 → 白鸭宴 → 温泉<br>Day4：培田古村 → 芷溪古宗祠 → 返程</p>
+    <p style="margin:8px 0 0"><strong>适合</strong>：高端定制游、企业年度疗休养、私域VIP客户体验。政府契合点：连城"两核一区一带一走廊"文旅格局。</p>
+  </div>
+
+  <h4>与连城白鸭品牌的关联点（宣传素材）</h4>
+
+  <table class="data-table">
+    <thead><tr><th>在地资源</th><th>与白鸭的关联</th><th>宣传角度</th></tr></thead>
+    <tbody>
+      <tr><td><strong>中国客家硒都</strong></td><td>连城是福建四个富硒县之一，白鸭天然富硒</td><td>"不是后天添加，是土地给的"——富硒的地标解释</td></tr>
+      <tr><td><strong>中国温泉之城</strong></td><td>温泉出水70-81℃，鸭子喝的山泉水与温泉同源</td><td>"喝温泉水长大的鸭"——水源故事</td></tr>
+      <tr><td><strong>森林覆盖率81.47%</strong></td><td>三江源头，山泉水丰富，养鸭水源天然清洁</td><td>"三江源头养出来的鸭"——生态背书</td></tr>
+      <tr><td><strong>习近平点赞白鸭</strong></td><td>连城白鸭得到总书记亲自点赞</td><td>最高级别背书 <span class="tag tag-red">⚠️使用需谨慎</span></td></tr>
+      <tr><td><strong>元代药膳记载</strong></td><td>《十药神书》"壬字白凤膏"</td><td>"700年前就是药"——历史底蕴</td></tr>
+      <tr><td><strong>金砖国宴菜</strong></td><td>厦门金砖会议国宴菜</td><td>"国宴级的鸭"——品质背书</td></tr>
+      <tr><td><strong>培田品白鸭汤</strong></td><td>培田古村已有白鸭汤体验项目</td><td>"游客来了必吃"——口碑证明</td></tr>
+      <tr><td><strong>芷溪古宗祠</strong></td><td>鸭场就在芷溪旁边</td><td>"在古村里养鸭"——人文氛围</td></tr>
+      <tr><td><strong>客家美食名城</strong></td><td>120多种客家美食，白鸭汤是招牌</td><td>"连城人从小喝到大的鸭汤"——国民认知</td></tr>
+    </tbody>
+  </table>
+
+  <h4>政府合作方向</h4>
+
+  <table class="data-table">
+    <thead><tr><th>方向</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>融入"两核一区一带一走廊"</strong></td><td>连城文旅格局以冠豸山+培田为核心，曼纽考基地在"环梅花山乡村旅游示范带"和"红色绿色古色研学体验走廊"范围内，可争取纳入官方旅游线路</td></tr>
+      <tr><td><strong>红色研学基地合作</strong></td><td>新泉镇正建设"新泉红色教育研学基地"，曼纽考新泉工厂可作为"产业研学"站点，与红色研学形成互补</td></tr>
+      <tr><td><strong>温泉康养+食补</strong></td><td>天一温泉已是省劳模疗休养基地，可联合推出"温泉+白鸭食补"康养套餐，对接机关/企业疗休养采购</td></tr>
+      <tr><td><strong>GIAHS申报</strong></td><td>曼纽考正在申报联合国全球重要农业文化遗产，与连城"文旅富县"战略高度契合，政府有动力支持</td></tr>
+      <tr><td><strong>富硒农产品品牌</strong></td><td>连城正打造富硒农产品区域品牌，可借势"中国客家硒都"统一推广</td></tr>
+      <tr><td><strong>非遗+白鸭联名</strong></td><td>连城非遗三登央视（姑田游大龙/罗坊走古事/芷溪花灯），全网曝光5亿次，可做"非遗+白鸭"联名礼盒</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 08 CONTENT MATERIALS ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">08</span>
+    <h2>内容素材速查表</h2>
+    <div class="subtitle">CONTENT MATERIAL REFERENCE</div>
+  </div>
+
+  <h3>8.1 短视频选题库</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>类别</th><th>选题</th><th>关键画面/卖点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="tag tag-primary">品牌故事</span></td><td>连城白鸭曾不足30只</td><td>保种故事，濒危→产业化</td></tr>
+      <tr><td><span class="tag tag-primary">品牌故事</span></td><td>元代药膳记载</td><td>《十药神书》"壬字白凤膏"</td></tr>
+      <tr><td><span class="tag tag-primary">品牌故事</span></td><td>金砖国宴菜</td><td>国宴级别背书</td></tr>
+      <tr><td><span class="tag tag-primary">品牌故事</span></td><td>国家地理标志</td><td>离开连城就退化，"橘生淮南"</td></tr>
+      <tr><td><span class="tag tag-blue">养殖揭秘</span></td><td>为什么我们的鸭场不臭</td><td>藻"围"上去消纳鸭粪</td></tr>
+      <tr><td><span class="tag tag-blue">养殖揭秘</span></td><td>鸭子的一天</td><td>晨起嬉水→白天戏水→夜间产蛋</td></tr>
+      <tr><td><span class="tag tag-blue">养殖揭秘</span></td><td>4层立体鸭舍</td><td>天桥跳水，人均效率提升20倍</td></tr>
+      <tr><td><span class="tag tag-blue">养殖揭秘</span></td><td>日本进口分蛋机</td><td>中国境内唯二，异物捡出率99.5%</td></tr>
+      <tr><td><span class="tag tag-accent">产品卖点</span></td><td>三文鱼刺身样圈纹蛋黄</td><td>切开蛋黄随时间变色</td></tr>
+      <tr><td><span class="tag tag-accent">产品卖点</span></td><td>清煮不腥的秘密</td><td>水源+饲料+藻</td></tr>
+      <tr><td><span class="tag tag-accent">产品卖点</span></td><td>DHA≥200mg/100g</td><td>一颗蛋满足婴幼儿每日DHA需求</td></tr>
+      <tr><td><span class="tag tag-accent">产品卖点</span></td><td>全程无抗NAE</td><td>不是检测无抗，是真的不用</td></tr>
+      <tr><td>场景化</td><td>清水加盐炖鸭汤</td><td>汤清淡清亮 vs 传统浑浊油重</td></tr>
+      <tr><td>场景化</td><td>鸭蛋水煮剥壳</td><td>蛋白Q弹，宛如白玉</td></tr>
+      <tr><td>场景化</td><td>水培菜采摘</td><td>无土栽培，30亩日产10吨</td></tr>
+      <tr><td><span class="tag tag-primary">热点结合</span></td><td>碳中和</td><td>藻+菜吸收CO₂&gt;鸭排放</td></tr>
+      <tr><td><span class="tag tag-primary">热点结合</span></td><td>动物福利</td><td>非笼养，鸭子可以戏水</td></tr>
+      <tr><td><span class="tag tag-primary">热点结合</span></td><td>3050计划</td><td>绿色生态可持续农业</td></tr>
+      <tr><td>趣味</td><td>鸭子排队产蛋</td><td>"传宗接代"的事</td></tr>
+      <tr><td>趣味</td><td>鸭子晨起梳妆打扮</td><td>"跟大姑娘家的一样"</td></tr>
+      <tr><td>趣味</td><td>农场忙着捞鱼不拉粪</td><td>藻→鱼→替代粪污处理</td></tr>
+      <tr><td><span class="tag tag-blue">私域/面馆</span></td><td>厦门面馆探店</td><td>现煮鸭汤+切蛋黄圈纹+顾客反应</td></tr>
+      <tr><td><span class="tag tag-blue">私域/面馆</span></td><td>一碗面背后的连城白鸭</td><td>从农场到面馆的溯源故事</td></tr>
+      <tr><td><span class="tag tag-accent">创始人</span></td><td>赖博士为什么去养鸭</td><td>27年脂质技术→落地养鸭的故事</td></tr>
+      <tr><td><span class="tag tag-accent">创始人</span></td><td>"赖博士"的鸭蛋课</td><td>用专业视角讲一个产品知识点</td></tr>
+      <tr><td><span class="tag tag-red">年卡</span></td><td>2500元买750枚蛋值不值</td><td>算账型内容，对比零售价</td></tr>
+      <tr><td><span class="tag tag-red">年卡</span></td><td>企业年终福利新选择</td><td>年卡分次配送=不囤货+有面子</td></tr>
+      <tr><td><span class="tag tag-primary">在地资源</span></td><td>习近平点赞的鸭</td><td>连城白鸭得到总书记点赞 <span class="tag tag-red">⚠️谨慎使用</span></td></tr>
+      <tr><td><span class="tag tag-primary">在地资源</span></td><td>喝温泉水长大的鸭</td><td>连城是中国温泉之城，鸭场水源与温泉同脉</td></tr>
+      <tr><td><span class="tag tag-primary">在地资源</span></td><td>富硒土地养的鸭</td><td>连城是中国客家硒都，白鸭天然富硒</td></tr>
+      <tr><td><span class="tag tag-primary">在地资源</span></td><td>在古村旁边养鸭</td><td>芷溪74座古宗祠旁就是种鸭场</td></tr>
+      <tr><td><span class="tag tag-primary">在地资源</span></td><td>三江源头养出来的鸭</td><td>森林覆盖率81.47%，山泉水直饮</td></tr>
+      <tr><td><span class="tag tag-blue">农文旅</span></td><td>连城白鸭美食地图</td><td>从培田白鸭汤到新泉白鸭宴</td></tr>
+      <tr><td><span class="tag tag-blue">农文旅</span></td><td>红色新泉+白鸭工厂</td><td>新泉整训→白鸭产业园一条线</td></tr>
+      <tr><td><span class="tag tag-blue">农文旅</span></td><td>泡温泉吃白鸭</td><td>天一温泉+白鸭食补康养套餐</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.2 合规口径提醒</h3>
+
+  <table class="data-table">
+    <thead><tr><th>事项</th><th>要求</th></tr></thead>
+    <tbody>
+      <tr><td>DHA具体数值</td><td>使用"≥200mg/100g"，具体检测数据向虞业凌（QA&QC）确认</td></tr>
+      <tr><td>"无抗"表述</td><td>可说"全程无抗NAE"，不可说"绝对零残留"等绝对化用语</td></tr>
+      <tr><td>"药膳"表述</td><td>可引用元代《十药神书》历史记载，不可宣称治疗效果</td></tr>
+      <tr><td>"国宴菜"</td><td>可说"厦门金砖会议国宴菜"</td></tr>
+      <tr><td>专利数据</td><td>引用前向虞业凌确认专利号和状态（授权/实审/受理）</td></tr>
+      <tr><td>产量数据</td><td>仙坪场当前2万余只，日产蛋约15000枚，设计容量10万只</td></tr>
+      <tr><td>竞品对比</td><td>不可点名恶意中伤同行，用"行业普遍情况"表述</td></tr>
+      <tr><td>价格信息</td><td>向郑定邦（市场）或段平泽（财务）确认后发布</td></tr>
+      <tr><td><strong>"习近平点赞"</strong></td><td>连城白鸭得到总书记点赞属实，但对外宣传使用领导人言论需严格遵循宣传纪律，<strong>使用前必须经范丁寿/赖仲经（对外关系）审核</strong>，不可擅自用于商业广告</td></tr>
+      <tr><td>"富硒"表述</td><td>连城是富硒县属实，但具体含量数据需向QA&QC确认，不可夸大</td></tr>
+      <tr><td>"温泉水养鸭"</td><td>鸭场水源为山泉水，与温泉同脉但不等于直接喂温泉水，表述需准确</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.3 关键对接人速查</h3>
+
+  <table class="data-table">
+    <thead><tr><th>需求</th><th>找谁</th></tr></thead>
+    <tbody>
+      <tr><td>基地拍摄协调</td><td>邓贵华（养殖）</td></tr>
+      <tr><td>检测报告/技术数据</td><td>虞业凌（QA&QC）</td></tr>
+      <tr><td>产品价格/活动</td><td>郑定邦（市场）</td></tr>
+      <tr><td>预算/报销</td><td>段平泽（财务）</td></tr>
+      <tr><td>日常协调/汇报</td><td>王辉（总经理助理）</td></tr>
+      <tr><td>品牌物料/人事</td><td>赖仲经（综合行政人力）</td></tr>
+      <tr><td>政府/媒体接待</td><td>范丁寿、王辉、赖仲经</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 09 GLOSSARY & FAQ ===== -->
+<div class="page">
+  <div class="section-header">
+    <span class="section-number">09</span>
+    <h2>附录：关键术语与 FAQ</h2>
+    <div class="subtitle">GLOSSARY & FAQ</div>
+  </div>
+
+  <h3>9.1 术语表</h3>
+
+  <table class="data-table">
+    <thead><tr><th>术语</th><th>全称/释义</th></tr></thead>
+    <tbody>
+      <tr><td><strong>NAE</strong></td><td>No Antibiotics Ever，养殖全程无抗（不是检测时无抗，是从头到尾不用）</td></tr>
+      <tr><td><strong>DHA</strong></td><td>二十二碳六烯酸，Omega-3脂肪酸的一种，促进大脑发育和视力保护</td></tr>
+      <tr><td><strong>GIAHS</strong></td><td>Global Important Agricultural Heritage Systems，联合国全球重要农业文化遗产</td></tr>
+      <tr><td><strong>丁壮素</strong></td><td>新奥核心产品，丁酸制剂，肠道健康，亚洲产销首位</td></tr>
+      <tr><td><strong>脂壮素</strong></td><td>新奥产品，纳米级微乳液，抑菌抗病毒，全程无抗NAE核心</td></tr>
+      <tr><td><strong>脂来安</strong></td><td>新奥产品，微囊包被型MCT（中链甘油三酯）</td></tr>
+      <tr><td><strong>傲清腥</strong></td><td>新奥饲用脂质制剂，去除鸭蛋腥味</td></tr>
+      <tr><td><strong>小球藻</strong></td><td>微藻的一种，每日繁殖8倍，消纳鸭粪、吸收CO₂</td></tr>
+      <tr><td><strong>浮萍</strong></td><td>Duckweed，水生植物，快速生长，反哺饲喂鸭子</td></tr>
+      <tr><td><strong>3050计划</strong></td><td>中国2030年碳达峰、2050年碳中和目标</td></tr>
+      <tr><td><strong>地标</strong></td><td>国家地理标志保护产品</td></tr>
+      <tr><td><strong>4级地表水</strong></td><td>《地表水环境质量标准》IV类，适用于一般工业用水和人体非直接接触娱乐用水</td></tr>
+    </tbody>
+  </table>
+
+  <h3>9.2 常见问题 FAQ</h3>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：为什么连城白鸭不能笼养？</div>
+    <div class="faq-a">连城白鸭是水鸭，野性足，天性需要嬉水。笼养会导致生理应激、羽毛退化、产蛋率下降。欧美国家已逐步禁止笼养家禽，我们的模式提前符合了动物福利趋势。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：全程无抗和市面上的"无抗"有什么区别？</div>
+    <div class="faq-a">市面上的"无抗"通常指蛋品检测时抗生素残留不超过5ppm（即养殖期间可能用了药，只是停药期够长）。我们的NAE是<strong>从种鸭到产蛋鸭全程不使用任何抗生素</strong>，5年未发生任何疫病，靠的是新奥脂质营养健康方案（脂来安等）替代疫苗和兽药。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：鸭蛋不腥是怎么做到的？</div>
+    <div class="faq-a">三个因素——①养鸭水源清洁（山泉水）；②全程使用新奥控缓释纳米级脂质制剂（酸乳+傲清腥）；③藻工厂生态系统维持水质。三者缺一不可。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：DHA是怎么"富集"到鸭蛋里的？</div>
+    <div class="faq-a">通过新奥的定效配脂技术+纳米脂质制剂技术，在饲料中添加特定脂质营养方案，鸭子吸收后DHA富集到蛋黄中，呈现三文鱼刺身样的圈纹。DHA≥200mg/100g。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：鸭场真的不臭吗？</div>
+    <div class="faq-a">是的。鸭粪通过漏粪板直接排入水中，小球藻"以1变8"的速度繁殖，立即"围"上去消纳鸭粪，转化为藻体。整个鸭场闻不到传统鸭场的臭味。这也是为什么我们说"农场忙着捞鱼，而不是拉粪"。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：碳中和怎么算的？</div>
+    <div class="faq-a">排放端=鸭子呼出CO₂+水面蒸发碳排放。吸收端=微藻吸收CO₂（每日8倍繁殖）+浮萍吸收+蔬菜吸收。吸收&gt;排放=碳中和。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：模式和"稻鸭共生"有什么区别？</div>
+    <div class="faq-a">稻鸭共生是稻田里养鸭，鸭粪肥田，但规模有限、无法标准化、无法做到全程无抗。我们的立体生态净养模式是4层立体鸭舍+戏水池+藻工厂+水培菜，规模化、标准化、全程无抗、碳中和，人均效率提升20倍。</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Q：为什么说破解了"不可能三角"？</div>
+    <div class="faq-a">地标产品（如连城白鸭）通常面临"规模-生态-品质"不可能三角：要规模化就牺牲生态和品质，要生态就难以规模化。曼纽考通过立体生态净养模式+新奥脂质技术，同时实现了规模化（10万只/场）、生态（碳中和、零排放）和品质（全程无抗、DHA富集），破解了这个三角。</div>
+  </div>
+
+  <div style="margin: 30px 0;"></div>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">⚠️ 待补充项</div>
+    <ul style="margin:8px 0 0">
+      <li>犊牛腹泻相关资料（新奥丁壮素/脂壮素在幼畜肠道健康方面的应用）——向技术中心确认</li>
+      <li>新泉工厂最新建设进度——向范丁寿确认</li>
+      <li>各鸭场最新存栏数据——向邓贵华确认</li>
+      <li>电商渠道具体合作方（厦门夏商、元初等）——向市场部确认</li>
+      <li>用户参观基地拍摄的照片中的具体信息——待图片查看后补充</li>
+    </ul>
+  </div>
+
+  <p style="text-align: center; color: var(--text-light); font-size: 14px;">— 文档完 —</p>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="report-footer">
+  <p><strong>新奥·曼纽考 内部学习交流资料</strong></p>
+  <p style="margin-top:8px; opacity:0.6;">基于公司PPT、GIAHS申请报告、运营手册及公开行业资料整理</p>
+  <p style="margin-top:4px; opacity:0.6;">2026年7月 · 内部学习资料 · 仅供交流参考</p>
+  <p style="margin-top:4px; opacity:0.6;">技术数据变更需QA&QC（虞业凌）确认</p>
+</div>
+
+</body>
+</html>
