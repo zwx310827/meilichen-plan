@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电商机会分析 · 六维判断框架</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #fff;
+    --text: #2d3436;
+    --muted: #636e72;
+    --accent: #0984e3;
+    --green: #00b894;
+    --yellow: #fdcb6e;
+    --red: #d63031;
+    --border: #dfe6e9;
+    --shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0c2461 0%, #1e3799 40%, #0984e3 100%);
+    color: #fff; padding: 60px 24px 48px; text-align: center;
+  }
+  .hero h1 { font-size: 2rem; margin-bottom: 8px; letter-spacing: 1px; }
+  .hero .sub { opacity: .8; font-size: .95rem; margin-bottom: 24px; }
+  .hero .badge-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .hero .badge {
+    background: rgba(255,255,255,.15); backdrop-filter: blur(4px);
+    padding: 5px 14px; border-radius: 20px; font-size: .82rem;
+  }
+
+  /* Container */
+  .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* Dimension card */
+  .dim { background:var(--card); border-radius: 12px; margin-bottom: 28px;
+         box-shadow: var(--shadow); overflow: hidden; }
+  .dim-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 24px; cursor: default;
+  }
+  .dim-num {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.15rem; color: #fff; flex-shrink: 0;
+  }
+  .dim:nth-child(1) .dim-num { background: #0984e3; }
+  .dim:nth-child(2) .dim-num { background: #6c5ce7; }
+  .dim:nth-child(3) .dim-num { background: #e17055; }
+  .dim:nth-child(4) .dim-num { background: #00b894; }
+  .dim:nth-child(5) .dim-num { background: #fdcb6e; color: #2d3436; }
+  .dim:nth-child(6) .dim-num { background: #636e72; }
+
+  .dim-title { font-size: 1.1rem; font-weight: 700; }
+  .dim-sub  { font-size: .82rem; color: var(--muted); }
+  .dim-body { padding: 0 24px 24px; }
+  .dim-body p { margin-bottom: 2px; }
+
+  /* Fields */
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: .85rem; font-weight: 600;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .field label .q { color: var(--accent); margin-right: 4px; }
+  .field input, .field textarea, .field select {
+    width: 100%; border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 12px; font-size: .92rem; font-family: inherit;
+    background: #fafbfc; transition: border .2s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none; border-color: var(--accent); background: #fff;
+  }
+  .field textarea { min-height: 70px; resize: vertical; }
+  .field .hint { font-size: .78rem; color: var(--muted); margin-top: 3px; }
+
+  /* Row */
+  .row { display: flex; gap: 12px; }
+  .row .field { flex: 1; }
+
+  /* Alert boxes */
+  .alert { padding: 14px 18px; border-radius: 8px; font-size: .88rem; margin: 16px 0; }
+  .alert-green  { background: #e6f9f2; color: #007a5a; border-left: 4px solid var(--green); }
+  .alert-yellow { background: #fef9e7; color: #8a6d14; border-left: 4px solid var(--yellow); }
+  .alert-red    { background: #fdecea; color: #a52a2a; border-left: 4px solid var(--red); }
+  .alert strong { display: block; margin-bottom: 2px; }
+
+  /* Table */
+  .mini-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .86rem; }
+  .mini-table th { background: #f1f2f6; padding: 8px 10px; text-align: left; font-weight: 600; }
+  .mini-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .mini-table input { width: 100%; border: none; background: transparent; padding: 4px 0; font-size: .86rem; }
+
+  /* Verdict */
+  .verdict { text-align: center; padding: 40px 20px; }
+  .verdict .icon { font-size: 3rem; margin-bottom: 12px; }
+  .verdict textarea { width: 100%; max-width: 500px; min-height: 80px;
+    border: 2px dashed var(--border); border-radius: 8px; padding: 12px;
+    font-size: 1rem; text-align: center; font-family: inherit; resize: vertical; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .hero { background: #0c2461 !important; -webkit-print-color-adjust: exact; }
+    .dim { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    input, textarea { border: 1px dashed #ccc; }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.4rem; }
+    .row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <h1>🔍 电商机会分析 · 六维判断框架</h1>
+  <p class="sub">从宠物赛道电商分析提炼 · 通用可复用模板</p>
+  <div class="badge-row">
+    <span class="badge">① 成本结构</span>
+    <span class="badge">② 产品矩阵</span>
+    <span class="badge">③ 流量内容</span>
+    <span class="badge">④ 达人渠道</span>
+    <span class="badge">⑤ 投入回报</span>
+    <span class="badge">⑥ 平台路径</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════ DIM 1: 成本结构 ═══════ -->
+<div class="dim">
+  <div class="dim-header">
+    <div class="dim-num">①</div>
+    <div>
+      <div class="dim-title">产品与成本结构</div>
+      <div class="dim-sub">判断能不能做电商的第一关——算账</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 产品名称 + 一句话核心卖点</label>
+        <input type="text" placeholder="例：连城白鸭DHA富集蛋 / 每枚含DHA 120mg，水煮无腥">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 单件完全成本（含原料/生产/包装）</label>
+        <input type="text" placeholder="例：2.4元/枚">
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 竞品平台售价范围</label>
+        <input type="text" placeholder="例：普通蛋 1.5-2元 / 高端蛋 4-8元">
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 你的目标售价</label>
+        <input type="text" placeholder="例：5元/枚（30枚礼盒装150元）">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 毛利率 =（售价 - 成本）/ 售价</label>
+        <input type="text" placeholder="例：(5-2.4)/5 = 52%">
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 物流包装单件成本</label>
+        <input type="text" placeholder="例：珍珠棉+纸箱 ≈ 3元/单">
+      </div>
+    </div>
+
+    <div class="alert alert-yellow">
+      <strong>⚠️ 判断线：毛利率 ≥ 50% 才适合平台电商</strong>
+      理由：投流成本通常占售价 50-73%（参考：宠物喷雾 52.5%，沐浴露 72.7%）。<br>
+      毛利率不够 → 考虑私域/社群分销/内容电商（省去投流费）。
+    </div>
+
+    <div class="field">
+      <label>📝 成本结构判断结论</label>
+      <textarea placeholder="例：毛利率52%，刚好过线。但扣除物流后利润空间薄，建议不碰纯平台电商，走内容+私域模式。" style="min-height:50px"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DIM 2: 产品矩阵 ═══════ -->
+<div class="dim">
+  <div class="dim-header">
+    <div class="dim-num">②</div>
+    <div>
+      <div class="dim-title">产品矩阵设计</div>
+      <div class="dim-sub">不能只卖一个东西——四层金字塔</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <table class="mini-table">
+      <tr>
+        <th style="width:12%">层级</th>
+        <th style="width:20%">产品名称</th>
+        <th style="width:13%">定价</th>
+        <th style="width:13%">毛利率</th>
+        <th>作用 & 说明</th>
+      </tr>
+      <tr>
+        <td><strong>🔻 引流品</strong></td>
+        <td><input type="text" placeholder="例：1元试吃蛋（2枚装）"></td>
+        <td><input type="text" placeholder="1-9.9元"></td>
+        <td><input type="text" placeholder="负毛利/0毛利"></td>
+        <td><input type="text" placeholder="降低首次尝试门槛，不靠这个赚钱"></td>
+      </tr>
+      <tr>
+        <td><strong>🔄 复购品</strong></td>
+        <td><input type="text" placeholder="例：DHA蛋月卡（30枚/月）"></td>
+        <td><input type="text" placeholder="市场均价"></td>
+        <td><input type="text" placeholder="薄利"></td>
+        <td><input type="text" placeholder="日常消耗，锁住老客，稳定现金流"></td>
+      </tr>
+      <tr>
+        <td><strong>💰 利润品</strong></td>
+        <td><input type="text" placeholder="例：DHA蛋礼盒（30枚+检测报告）"></td>
+        <td><input type="text" placeholder="高于均价30-50%"></td>
+        <td><input type="text" placeholder="高毛利"></td>
+        <td><input type="text" placeholder="送礼场景/组合装/定制款，拉高客单价"></td>
+      </tr>
+      <tr>
+        <td><strong>🏰 壁垒品</strong></td>
+        <td><input type="text" placeholder="例：连城白鸭整鸭（GIAHS+药膳）"></td>
+        <td><input type="text" placeholder="你定"></td>
+        <td><input type="text" placeholder="最高毛利"></td>
+        <td><input type="text" placeholder="独家不可复制：专利/资质/产地/IP/技术"></td>
+      </tr>
+    </table>
+
+    <div class="alert alert-green">
+      <strong>💡 核心逻辑</strong>
+      引流品负责"拉新"，复购品负责"锁客"，利润品赚"大头"，壁垒品保证"只有你能赚"。四层缺一不穩。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DIM 3: 流量内容 ═══════ -->
+<div class="dim">
+  <div class="dim-header">
+    <div class="dim-num">③</div>
+    <div>
+      <div class="dim-title">流量与内容策略</div>
+      <div class="dim-sub">内容能力 = 电商发动机，没有内容就没有流量</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 目标用户画像（谁在买？刷什么平台？）</label>
+        <input type="text" placeholder="例：30-45岁宝妈，关注食品安全，刷视频号+抖音">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 产品能用短视频展示吗？</label>
+        <select>
+          <option>✅ 非常适合（有视觉冲击/使用场景/前后对比）</option>
+          <option>⚠️ 一般（需要包装故事，产品本身不够直观）</option>
+          <option>❌ 很难（太抽象/太B端，拍不出画面感）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 有没有能出镜的人？</label>
+        <select>
+          <option>✅ 创始人/专家本人愿意出镜</option>
+          <option>⚠️ 有产品但没有IP人设，需要用其他方式</option>
+          <option>❌ 没有出镜人选，只能纯产品展示</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="q">Q</span> 内容方向选择（可多选）</label>
+      <textarea placeholder="☐ 知识科普（如：蛋黄圈纹代表什么 / DHA怎么选）&#10;☐ 场景种草（如：宝宝第一次吃DHA蛋 / 水煮无腥实测）&#10;☐ 创始人故事（如：中国农大博士回乡养鸭）&#10;☐ 生产过程（如：6万只鸭一人管 / 立体生态净养）&#10;☐ 测评对比（如：黄天鹅 vs 欧米伽博士 蛋黄对比）&#10;☐ 用户证言（如：宝妈反馈孩子爱吃）"></textarea>
+    </div>
+
+    <div class="alert alert-yellow">
+      <strong>⚠️ 关键判断</strong>
+      如果产品不适合短视频展示 + 没有人能出镜 + 没有内容创意 → 电商很难做。<br>
+      参考数据：宠物白牌产品 95%+ 销量来自<strong>短视频带货</strong>，不是直播，不是搜索。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DIM 4: 达人渠道 ═══════ -->
+<div class="dim">
+  <div class="dim-header">
+    <div class="dim-num">④</div>
+    <div>
+      <div class="dim-title">达人 / 渠道矩阵</div>
+      <div class="dim-sub">自己拍100条，不如100个达人各拍1条</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 品类里有无带货达人？预估数量？</label>
+        <input type="text" placeholder="例：食品/生鲜类达人多，精准讲DHA的少 ≈ 50-80人">
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 达人合作模式？</label>
+        <select>
+          <option>纯佣金制（按成交额分成，无固定费用）—— 推荐起步</option>
+          <option>坑位费+佣金（固定费用+分成）—— 适合成熟期</option>
+          <option>自建账号矩阵（自己做多个号）—— 适合有内容团队</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 初期目标达人规模</label>
+        <input type="text" placeholder="例：第一阶段 20-30个达人测品 → 成熟期 100+达人">
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 可承受的佣金比例</label>
+        <input type="text" placeholder="例：15-25%（高毛利品类可到30%）">
+      </div>
+    </div>
+
+    <table class="mini-table">
+      <tr><th>达人规模</th><th>月销预期</th><th>适合阶段</th></tr>
+      <tr><td>20-50人</td><td>5-10W</td><td>冷启动测品</td></tr>
+      <tr><td>50-100人</td><td>10-25W</td><td>白牌起步期</td></tr>
+      <tr><td>200+人</td><td>50W+</td><td>白牌成熟期</td></tr>
+      <tr><td>100+人+直播</td><td>100W+</td><td>品牌成熟期</td></tr>
+    </table>
+
+    <div class="alert alert-green">
+      <strong>💡 起步建议</strong>
+      先从纯佣金达人切入（试错成本最低），测出哪个达人类型 + 哪类内容转化好，再考虑建自有账号矩阵。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DIM 5: 投入回报 ═══════ -->
+<div class="dim">
+  <div class="dim-header">
+    <div class="dim-num">⑤</div>
+    <div>
+      <div class="dim-title">投入与回报周期</div>
+      <div class="dim-sub">电商没有"上架就赚钱"，心理预期拉到半年以上</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <div class="row">
+      <div class="field">
+        <label><span class="q">Q</span> 启动期预算（含内容团队/样品/投流）</label>
+        <input type="text" placeholder="例：10万（内容2万+达人样品1万+投流7万）">
+      </div>
+      <div class="field">
+        <label><span class="q">Q</span> 可接受最长亏损周期</label>
+        <input type="text" placeholder="例：6个月 / 9个月 / 12个月">
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="q">Q</span> 走哪条路线？</label>
+      <select>
+        <option>白牌跑量：低价+达人矩阵，7个月盈亏平衡，第8月盈利</option>
+        <option>品牌溢价：对标头部+专业壁垒，9-10个月盈亏平衡，1年盈利</option>
+        <option>混合路线：低价引流品+品牌利润品，灵活组合</option>
+        <option>私域路线：不烧投流，用内容拉人进私域做长期复购</option>
+      </select>
+    </div>
+
+    <table class="mini-table">
+      <tr><th></th><th>白牌跑量</th><th>品牌溢价</th></tr>
+      <tr><td>投入期</td><td>1-6月</td><td>1-9月</td></tr>
+      <tr><td>盈亏平衡</td><td>第7月</td><td>第10月</td></tr>
+      <tr><td>开始盈利</td><td>第8月</td><td>第1年</td></tr>
+      <tr><td>扩张期</td><td>第2-3年全平台</td><td>第2-3年全国+海外</td></tr>
+      <tr><td>核心投入</td><td>达人矩阵+投流</td><td>内容体系+品牌认证</td></tr>
+    </table>
+
+    <div class="field" style="margin-top:12px">
+      <label>📝 前6个月关键里程碑</label>
+      <textarea placeholder="M1-M2：搭建内容模板，测试5-10个达人&#10;M3-M4：找出高转化内容公式，达人扩至30人&#10;M5-M6：月销稳定破X万，ROI接近盈亏平衡线"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ DIM 6: 平台路径 ═══════ -->
+<div class="dim">
+  <div class="dim-header">
+    <div class="dim-num">⑥</div>
+    <div>
+      <div class="dim-title">平台策略与扩张路径</div>
+      <div class="dim-sub">单点突破 → 全平台复制 → 出海</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <div class="field">
+      <label><span class="q">Q</span> 起步平台</label>
+      <select>
+        <option>抖音 —— 流量最大、试错成本最低、推荐首选</option>
+        <option>视频号 —— 适合有私域/微信生态基础的项目</option>
+        <option>小红书 —— 适合高颜值/生活方式品类</option>
+        <option>快手 —— 适合下沉市场/农产品/源头好物</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>🗺️ 扩张路径规划</label>
+      <textarea placeholder="阶段1（起步）：抖音单点突破，跑通内容→转化模型&#10;阶段2（第2年）：同步淘宝/京东承接搜索流量 + 视频号做私域闭环&#10;阶段3（第2-3年）：小红书种草矩阵 + 快手下沉市场&#10;阶段4（第3年+）：TikTok / TEMU / 亚马逊出海（如有计划）"></textarea>
+    </div>
+
+    <div class="alert alert-yellow">
+      <strong>⚠️ 原则</strong>
+      不要在起步阶段全平台铺开——资源和精力撑不住。<br>
+      哪个平台先出单，就把资源集中到哪个平台，跑通再复制。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ VERDICT ═══════ -->
+<div class="dim" style="border: 2px solid var(--accent);">
+  <div class="dim-header" style="background:#f0f7ff;">
+    <div style="font-size:1.5rem; margin-right:10px;">📋</div>
+    <div>
+      <div class="dim-title">最终判断 & 行动清单</div>
+      <div class="dim-sub">六个维度走完后，做出明确结论</div>
+    </div>
+  </div>
+  <div class="dim-body">
+    <div class="verdict">
+      <div class="icon">
+        <select style="font-size:1.5rem; border:2px dashed var(--border); padding:8px 16px; border-radius:8px; text-align:center;">
+          <option>✅ 适合 —— 建议推进</option>
+          <option>⚠️ 部分可行 —— 需调整策略后推进</option>
+          <option>❌ 不适合 —— 当前阶段不建议做</option>
+        </select>
+      </div>
+      <textarea placeholder="一句话理由：为什么适合/不适合？"></textarea>
+    </div>
+
+    <div class="field">
+      <label>📝 三大核心风险</label>
+      <textarea placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>✅ 下一步执行清单（优先级排序）</label>
+      <textarea placeholder="1. [本周] ...&#10;2. [本月] ...&#10;3. [下月] ...&#10;4. [三月内] ...&#10;5. [半年内] ..."></textarea>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>项目名称</label>
+        <input type="text" placeholder="例：欧米伽博士DHA蛋电商化">
+      </div>
+      <div class="field">
+        <label>评估日期</label>
+        <input type="text" placeholder="2026-07-13">
+      </div>
+      <div class="field">
+        <label>评估人</label>
+        <input type="text">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; color:var(--muted); font-size:.8rem; padding:20px 0;">
+  <p>基于新奥宠物电商赛道分析提炼 · 通用电商判断框架 v1.0</p>
+  <p>核心数据来源：抖音/淘宝/京东/视频号宠物护理品类30天经营数据</p>
+</div>
+
+</div>
+</body>
+</html>
