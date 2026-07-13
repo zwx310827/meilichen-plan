@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>线上运营工作方向沟通会 · 议题清单</title>
+<style>
+  :root {
+    --primary: #1a5c3a;
+    --primary-light: #2d8659;
+    --primary-dark: #0d3d24;
+    --accent: #c89b3c;
+    --accent-light: #e0b856;
+    --bg: #faf9f6;
+    --card: #ffffff;
+    --card-hover: #f5f7f5;
+    --text: #2c2c2c;
+    --text-dim: #666;
+    --text-muted: #999;
+    --red: #c0392b;
+    --orange: #d4943a;
+    --blue: #2980b9;
+    --green-ok: #27ae60;
+    --border: #e0ddd5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Toolbar */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,249,246,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    margin: -40px -20px 32px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .toolbar-left { display: flex; gap: 10px; align-items: center; }
+  .toolbar-right { display: flex; gap: 8px; }
+  .btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--card-hover); color: var(--primary); border-color: var(--primary); }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .btn-primary:hover { background: var(--primary-light); border-color: var(--primary-light); color: #fff; }
+  .btn-danger { color: var(--red); border-color: rgba(199,84,80,0.3); }
+  .btn-danger:hover { background: rgba(199,84,80,0.15); color: #e8807a; }
+  .save-status {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: 8px;
+  }
+  .save-status.saved { color: var(--green-ok); }
+  /* Cover */
+  .cover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    margin-bottom: 40px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .cover-label {
+    color: var(--accent-light);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .cover h1 {
+    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .cover .subtitle {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+  }
+  .cover-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item { text-align: center; }
+  .cover-meta-item .label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+  .cover-meta-item .value {
+    font-size: 14px;
+    color: var(--accent-light);
+  }
+  .cover-meta-item .value[contenteditable]:focus {
+    outline: 1px dashed var(--accent-light);
+    border-radius: 3px;
+  }
+
+  /* Section */
+  .agenda-section { margin-bottom: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(200,155,60,0.3);
+    line-height: 1;
+    min-width: 48px;
+  }
+  .section-title {
+    font-size: 19px;
+    color: var(--primary);
+    font-weight: 600;
+    outline: none;
+  }
+  .section-title[contenteditable]:focus {
+    outline: 1px dashed var(--primary);
+    border-radius: 3px;
+  }
+  .section-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .agenda-section:hover .section-actions { opacity: 1; }
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .icon-btn:hover { color: var(--primary); border-color: var(--primary); }
+
+  /* Topic */
+  .topic {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    position: relative;
+  }
+  .topic:hover { background: var(--card-hover); border-color: var(--accent); }
+  .topic.resolved { border-left: 3px solid var(--green-ok); }
+  .topic-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .topic-title {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 600;
+    flex: 1;
+    outline: none;
+  }
+  .topic-title[contenteditable]:focus {
+    outline: 1px dashed var(--primary);
+    border-radius: 3px;
+  }
+  .badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+  }
+  .badge-must { background: rgba(192,57,43,0.1); color: var(--red); }
+  .badge-should { background: rgba(212,148,58,0.12); color: var(--orange); }
+  .badge-nice { background: rgba(41,128,185,0.1); color: var(--blue); }
+  .badge-done { background: rgba(39,174,96,0.12); color: var(--green-ok); }
+
+  .topic-detail {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    outline: none;
+  }
+  .topic-detail[contenteditable]:focus {
+    outline: 1px dashed var(--primary);
+    border-radius: 3px;
+  }
+  .topic-detail ul { padding-left: 18px; margin: 6px 0; }
+  .topic-detail li { margin-bottom: 4px; }
+  .topic-detail strong { color: var(--accent); }
+  .topic-note {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(192,57,43,0.05);
+    border-left: 2px solid var(--red);
+    border-radius: 4px;
+    font-size: 12px;
+    color: #b03a2e;
+  }
+
+  /* Answer area */
+  .answer-box {
+    margin-top: 12px;
+    border-top: 1px dashed rgba(201,169,97,0.15);
+    padding-top: 12px;
+  }
+  .answer-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .answer-label::before {
+    content: '\2713';
+    color: var(--green-ok);
+    font-size: 13px;
+  }
+  .answer-input {
+    width: 100%;
+    background: #f8f9fa;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 44px;
+    transition: border 0.2s;
+  }
+  .answer-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #ffffff;
+  }
+  .answer-input::placeholder { color: var(--text-muted); font-style: italic; }
+
+  /* Topic actions */
+  .topic-actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .topic:hover .topic-actions { opacity: 1; }
+
+  /* Add topic button */
+  .add-topic-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+  .add-topic-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(26,92,58,0.03);
+  }
+
+  /* Add section button */
+  .add-section-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+    padding: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s;
+    margin-bottom: 36px;
+  }
+  .add-section-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(26,92,58,0.03);
+  }
+
+  /* Summary */
+  .summary-box {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 40px;
+    border: 1px solid var(--border);
+  }
+  .summary-box h3 {
+    color: var(--accent-light);
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  .summary-box ol { padding-left: 20px; }
+  .summary-box li {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 8px;
+    line-height: 1.8;
+  }
+  .summary-box li strong { color: var(--accent-light); }
+
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; color: black; padding: 0; }
+    .toolbar, .add-topic-btn, .add-section-btn, .section-actions, .topic-actions { display: none !important; }
+    .topic { border: 1px solid #ccc !important; background: white !important; color: black !important; }
+    .topic-title { color: black !important; }
+    .topic-detail { color: #333 !important; }
+    .answer-input { background: #f9f9f9 !important; color: black !important; border: 1px solid #ccc !important; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .summary-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 640px) {
+    .cover h1 { font-size: 22px; }
+    .cover-meta { gap: 16px; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="btn btn-primary" onclick="addSection()">+ 新增议题板块</button>
+      <span class="save-status" id="saveStatus">已自动保存</span>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn" onclick="window.print()">打印 / 导出PDF</button>
+      <button class="btn btn-danger" onclick="resetAll()">重置</button>
+    </div>
+  </div>
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="cover-label">工作沟通会</div>
+    <h1>线上运营工作方向沟通会</h1>
+    <div class="subtitle">议题清单 · 会议记录</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">日期</div>
+        <div class="value" contenteditable="true" data-field="date">2026年7月13日</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">参会人员</div>
+        <div class="value" contenteditable="true" data-field="attendees">线上运营 · 总经理助理 · 市场部</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">目标</div>
+        <div class="value">明确工作方向 · 梳理待确认事项</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 议题一 -->
+  <div class="agenda-section" data-section="1">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-title" contenteditable="true">账号与内容方向</div>
+      <div class="section-actions">
+        <button class="icon-btn" onclick="addTopic(this)" title="新增议题">+</button>
+        <button class="icon-btn" onclick="deleteSection(this)" title="删除板块">&times;</button>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="1-1">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">两个账号的定位，我有个初步想法，一起聊聊</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        我先起个头，抛砖引玉，你们从公司资源和销售的角度一起看看：
+        <ul>
+          <li><strong>赖博士养鸭</strong>：赖博士出镜，走专业/技术/产业链方向，主打成品鸭+品牌背书</li>
+          <li><strong>鸭蛋姐</strong>：老板娘出镜，走宝妈共情方向，主打鸭蛋+面馆+辅食场景</li>
+          <li><strong>我这边</strong>：负责线上的执行工作，不出镜，在幕后配合两位</li>
+          <li>大方向、定位、分工，你们觉得行不行？哪里需要调整？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="1-1"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="1-2">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">内容方向，我目前的想法是这样，想听听你们的判断</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        我目前的理解：短期内容先配合销售（成品鸭、年卡），中长线可以往犊牛腹泻/无抗养殖方向走。另外我个人觉得内容还是得去现场拍，光靠线上素材不太够。
+        <ul>
+          <li>方向对不对？优先级你们怎么排？</li>
+          <li>如果要去现场拍，咱们这边谁方便对接？基地大概什么时候能去一趟？有没有现成的素材可以先给我看看？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="1-2"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="1-3">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">咱们之间的协作方式，有些地方我还不太清楚</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        说实话我现在有点一头雾水，因为咱们东西比较杂，很多事我不确定边界在哪。想跟大家对齐一下：
+        <ul>
+          <li><strong>账号的事，最终谁拍板？</strong>我理解是内容专业方向上我可以多出力，但业务方向和合规这块得你们把关。这样分工对吗？</li>
+          <li><strong>如果后面有一些跟内容不直接相关的杂事找过来</strong>，咱们怎么协调优先级？毕竟视频这边也得保证基本的更新频率</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="1-3"></textarea>
+      </div>
+    </div>
+
+    <button class="add-topic-btn" onclick="addTopic(this)">+ 新增议题</button>
+  </div>
+
+  <!-- 议题二 -->
+  <div class="agenda-section" data-section="2">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-title" contenteditable="true">厦门面馆 / 体验店</div>
+      <div class="section-actions">
+        <button class="icon-btn" onclick="addTopic(this)" title="新增议题">+</button>
+        <button class="icon-btn" onclick="deleteSection(this)" title="删除板块">&times;</button>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="2-1">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">面馆/体验店现状</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>目前是否已经开业？还是还在筹备中？</li>
+          <li>具体名称、地址？</li>
+          <li>运营模式（公司自营/合作）？日常负责人？</li>
+          <li>菜单品类和定价区间？</li>
+          <li>是否对外开放？还是仅用于接待？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="2-1"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="2-2">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-should" onclick="cycleBadge(this)">待梳理</span>
+        <div class="topic-title" contenteditable="true">面馆与线上运营的联动</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>面馆是否作为内容拍摄场景？需要什么流程？</li>
+          <li>到店顾客的私域引流方式？（扫码加企微？关注公众号？）</li>
+          <li>是否有"到店体验→线上复购"的转化计划？</li>
+          <li>面馆有没有专属的引流款/套餐？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="2-2"></textarea>
+      </div>
+    </div>
+
+    <button class="add-topic-btn" onclick="addTopic(this)">+ 新增议题</button>
+  </div>
+
+  <!-- 议题三 -->
+  <div class="agenda-section" data-section="3">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-title" contenteditable="true">产品体系与价格口径</div>
+      <div class="section-actions">
+        <button class="icon-btn" onclick="addTopic(this)" title="新增议题">+</button>
+        <button class="icon-btn" onclick="deleteSection(this)" title="删除板块">&times;</button>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="3-1">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">年卡产品名称统一</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        线上商城显示为"25件30枚欧米伽博士蛋"，年卡资料描述为"25盒×30枚连城白鸭蛋礼盒"，两者名称不一致。
+        <ul>
+          <li>年卡对应的产品到底是欧米伽博士品牌款（DHA富集），还是连城白鸭蛋基础款？</li>
+          <li>对外宣传统一使用哪个名称？</li>
+          <li>DHA富集卖点是否适用于年卡产品？宣传口径如何统一？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="3-1"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="3-2">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">养生鸭（¥128）与药膳鸭（¥298）产品差异</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>两者的具体区别？（是否含分割、药膳包、加工方式、重量、包装等）</li>
+          <li>各自的目标客群和主打场景？</li>
+          <li>线上内容讲解时统一口径是什么？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="3-2"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="3-3">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-should" onclick="cycleBadge(this)">待梳理</span>
+        <div class="topic-title" contenteditable="true">DHA含量检测报告</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>是否有最新的第三方检测报告？DHA含量具体数值？</li>
+          <li>对外宣传可使用的数值范围？</li>
+          <li>检测报告是否可用于内容素材？是否需要脱敏处理？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="3-3"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="3-4">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-should" onclick="cycleBadge(this)">待梳理</span>
+        <div class="topic-title" contenteditable="true">线上商城运营细节</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>是否包邮？运费标准？</li>
+          <li>配送方式（常温/冷链）？发货区域限制？</li>
+          <li>售后标准？（蛋破损赔付方式？）</li>
+          <li>是否支持门店自提？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="3-4"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="3-5">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-nice" onclick="cycleBadge(this)">可后续</span>
+        <div class="topic-title" contenteditable="true">礼券 / 消费卡规则</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>卡面规则、有效期、适用门店</li>
+          <li>线上线下是否通兑？</li>
+          <li>企业团购开票流程？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="3-5"></textarea>
+      </div>
+    </div>
+
+    <button class="add-topic-btn" onclick="addTopic(this)">+ 新增议题</button>
+  </div>
+
+  <!-- 议题四 -->
+  <div class="agenda-section" data-section="4">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-title" contenteditable="true">对外宣传合规口径</div>
+      <div class="section-actions">
+        <button class="icon-btn" onclick="addTopic(this)" title="新增议题">+</button>
+        <button class="icon-btn" onclick="deleteSection(this)" title="删除板块">&times;</button>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="4-1">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">领导人相关信息的使用规范</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>该信息在对外内容中能否提及？</li>
+          <li>如果能用，审批流程是什么？找谁审？提前多久提交？</li>
+          <li>是否有已经审核过的标准表述？</li>
+        </ul>
+      </div>
+      <div class="topic-note">
+        使用领导人相关信息需严格遵循宣传纪律，使用前须经对外关系部门审核，不可擅自用于商业广告。
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="4-1"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="4-2">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-should" onclick="cycleBadge(this)">待梳理</span>
+        <div class="topic-title" contenteditable="true">"富硒"表述的数据支撑</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>白鸭蛋的硒含量具体数据？是否有检测报告？</li>
+          <li>对外可以使用"富硒"表述吗？有没有含量标准要求？</li>
+          <li>标准表述方式是什么？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="4-2"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="4-3">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-should" onclick="cycleBadge(this)">待梳理</span>
+        <div class="topic-title" contenteditable="true">"温泉水养鸭"表述准确性</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        鸭场水源为山泉水，与温泉同脉，但不等于直接喂温泉水：
+        <ul>
+          <li>对外可以使用哪种表述方式？</li>
+          <li>标准表述建议怎么写？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="4-3"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="4-4">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-should" onclick="cycleBadge(this)">待梳理</span>
+        <div class="topic-title" contenteditable="true">"无抗"宣传口径</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>对外统一用"全程无抗""无抗NAE"还是其他表述？</li>
+          <li>是否有认证证书可用于内容素材？</li>
+          <li>有没有需要避免使用的表述？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="4-4"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="4-5">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-nice" onclick="cycleBadge(this)">可后续</span>
+        <div class="topic-title" contenteditable="true">内容审核流程</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>日常内容发布前审核流程？审核周期？</li>
+          <li>涉及数据、检测报告、领导人相关的内容是否有额外审批？</li>
+          <li>有没有"不需要审核可以直接发"的内容类型？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="4-5"></textarea>
+      </div>
+    </div>
+
+    <button class="add-topic-btn" onclick="addTopic(this)">+ 新增议题</button>
+  </div>
+
+  <!-- 议题五 -->
+  <div class="agenda-section" data-section="5">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-title" contenteditable="true">其他待确认事项</div>
+      <div class="section-actions">
+        <button class="icon-btn" onclick="addTopic(this)" title="新增议题">+</button>
+        <button class="icon-btn" onclick="deleteSection(this)" title="删除板块">&times;</button>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="5-1">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-nice" onclick="cycleBadge(this)">可后续</span>
+        <div class="topic-title" contenteditable="true">犊牛腹泻相关资料</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        新奥丁壮素/脂壮素在幼畜肠道健康方面有应用，目前资料中暂无相关数据。
+        <ul>
+          <li>是否有相关技术资料？需向技术部门确认</li>
+          <li>该板块内容是否属于线上运营工作范围？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="5-1"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="5-2">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-nice" onclick="cycleBadge(this)">可后续</span>
+        <div class="topic-title" contenteditable="true">新泉工厂建设进度</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>新泉白鸭文化产业园目前建设进度？预计投产时间？</li>
+          <li>日宰5000只屠宰线的验收节点？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="5-2"></textarea>
+      </div>
+    </div>
+
+    <div class="topic" data-topic="5-3">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-nice" onclick="cycleBadge(this)">可后续</span>
+        <div class="topic-title" contenteditable="true">各鸭场最新数据</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">
+        <ul>
+          <li>各鸭场各自最新的存栏量和日产蛋量？</li>
+          <li>旗舰基地目前进展？</li>
+          <li>这些数据对外可以说吗？还是属于内部信息？</li>
+        </ul>
+      </div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="5-3"></textarea>
+      </div>
+    </div>
+
+    <button class="add-topic-btn" onclick="addTopic(this)">+ 新增议题</button>
+  </div>
+
+  <button class="add-section-btn" onclick="addSection()">+ 新增议题板块</button>
+
+  <!-- 说明 -->
+  <div class="summary-box">
+    <h3>议题说明</h3>
+    <ol>
+      <li><strong>优先级</strong>：标"需明确"的为本次会议核心议题，争取会上明确方向；标"待梳理"的争取给出时间节点；标"可后续"的记录后推进。点击标签可切换状态。</li>
+      <li><strong>交互功能</strong>：所有标题、问题描述均可直接点击编辑；每个议题下方有"会议记录"输入框，会上可直接输入；可随时新增/删除议题和板块。</li>
+      <li><strong>自动保存</strong>：所有编辑内容自动保存在浏览器本地，关闭页面后重新打开数据仍在。</li>
+      <li><strong>导出</strong>：点击右上角"打印/导出PDF"可输出纸质版或PDF文件。</li>
+      <li><strong>会后跟进</strong>：会议确认结果将整理更新到内部学习资料中，并输出"已确认/待跟进"清单。</li>
+    </ol>
+  </div>
+
+  <div class="footer">
+    曼纽考线上运营 · 工作方向沟通会议题清单 · 2026.07.13
+  </div>
+
+</div>
+
+<script>
+// ===== Auto Save =====
+const STORAGE_KEY = 'meetingDoc_20260713';
+let saveTimer = null;
+
+function saveData() {
+  const data = {
+    fields: {},
+    answers: {},
+    badges: {},
+    titles: {},
+    details: {}
+  };
+
+  document.querySelectorAll('[data-field]').forEach(el => {
+    data.fields[el.dataset.field] = el.innerHTML;
+  });
+
+  document.querySelectorAll('.answer-input').forEach(el => {
+    data.answers[el.dataset.answer] = el.value;
+  });
+
+  document.querySelectorAll('.topic').forEach(topic => {
+    const id = topic.dataset.topic;
+    const badge = topic.querySelector('.badge');
+    if (badge) {
+      data.badges[id] = { text: badge.textContent, cls: badge.className };
+    }
+    const title = topic.querySelector('.topic-title');
+    if (title) data.titles[id] = title.innerHTML;
+    const detail = topic.querySelector('.topic-detail');
+    if (detail) data.details[id] = detail.innerHTML;
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const status = document.getElementById('saveStatus');
+  status.textContent = '已保存 ' + new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'});
+  status.classList.add('saved');
+}
+
+function loadData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    Object.keys(data.fields || {}).forEach(key => {
+      const el = document.querySelector('[data-field="' + key + '"]');
+      if (el) el.innerHTML = data.fields[key];
+    });
+    Object.keys(data.answers || {}).forEach(key => {
+      const el = document.querySelector('[data-answer="' + key + '"]');
+      if (el) el.value = data.answers[key];
+    });
+    Object.keys(data.badges || {}).forEach(key => {
+      const topic = document.querySelector('[data-topic="' + key + '"]');
+      if (topic) {
+        const badge = topic.querySelector('.badge');
+        if (badge) {
+          badge.textContent = data.badges[key].text;
+          badge.className = data.badges[key].cls;
+        }
+      }
+      if (data.badges[key].text === '已确认') {
+        topic.classList.add('resolved');
+      }
+    });
+    Object.keys(data.titles || {}).forEach(key => {
+      const topic = document.querySelector('[data-topic="' + key + '"]');
+      if (topic) {
+        const title = topic.querySelector('.topic-title');
+        if (title) title.innerHTML = data.titles[key];
+      }
+    });
+    Object.keys(data.details || {}).forEach(key => {
+      const topic = document.querySelector('[data-topic="' + key + '"]');
+      if (topic) {
+        const detail = topic.querySelector('.topic-detail');
+        if (detail) detail.innerHTML = data.details[key];
+      }
+    });
+  } catch(e) { console.warn('Load error:', e); }
+}
+
+function debouncedSave() {
+  clearTimeout(saveTimer);
+  const status = document.getElementById('saveStatus');
+  status.textContent = '保存中...';
+  status.classList.remove('saved');
+  saveTimer = setTimeout(saveData, 800);
+}
+
+document.addEventListener('input', function(e) {
+  if (e.target.hasAttribute('contenteditable') || e.target.classList.contains('answer-input')) {
+    debouncedSave();
+  }
+});
+
+document.addEventListener('change', function(e) {
+  if (e.target.classList.contains('answer-input')) {
+    debouncedSave();
+  }
+});
+
+// ===== Badge Cycle =====
+const badgeStates = [
+  { text: '需明确', cls: 'badge badge-must' },
+  { text: '待梳理', cls: 'badge badge-should' },
+  { text: '可后续', cls: 'badge badge-nice' },
+  { text: '已确认', cls: 'badge badge-done' }
+];
+
+function cycleBadge(el) {
+  let currentIdx = badgeStates.findIndex(s => s.text === el.textContent.trim());
+  currentIdx = (currentIdx + 1) % badgeStates.length;
+  const next = badgeStates[currentIdx];
+  el.textContent = next.text;
+  el.className = next.cls;
+  const topic = el.closest('.topic');
+  if (next.text === '已确认') {
+    topic.classList.add('resolved');
+  } else {
+    topic.classList.remove('resolved');
+  }
+  debouncedSave();
+}
+
+// ===== Add Topic =====
+let topicCounter = 1000;
+
+function addTopic(btn) {
+  const section = btn.closest('.agenda-section');
+  const topicId = 'new-' + (++topicCounter);
+  const html = `
+    <div class="topic" data-topic="${topicId}">
+      <div class="topic-actions">
+        <button class="icon-btn" onclick="deleteTopic(this)" title="删除">&times;</button>
+      </div>
+      <div class="topic-title-row">
+        <span class="badge badge-must" onclick="cycleBadge(this)">需明确</span>
+        <div class="topic-title" contenteditable="true">点击编辑议题标题</div>
+      </div>
+      <div class="topic-detail" contenteditable="true">点击编辑问题描述</div>
+      <div class="answer-box">
+        <div class="answer-label">会议记录</div>
+        <textarea class="answer-input" placeholder="在此输入会议讨论结果..." data-answer="${topicId}"></textarea>
+      </div>
+    </div>
+  `;
+  btn.insertAdjacentHTML('beforebegin', html);
+  const newTopic = btn.previousElementSibling;
+  newTopic.querySelector('.topic-title').focus();
+  debouncedSave();
+}
+
+// ===== Delete Topic =====
+function deleteTopic(btn) {
+  if (!confirm('确认删除该议题？')) return;
+  const topic = btn.closest('.topic');
+  topic.remove();
+  debouncedSave();
+}
+
+// ===== Add Section =====
+let sectionCounter = 100;
+
+function addSection() {
+  const sectionId = ++sectionCounter;
+  const num = String(document.querySelectorAll('.agenda-section').length + 1).padStart(2, '0');
+  const html = `
+    <div class="agenda-section" data-section="${sectionId}">
+      <div class="section-header">
+        <div class="section-number">${num}</div>
+        <div class="section-title" contenteditable="true">点击编辑板块标题</div>
+        <div class="section-actions">
+          <button class="icon-btn" onclick="addTopic(this)" title="新增议题">+</button>
+          <button class="icon-btn" onclick="deleteSection(this)" title="删除板块">&times;</button>
+        </div>
+      </div>
+      <button class="add-topic-btn" onclick="addTopic(this)">+ 新增议题</button>
+    </div>
+  `;
+  const addSectionBtn = document.querySelector('.add-section-btn');
+  addSectionBtn.insertAdjacentHTML('beforebegin', html);
+  const newSection = addSectionBtn.previousElementSibling;
+  newSection.querySelector('.section-title').focus();
+  renumberSections();
+  debouncedSave();
+}
+
+// ===== Delete Section =====
+function deleteSection(btn) {
+  if (!confirm('确认删除整个板块及其所有议题？')) return;
+  const section = btn.closest('.agenda-section');
+  section.remove();
+  renumberSections();
+  debouncedSave();
+}
+
+// ===== Renumber =====
+function renumberSections() {
+  document.querySelectorAll('.agenda-section').forEach((section, idx) => {
+    const num = String(idx + 1).padStart(2, '0');
+    section.querySelector('.section-number').textContent = num;
+  });
+}
+
+// ===== Reset =====
+function resetAll() {
+  if (!confirm('确认重置所有内容？此操作不可撤销，所有会议记录将被清除。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ===== Init =====
+loadData();
+</script>
+</body>
+</html>
