@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>曼纽考 视频素材库</title>
+<style>
+:root {
+  --bg: #1a1a1a;
+  --panel: #232323;
+  --panel2: #2a2a2a;
+  --border: #333;
+  --border-soft: #2e2e2e;
+  --text: #e8e8e8;
+  --text-soft: #aaa;
+  --text-dim: #777;
+  --accent: #4f9eff;
+  --warn: #ff9a3c;
+  --good: #4ade80;
+  --bad: #f87171;
+  --tag: #3a3a3a;
+  --hover: #2f2f2f;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 13px; line-height: 1.5; }
+button { font: inherit; cursor: pointer; background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; }
+button:hover { background: var(--hover); border-color: var(--accent); }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button.primary:hover { background: #6fb0ff; }
+button.sm { padding: 2px 6px; font-size: 11px; }
+input, select, textarea { font: inherit; background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; outline: none; }
+input:focus, select:focus { border-color: var(--accent); }
+
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
+.topbar h1 { font-size: 16px; font-weight: 600; }
+.topbar .stats { display: flex; gap: 16px; color: var(--text-soft); font-size: 12px; }
+.topbar .stats b { color: var(--text); font-weight: 600; }
+.topbar .grow { flex: 1; }
+.topbar input.search { width: 240px; }
+
+.tabs { display: flex; gap: 4px; padding: 8px 16px 0 16px; background: var(--panel); border-bottom: 1px solid var(--border); overflow-x: auto; flex-wrap: nowrap; }
+.tab { padding: 8px 14px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-soft); border-radius: 0; white-space: nowrap; }
+.tab:hover { color: var(--text); background: transparent; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab .cnt { color: var(--text-dim); font-size: 11px; margin-left: 4px; }
+.tab.active .cnt { color: var(--accent); }
+
+.toolbar { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--panel2); border-bottom: 1px solid var(--border-soft); flex-wrap: wrap; }
+.toolbar label { color: var(--text-soft); font-size: 12px; }
+.toolbar select, .toolbar input { font-size: 12px; padding: 3px 6px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th { background: var(--panel); color: var(--text-soft); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); position: sticky; top: 0; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; z-index: 10; }
+tbody td { padding: 6px 10px; border-bottom: 1px solid var(--border-soft); vertical-align: middle; }
+tbody tr:hover { background: var(--hover); }
+tbody tr.new { background: rgba(79, 158, 255, 0.06); }
+tbody tr.deleted { opacity: 0.45; }
+tbody tr.deleted td:first-child::before { content: "🗑"; margin-right: 4px; }
+
+.desc-cell { min-width: 260px; max-width: 380px; }
+.desc-cell .desc { padding: 4px 6px; border-radius: 3px; cursor: text; min-height: 24px; word-break: break-word; }
+.desc-cell .desc:hover { background: var(--panel2); }
+.desc-cell .desc:focus { background: var(--panel2); outline: 1px solid var(--accent); }
+.desc-cell .desc[data-empty="true"]::before { content: "点击补充描述…"; color: var(--text-dim); }
+
+.reuse { display: inline-flex; align-items: center; gap: 4px; }
+.reuse button { width: 22px; height: 22px; padding: 0; font-size: 14px; line-height: 1; }
+.reuse .cnt { min-width: 28px; text-align: center; font-weight: 600; }
+.reuse.hot .cnt { color: var(--warn); }
+.reuse.zero .cnt { color: var(--text-dim); }
+
+.tag { display: inline-block; background: var(--tag); color: var(--text-soft); padding: 1px 6px; border-radius: 10px; font-size: 11px; margin-right: 3px; margin-top: 2px; cursor: pointer; }
+.tag:hover { color: var(--bad); }
+.tag.add { color: var(--text-dim); cursor: pointer; }
+.tag.add:hover { color: var(--accent); }
+
+.note { color: var(--text-dim); font-size: 11px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: text; padding: 4px 6px; border-radius: 3px; }
+.note:hover { color: var(--text); background: var(--panel2); }
+.note:focus { background: var(--panel2); outline: 1px solid var(--accent); }
+
+.status-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); }
+.status-pill.local { background: rgba(74, 222, 128, 0.12); color: var(--good); border-color: rgba(74, 222, 128, 0.3); }
+.status-pill.cloud { background: rgba(79, 158, 255, 0.12); color: var(--accent); border-color: rgba(79, 158, 255, 0.3); }
+.status-pill.deleted { background: rgba(248, 113, 113, 0.12); color: var(--bad); border-color: rgba(248, 113, 113, 0.3); }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; }
+.modal-bg.show { display: flex; }
+.modal { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 20px; min-width: 420px; max-width: 80vw; max-height: 80vh; overflow-y: auto; }
+.modal h3 { margin-bottom: 12px; }
+.modal .row { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+.modal .row label { min-width: 80px; color: var(--text-soft); }
+.modal .btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+.toast { position: fixed; bottom: 20px; right: 20px; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 10px 16px; border-radius: 4px; z-index: 3000; opacity: 0; transform: translateY(10px); transition: 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { border-left-color: var(--bad); }
+.toast.success { border-left-color: var(--good); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+.empty { padding: 60px 20px; text-align: center; color: var(--text-dim); }
+.empty h2 { margin-bottom: 8px; color: var(--text-soft); }
+.empty pre { background: var(--panel2); border: 1px solid var(--border); padding: 12px; border-radius: 4px; text-align: left; max-width: 600px; margin: 16px auto; font-size: 12px; overflow-x: auto; }
+
+.fname { color: var(--text); font-family: "SF Mono", Consolas, monospace; font-size: 11px; }
+.fname .cat { color: var(--text-dim); font-size: 10px; }
+.meta-col { color: var(--text-soft); font-size: 11px; white-space: nowrap; }
+.meta-col b { color: var(--text); }
+.actions { display: flex; gap: 3px; flex-wrap: wrap; }
+.actions button { font-size: 11px; padding: 2px 5px; }
+
+.bulk-bar { background: var(--panel); border: 1px solid var(--accent); border-radius: 4px; padding: 8px 12px; margin: 8px 16px; display: none; align-items: center; gap: 10px; }
+.bulk-bar.show { display: flex; }
+.bulk-bar span { color: var(--text-soft); font-size: 12px; }
+
+.row-cb { text-align: center; }
+.row-cb input { cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>⚡ 曼纽考 视频素材库</h1>
+  <div class="stats" id="stats"></div>
+  <div class="grow"></div>
+  <input class="search" id="search" placeholder="搜索文件名/描述/标签…">
+  <button onclick="reload()">↻ 重新加载</button>
+  <button onclick="showImport()">导入</button>
+  <button onclick="exportJSON()" class="primary">导出备份</button>
+  <button onclick="showHelp()">?</button>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="toolbar">
+  <label>时长</label>
+  <select id="filter-dur">
+    <option value="">全部</option>
+    <option value="0-5">0-5秒</option>
+    <option value="5-15">5-15秒</option>
+    <option value="15-60">15-60秒</option>
+    <option value="60-300">1-5分钟</option>
+    <option value="300-99999">5分钟以上</option>
+  </select>
+  <label>复用</label>
+  <select id="filter-reuse">
+    <option value="">全部</option>
+    <option value="0">未使用</option>
+    <option value="1-2">用过1-2次</option>
+    <option value="3-9">常用(3-9)</option>
+    <option value="10-99999">高频(10+)</option>
+  </select>
+  <label>状态</label>
+  <select id="filter-status">
+    <option value="">全部</option>
+    <option value="new">新增未编辑</option>
+    <option value="empty">描述为空</option>
+    <option value="local">本地</option>
+    <option value="cloud">已传云</option>
+    <option value="deleted">已删本地</option>
+  </select>
+  <label>排序</label>
+  <select id="sort">
+    <option value="filename">文件名</option>
+    <option value="duration">时长↓</option>
+    <option value="size">大小↓</option>
+    <option value="reuse_desc">复用↓</option>
+    <option value="reuse_asc">复用↑</option>
+    <option value="mtime">添加时间</option>
+    <option value="last_used">最近使用</option>
+  </select>
+  <div class="grow" style="flex:1"></div>
+  <span id="filter-cnt" style="color:var(--text-dim);font-size:12px"></span>
+  <button class="sm" onclick="toggleBulk()" id="bulk-btn">批量操作</button>
+</div>
+
+<div class="bulk-bar" id="bulk-bar">
+  <span id="bulk-cnt">已选 0 项</span>
+  <button class="sm" onclick="bulkStatus('local')">标为本地</button>
+  <button class="sm" onclick="bulkStatus('cloud')">标为已传云</button>
+  <button class="sm" onclick="bulkStatus('deleted')">标为已删</button>
+  <button class="sm" onclick="bulkReuse(1)">复用+1</button>
+  <button class="sm" onclick="bulkClear()">取消选择</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:30px" class="row-cb" id="th-cb" style="display:none"><input type="checkbox" onchange="toggleAll(this)"></th>
+        <th style="width:120px">文件名</th>
+        <th style="width:90px">时长</th>
+        <th style="width:70px">大小</th>
+        <th style="width:80px">状态</th>
+        <th>描述</th>
+        <th style="width:120px">标签</th>
+        <th style="width:100px">复用次数</th>
+        <th style="width:80px">最后使用</th>
+        <th style="width:140px">备注</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* 状态：
+   - INVENTORY_EMBEDDED: 扫描脚本注入的内嵌数据（双击打开就能用，不依赖服务）
+   - baseData: 当前使用的数据（内嵌或fetch）
+   - userData: localStorage 存的（用户编辑的字段覆盖 base）
+   - bulkMode: 批量选择模式
+*/
+let INVENTORY_EMBEDDED = {"generated":"2026-07-20T11:15:28","total":382,"items":[{"id":"产品空镜__C7872","category":"产品空镜","filename":"C7872.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 10:56","duration_s":15.8,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7873","category":"产品空镜","filename":"C7873.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 10:57","duration_s":24.0,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7874","category":"产品空镜","filename":"C7874.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 10:56","duration_s":18.7,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7875","category":"产品空镜","filename":"C7875.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 10:56","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7876","category":"产品空镜","filename":"C7876.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 10:56","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7877","category":"产品空镜","filename":"C7877.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 10:58","duration_s":23.0,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7878","category":"产品空镜","filename":"C7878.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 10:58","duration_s":21.1,"width":1920,"height":1080,"fps":50.0,"description":"绿瓶DHA藻油小瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7879","category":"产品空镜","filename":"C7879.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 11:02","duration_s":25.9,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7880","category":"产品空镜","filename":"C7880.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 10:58","duration_s":24.0,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7881","category":"产品空镜","filename":"C7881.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 11:02","duration_s":15.8,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7882","category":"产品空镜","filename":"C7882.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 14:10","duration_s":24.5,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7883","category":"产品空镜","filename":"C7883.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:10","duration_s":22.6,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7884","category":"产品空镜","filename":"C7884.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 11:04","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7885","category":"产品空镜","filename":"C7885.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:10","duration_s":10.6,"width":1920,"height":1080,"fps":50.0,"description":"白/黄瓶DHA藻油大瓶，多角度展示","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7886","category":"产品空镜","filename":"C7886.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:10","duration_s":21.6,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7887","category":"产品空镜","filename":"C7887.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:10","duration_s":20.6,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7888","category":"产品空镜","filename":"C7888.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:12","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7889","category":"产品空镜","filename":"C7889.MP4","size_mb":256.3,"size_text":"256.3MB","mtime":"2026-07-17 14:13","duration_s":35.5,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7890","category":"产品空镜","filename":"C7890.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:12","duration_s":11.5,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7891","category":"产品空镜","filename":"C7891.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:12","duration_s":13.4,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7892","category":"产品空镜","filename":"C7892.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:13","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"DHA礼盒装（白色礼盒）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7893","category":"产品空镜","filename":"C7893.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:13","duration_s":18.7,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7894","category":"产品空镜","filename":"C7894.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:13","duration_s":20.2,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7895","category":"产品空镜","filename":"C7895.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:14","duration_s":19.7,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7896","category":"产品空镜","filename":"C7896.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:15","duration_s":23.0,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7897","category":"产品空镜","filename":"C7897.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:14","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7898","category":"产品空镜","filename":"C7898.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:14","duration_s":14.9,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7899","category":"产品空镜","filename":"C7899.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:15","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"产品空镜__C7900","category":"产品空镜","filename":"C7900.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:15","duration_s":19.7,"width":1920,"height":1080,"fps":50.0,"description":"DHA儿童装/礼盒装特写","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0504","category":"公司外景","filename":"DJI_0504.MP4","size_mb":374.1,"size_text":"374.1MB","mtime":"2026-07-17 14:30","duration_s":62.6,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0505","category":"公司外景","filename":"DJI_0505.MP4","size_mb":146.5,"size_text":"146.5MB","mtime":"2026-07-17 14:29","duration_s":24.4,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0506","category":"公司外景","filename":"DJI_0506.MP4","size_mb":161.2,"size_text":"161.2MB","mtime":"2026-07-17 14:30","duration_s":26.9,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0507","category":"公司外景","filename":"DJI_0507.MP4","size_mb":138.4,"size_text":"138.4MB","mtime":"2026-07-17 14:29","duration_s":23.1,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0508","category":"公司外景","filename":"DJI_0508.MP4","size_mb":57.2,"size_text":"57.2MB","mtime":"2026-07-17 14:30","duration_s":9.5,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0509","category":"公司外景","filename":"DJI_0509.MP4","size_mb":168.4,"size_text":"168.4MB","mtime":"2026-07-17 14:30","duration_s":28.0,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0510","category":"公司外景","filename":"DJI_0510.MP4","size_mb":205.0,"size_text":"205.0MB","mtime":"2026-07-17 14:31","duration_s":34.2,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0511","category":"公司外景","filename":"DJI_0511.MP4","size_mb":298.8,"size_text":"298.8MB","mtime":"2026-07-17 14:31","duration_s":50.0,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0512","category":"公司外景","filename":"DJI_0512.MP4","size_mb":88.3,"size_text":"88.3MB","mtime":"2026-07-17 14:31","duration_s":14.4,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0513","category":"公司外景","filename":"DJI_0513.MP4","size_mb":150.7,"size_text":"150.7MB","mtime":"2026-07-17 14:31","duration_s":25.2,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0514","category":"公司外景","filename":"DJI_0514.MP4","size_mb":127.1,"size_text":"127.1MB","mtime":"2026-07-17 14:31","duration_s":21.2,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0515","category":"公司外景","filename":"DJI_0515.MP4","size_mb":83.5,"size_text":"83.5MB","mtime":"2026-07-17 14:31","duration_s":13.9,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0516","category":"公司外景","filename":"DJI_0516.MP4","size_mb":82.7,"size_text":"82.7MB","mtime":"2026-07-17 14:32","duration_s":13.7,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0517","category":"公司外景","filename":"DJI_0517.MP4","size_mb":196.8,"size_text":"196.8MB","mtime":"2026-07-17 14:33","duration_s":32.9,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0518","category":"公司外景","filename":"DJI_0518.MP4","size_mb":148.4,"size_text":"148.4MB","mtime":"2026-07-17 14:33","duration_s":24.8,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"公司外景__DJI_0519","category":"公司外景","filename":"DJI_0519.MP4","size_mb":87.5,"size_text":"87.5MB","mtime":"2026-07-17 14:32","duration_s":14.4,"width":2688,"height":1512,"fps":25.0,"description":"公司建筑外观/门头/环境（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0435","category":"养殖外景","filename":"DJI_0435.MP4","size_mb":196.1,"size_text":"196.1MB","mtime":"2026-07-17 16:03","duration_s":32.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0436","category":"养殖外景","filename":"DJI_0436.MP4","size_mb":26.7,"size_text":"26.7MB","mtime":"2026-07-17 16:03","duration_s":4.3,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0437","category":"养殖外景","filename":"DJI_0437.MP4","size_mb":138.9,"size_text":"138.9MB","mtime":"2026-07-17 16:04","duration_s":23.0,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0438","category":"养殖外景","filename":"DJI_0438.MP4","size_mb":139.9,"size_text":"139.9MB","mtime":"2026-07-17 16:04","duration_s":23.3,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0439","category":"养殖外景","filename":"DJI_0439.MP4","size_mb":33.6,"size_text":"33.6MB","mtime":"2026-07-17 16:05","duration_s":5.5,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0440","category":"养殖外景","filename":"DJI_0440.MP4","size_mb":77.7,"size_text":"77.7MB","mtime":"2026-07-17 16:03","duration_s":12.9,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0441","category":"养殖外景","filename":"DJI_0441.MP4","size_mb":80.5,"size_text":"80.5MB","mtime":"2026-07-17 16:04","duration_s":13.3,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0442","category":"养殖外景","filename":"DJI_0442.MP4","size_mb":77.8,"size_text":"77.8MB","mtime":"2026-07-17 16:04","duration_s":13.0,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0443","category":"养殖外景","filename":"DJI_0443.MP4","size_mb":116.9,"size_text":"116.9MB","mtime":"2026-07-17 16:05","duration_s":19.4,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0444","category":"养殖外景","filename":"DJI_0444.MP4","size_mb":123.9,"size_text":"123.9MB","mtime":"2026-07-17 16:07","duration_s":20.5,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0445","category":"养殖外景","filename":"DJI_0445.MP4","size_mb":61.3,"size_text":"61.3MB","mtime":"2026-07-17 16:07","duration_s":10.1,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0446","category":"养殖外景","filename":"DJI_0446.MP4","size_mb":118.5,"size_text":"118.5MB","mtime":"2026-07-17 16:08","duration_s":19.7,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0447","category":"养殖外景","filename":"DJI_0447.MP4","size_mb":141.3,"size_text":"141.3MB","mtime":"2026-07-17 16:08","duration_s":23.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0448","category":"养殖外景","filename":"DJI_0448.MP4","size_mb":76.0,"size_text":"76.0MB","mtime":"2026-07-17 16:07","duration_s":12.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0449","category":"养殖外景","filename":"DJI_0449.MP4","size_mb":99.5,"size_text":"99.5MB","mtime":"2026-07-17 16:08","duration_s":16.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0450","category":"养殖外景","filename":"DJI_0450.MP4","size_mb":40.3,"size_text":"40.3MB","mtime":"2026-07-17 16:08","duration_s":6.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0451","category":"养殖外景","filename":"DJI_0451.MP4","size_mb":76.5,"size_text":"76.5MB","mtime":"2026-07-17 16:08","duration_s":12.7,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0452","category":"养殖外景","filename":"DJI_0452.MP4","size_mb":13.1,"size_text":"13.1MB","mtime":"2026-07-17 16:08","duration_s":2.1,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0453","category":"养殖外景","filename":"DJI_0453.MP4","size_mb":142.2,"size_text":"142.2MB","mtime":"2026-07-19 18:56","duration_s":23.7,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0454","category":"养殖外景","filename":"DJI_0454.MP4","size_mb":60.8,"size_text":"60.8MB","mtime":"2026-07-17 16:10","duration_s":10.0,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0455","category":"养殖外景","filename":"DJI_0455.MP4","size_mb":160.6,"size_text":"160.6MB","mtime":"2026-07-19 18:57","duration_s":26.7,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0456","category":"养殖外景","filename":"DJI_0456.MP4","size_mb":123.9,"size_text":"123.9MB","mtime":"2026-07-19 18:57","duration_s":20.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0457","category":"养殖外景","filename":"DJI_0457.MP4","size_mb":77.0,"size_text":"77.0MB","mtime":"2026-07-19 18:57","duration_s":12.8,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0458","category":"养殖外景","filename":"DJI_0458.MP4","size_mb":171.9,"size_text":"171.9MB","mtime":"2026-07-19 18:57","duration_s":28.8,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0459","category":"养殖外景","filename":"DJI_0459.MP4","size_mb":75.6,"size_text":"75.6MB","mtime":"2026-07-19 18:57","duration_s":12.5,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0492","category":"养殖外景","filename":"DJI_0492.MP4","size_mb":55.2,"size_text":"55.2MB","mtime":"2026-07-19 18:57","duration_s":9.2,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0493","category":"养殖外景","filename":"DJI_0493.MP4","size_mb":61.7,"size_text":"61.7MB","mtime":"2026-07-19 18:58","duration_s":10.2,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0494","category":"养殖外景","filename":"DJI_0494.MP4","size_mb":37.2,"size_text":"37.2MB","mtime":"2026-07-19 18:58","duration_s":6.0,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0495","category":"养殖外景","filename":"DJI_0495.MP4","size_mb":10.3,"size_text":"10.3MB","mtime":"2026-07-19 18:58","duration_s":1.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"养殖外景__DJI_0496","category":"养殖外景","filename":"DJI_0496.MP4","size_mb":260.5,"size_text":"260.5MB","mtime":"2026-07-19 19:00","duration_s":43.6,"width":2688,"height":1512,"fps":25.0,"description":"养殖外景（基地/棚舍/全景）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__C7563","category":"培育菜类","filename":"C7563.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:33","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__C7564","category":"培育菜类","filename":"C7564.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:33","duration_s":23.0,"width":1920,"height":1080,"fps":50.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__C7565","category":"培育菜类","filename":"C7565.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:33","duration_s":17.3,"width":1920,"height":1080,"fps":50.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__C7566","category":"培育菜类","filename":"C7566.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:33","duration_s":10.1,"width":1920,"height":1080,"fps":50.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__C7567","category":"培育菜类","filename":"C7567.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:33","duration_s":11.5,"width":1920,"height":1080,"fps":50.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__C7568","category":"培育菜类","filename":"C7568.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:35","duration_s":20.6,"width":1920,"height":1080,"fps":50.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0390","category":"培育菜类","filename":"DJI_0390.MP4","size_mb":78.6,"size_text":"78.6MB","mtime":"2026-07-17 14:34","duration_s":13.1,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0391","category":"培育菜类","filename":"DJI_0391.MP4","size_mb":97.4,"size_text":"97.4MB","mtime":"2026-07-17 14:35","duration_s":16.2,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0392","category":"培育菜类","filename":"DJI_0392.MP4","size_mb":195.2,"size_text":"195.2MB","mtime":"2026-07-17 14:35","duration_s":32.5,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0393","category":"培育菜类","filename":"DJI_0393.MP4","size_mb":35.8,"size_text":"35.8MB","mtime":"2026-07-17 14:33","duration_s":5.9,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0394","category":"培育菜类","filename":"DJI_0394.MP4","size_mb":170.7,"size_text":"170.7MB","mtime":"2026-07-17 14:36","duration_s":28.5,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0395","category":"培育菜类","filename":"DJI_0395.MP4","size_mb":56.1,"size_text":"56.1MB","mtime":"2026-07-17 14:35","duration_s":9.3,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0396","category":"培育菜类","filename":"DJI_0396.MP4","size_mb":99.8,"size_text":"99.8MB","mtime":"2026-07-17 14:36","duration_s":16.6,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0397","category":"培育菜类","filename":"DJI_0397.MP4","size_mb":103.2,"size_text":"103.2MB","mtime":"2026-07-17 14:36","duration_s":17.1,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0398","category":"培育菜类","filename":"DJI_0398.MP4","size_mb":32.8,"size_text":"32.8MB","mtime":"2026-07-17 14:36","duration_s":5.3,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0399","category":"培育菜类","filename":"DJI_0399.MP4","size_mb":20.2,"size_text":"20.2MB","mtime":"2026-07-17 14:35","duration_s":3.2,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0400","category":"培育菜类","filename":"DJI_0400.MP4","size_mb":86.1,"size_text":"86.1MB","mtime":"2026-07-17 14:36","duration_s":14.4,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0497","category":"培育菜类","filename":"DJI_0497.MP4","size_mb":234.5,"size_text":"234.5MB","mtime":"2026-07-17 14:37","duration_s":39.2,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0498","category":"培育菜类","filename":"DJI_0498.MP4","size_mb":247.4,"size_text":"247.4MB","mtime":"2026-07-17 14:38","duration_s":41.3,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0499","category":"培育菜类","filename":"DJI_0499.MP4","size_mb":52.7,"size_text":"52.7MB","mtime":"2026-07-17 14:36","duration_s":8.6,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0500","category":"培育菜类","filename":"DJI_0500.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:36","duration_s":10.7,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0501","category":"培育菜类","filename":"DJI_0501.MP4","size_mb":36.7,"size_text":"36.7MB","mtime":"2026-07-17 14:36","duration_s":6.0,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0502","category":"培育菜类","filename":"DJI_0502.MP4","size_mb":53.4,"size_text":"53.4MB","mtime":"2026-07-17 14:36","duration_s":8.7,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"培育菜类__DJI_0503","category":"培育菜类","filename":"DJI_0503.MP4","size_mb":73.4,"size_text":"73.4MB","mtime":"2026-07-17 14:38","duration_s":12.0,"width":2688,"height":1512,"fps":25.0,"description":"培育菜类（水培蔬菜/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7772","category":"实验室","filename":"C7772.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:38","duration_s":15.8,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7773","category":"实验室","filename":"C7773.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 14:37","duration_s":4.3,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7774","category":"实验室","filename":"C7774.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:38","duration_s":13.9,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7775","category":"实验室","filename":"C7775.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:38","duration_s":5.3,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7776","category":"实验室","filename":"C7776.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:38","duration_s":6.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7777","category":"实验室","filename":"C7777.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 14:38","duration_s":3.8,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7778","category":"实验室","filename":"C7778.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 14:39","duration_s":2.9,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7779","category":"实验室","filename":"C7779.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:39","duration_s":9.6,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7780","category":"实验室","filename":"C7780.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:39","duration_s":7.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7781","category":"实验室","filename":"C7781.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:39","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7782","category":"实验室","filename":"C7782.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:39","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7783","category":"实验室","filename":"C7783.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 14:42","duration_s":2.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7784","category":"实验室","filename":"C7784.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:39","duration_s":15.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7785","category":"实验室","filename":"C7785.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:39","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7786","category":"实验室","filename":"C7786.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:40","duration_s":10.1,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7787","category":"实验室","filename":"C7787.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:41","duration_s":13.9,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7788","category":"实验室","filename":"C7788.MP4","size_mb":288.3,"size_text":"288.3MB","mtime":"2026-07-17 14:43","duration_s":42.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7789","category":"实验室","filename":"C7789.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:41","duration_s":15.8,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7790","category":"实验室","filename":"C7790.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:41","duration_s":5.3,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7791","category":"实验室","filename":"C7791.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:41","duration_s":11.5,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7792","category":"实验室","filename":"C7792.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:42","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7793","category":"实验室","filename":"C7793.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:43","duration_s":14.9,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7794","category":"实验室","filename":"C7794.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:43","duration_s":16.8,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7795","category":"实验室","filename":"C7795.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:43","duration_s":18.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7796","category":"实验室","filename":"C7796.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:44","duration_s":18.7,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7797","category":"实验室","filename":"C7797.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:44","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7798","category":"实验室","filename":"C7798.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:45","duration_s":7.7,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7799","category":"实验室","filename":"C7799.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:45","duration_s":7.7,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7800","category":"实验室","filename":"C7800.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:44","duration_s":18.7,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7801","category":"实验室","filename":"C7801.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:44","duration_s":7.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7802","category":"实验室","filename":"C7802.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:45","duration_s":15.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7818","category":"实验室","filename":"C7818.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:45","duration_s":5.8,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7819","category":"实验室","filename":"C7819.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:45","duration_s":8.6,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7820","category":"实验室","filename":"C7820.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:45","duration_s":10.6,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7821","category":"实验室","filename":"C7821.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:46","duration_s":12.0,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7822","category":"实验室","filename":"C7822.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:46","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7823","category":"实验室","filename":"C7823.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:46","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7824","category":"实验室","filename":"C7824.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:47","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7825","category":"实验室","filename":"C7825.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:46","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7826","category":"实验室","filename":"C7826.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:47","duration_s":17.3,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7827","category":"实验室","filename":"C7827.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:46","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7828","category":"实验室","filename":"C7828.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:47","duration_s":12.0,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7829","category":"实验室","filename":"C7829.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:47","duration_s":7.2,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7830","category":"实验室","filename":"C7830.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:47","duration_s":10.6,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7831","category":"实验室","filename":"C7831.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 14:47","duration_s":4.3,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7832","category":"实验室","filename":"C7832.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:49","duration_s":21.1,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7833","category":"实验室","filename":"C7833.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:48","duration_s":11.0,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7834","category":"实验室","filename":"C7834.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:48","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7835","category":"实验室","filename":"C7835.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:48","duration_s":11.5,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7836","category":"实验室","filename":"C7836.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:48","duration_s":10.1,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7837","category":"实验室","filename":"C7837.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:48","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7838","category":"实验室","filename":"C7838.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:49","duration_s":15.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7839","category":"实验室","filename":"C7839.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:49","duration_s":7.7,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7840","category":"实验室","filename":"C7840.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:49","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"实验室__C7841","category":"实验室","filename":"C7841.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 14:51","duration_s":25.9,"width":1920,"height":1080,"fps":50.0,"description":"实验室（仪器/实验/科研人员）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7668","category":"工厂","filename":"C7668.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:15","duration_s":15.4,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7669","category":"工厂","filename":"C7669.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:15","duration_s":8.6,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7670","category":"工厂","filename":"C7670.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:15","duration_s":5.3,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7671","category":"工厂","filename":"C7671.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 14:15","duration_s":3.4,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7672","category":"工厂","filename":"C7672.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:16","duration_s":7.2,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7673","category":"工厂","filename":"C7673.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:16","duration_s":10.6,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7674","category":"工厂","filename":"C7674.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 14:17","duration_s":26.4,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7675","category":"工厂","filename":"C7675.MP4","size_mb":256.3,"size_text":"256.3MB","mtime":"2026-07-17 14:17","duration_s":36.5,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7698","category":"工厂","filename":"C7698.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:16","duration_s":18.2,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7699","category":"工厂","filename":"C7699.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:17","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7700","category":"工厂","filename":"C7700.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:17","duration_s":14.9,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7701","category":"工厂","filename":"C7701.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:18","duration_s":18.2,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7702","category":"工厂","filename":"C7702.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:18","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7719","category":"工厂","filename":"C7719.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:18","duration_s":15.4,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7720","category":"工厂","filename":"C7720.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:20","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7721","category":"工厂","filename":"C7721.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:20","duration_s":21.6,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7722","category":"工厂","filename":"C7722.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:20","duration_s":18.2,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7723","category":"工厂","filename":"C7723.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:21","duration_s":20.6,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7725","category":"工厂","filename":"C7725.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:20","duration_s":10.6,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7726","category":"工厂","filename":"C7726.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 14:22","duration_s":25.0,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7727","category":"工厂","filename":"C7727.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:22","duration_s":17.8,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7728","category":"工厂","filename":"C7728.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:22","duration_s":10.1,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7729","category":"工厂","filename":"C7729.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:22","duration_s":9.6,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7730","category":"工厂","filename":"C7730.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:21","duration_s":7.7,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7733","category":"工厂","filename":"C7733.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:22","duration_s":16.8,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7734","category":"工厂","filename":"C7734.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:23","duration_s":13.4,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7735","category":"工厂","filename":"C7735.MP4","size_mb":320.3,"size_text":"320.3MB","mtime":"2026-07-17 14:26","duration_s":47.5,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7736","category":"工厂","filename":"C7736.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:23","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7737","category":"工厂","filename":"C7737.MP4","size_mb":512.3,"size_text":"512.3MB","mtime":"2026-07-17 14:28","duration_s":74.9,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7738","category":"工厂","filename":"C7738.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 14:25","duration_s":25.4,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7739","category":"工厂","filename":"C7739.MP4","size_mb":480.3,"size_text":"480.3MB","mtime":"2026-07-17 14:28","duration_s":70.1,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7740","category":"工厂","filename":"C7740.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:24","duration_s":13.0,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7741","category":"工厂","filename":"C7741.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-17 14:27","duration_s":31.2,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7742","category":"工厂","filename":"C7742.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:27","duration_s":18.7,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7743","category":"工厂","filename":"C7743.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:27","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7744","category":"工厂","filename":"C7744.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:28","duration_s":11.0,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7745","category":"工厂","filename":"C7745.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:28","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7746","category":"工厂","filename":"C7746.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:28","duration_s":13.9,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"工厂__C7747","category":"工厂","filename":"C7747.MP4","size_mb":384.3,"size_text":"384.3MB","mtime":"2026-07-17 14:30","duration_s":55.2,"width":1920,"height":1080,"fps":50.0,"description":"工厂生产画面（车间/设备/工人）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7602","category":"藻类培育","filename":"C7602.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-19 19:00","duration_s":33.1,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7603","category":"藻类培育","filename":"C7603.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-19 19:00","duration_s":19.2,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7604","category":"藻类培育","filename":"C7604.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-19 18:59","duration_s":12.0,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7605","category":"藻类培育","filename":"C7605.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-19 19:00","duration_s":24.5,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7606","category":"藻类培育","filename":"C7606.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-19 19:00","duration_s":19.7,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7607","category":"藻类培育","filename":"C7607.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-19 19:02","duration_s":30.7,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7608","category":"藻类培育","filename":"C7608.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-19 19:02","duration_s":23.5,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7609","category":"藻类培育","filename":"C7609.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-19 19:02","duration_s":24.0,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7610","category":"藻类培育","filename":"C7610.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-19 19:01","duration_s":6.7,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7611","category":"藻类培育","filename":"C7611.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-19 19:02","duration_s":19.7,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7612","category":"藻类培育","filename":"C7612.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-19 19:02","duration_s":16.8,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"藻类培育__C7613","category":"藻类培育","filename":"C7613.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-19 19:03","duration_s":15.8,"width":1920,"height":1080,"fps":25.0,"description":"藻类培育（培养液/科研/生长）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7711","category":"饲料调配，投喂","filename":"C7711.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:51","duration_s":19.2,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7712","category":"饲料调配，投喂","filename":"C7712.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:51","duration_s":22.6,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7713","category":"饲料调配，投喂","filename":"C7713.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:51","duration_s":13.9,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7714","category":"饲料调配，投喂","filename":"C7714.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:50","duration_s":7.7,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7715","category":"饲料调配，投喂","filename":"C7715.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:51","duration_s":12.0,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7716","category":"饲料调配，投喂","filename":"C7716.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:52","duration_s":20.2,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7717","category":"饲料调配，投喂","filename":"C7717.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:52","duration_s":12.0,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"饲料调配，投喂__C7718","category":"饲料调配，投喂","filename":"C7718.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:52","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"饲料调配与投喂（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7748","category":"鸭汤，鸭蛋","filename":"C7748.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:55","duration_s":21.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7749","category":"鸭汤，鸭蛋","filename":"C7749.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:57","duration_s":19.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7750","category":"鸭汤，鸭蛋","filename":"C7750.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:57","duration_s":18.7,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7751","category":"鸭汤，鸭蛋","filename":"C7751.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 15:58","duration_s":25.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7752","category":"鸭汤，鸭蛋","filename":"C7752.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:58","duration_s":22.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7863","category":"鸭汤，鸭蛋","filename":"C7863.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 15:57","duration_s":4.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7864","category":"鸭汤，鸭蛋","filename":"C7864.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 15:57","duration_s":4.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7865","category":"鸭汤，鸭蛋","filename":"C7865.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 15:58","duration_s":4.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7866","category":"鸭汤，鸭蛋","filename":"C7866.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 15:58","duration_s":3.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7867","category":"鸭汤，鸭蛋","filename":"C7867.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 15:58","duration_s":4.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7868","category":"鸭汤，鸭蛋","filename":"C7868.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:59","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7869","category":"鸭汤，鸭蛋","filename":"C7869.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 16:00","duration_s":14.9,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7870","category":"鸭汤，鸭蛋","filename":"C7870.MP4","size_mb":288.3,"size_text":"288.3MB","mtime":"2026-07-17 16:02","duration_s":42.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7871","category":"鸭汤，鸭蛋","filename":"C7871.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 16:01","duration_s":25.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7901","category":"鸭汤，鸭蛋","filename":"C7901.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:59","duration_s":9.1,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7902","category":"鸭汤，鸭蛋","filename":"C7902.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 16:02","duration_s":20.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭汤，鸭蛋__C7903","category":"鸭汤，鸭蛋","filename":"C7903.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 16:02","duration_s":17.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭汤/鸭蛋（成品/烹饪/摆盘）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7550","category":"鸭类空镜","filename":"C7550.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:52","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7551","category":"鸭类空镜","filename":"C7551.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:52","duration_s":12.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7552","category":"鸭类空镜","filename":"C7552.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 14:54","duration_s":24.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7553","category":"鸭类空镜","filename":"C7553.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-17 14:54","duration_s":32.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7554","category":"鸭类空镜","filename":"C7554.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:54","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7555","category":"鸭类空镜","filename":"C7555.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:54","duration_s":19.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7556","category":"鸭类空镜","filename":"C7556.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:54","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7557","category":"鸭类空镜","filename":"C7557.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:55","duration_s":7.7,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7558","category":"鸭类空镜","filename":"C7558.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:55","duration_s":13.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7559","category":"鸭类空镜","filename":"C7559.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:55","duration_s":13.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7560","category":"鸭类空镜","filename":"C7560.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:54","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7561","category":"鸭类空镜","filename":"C7561.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:55","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7562","category":"鸭类空镜","filename":"C7562.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:55","duration_s":11.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7569","category":"鸭类空镜","filename":"C7569.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:56","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7570","category":"鸭类空镜","filename":"C7570.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:57","duration_s":18.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7571","category":"鸭类空镜","filename":"C7571.MP4","size_mb":384.3,"size_text":"384.3MB","mtime":"2026-07-17 14:58","duration_s":55.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7572","category":"鸭类空镜","filename":"C7572.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-17 14:58","duration_s":30.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7573","category":"鸭类空镜","filename":"C7573.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 14:57","duration_s":12.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7574","category":"鸭类空镜","filename":"C7574.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 14:58","duration_s":21.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7575","category":"鸭类空镜","filename":"C7575.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 14:59","duration_s":17.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7577","category":"鸭类空镜","filename":"C7577.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:58","duration_s":8.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7578","category":"鸭类空镜","filename":"C7578.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:00","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7579","category":"鸭类空镜","filename":"C7579.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 14:59","duration_s":9.1,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7580","category":"鸭类空镜","filename":"C7580.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:00","duration_s":15.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7581","category":"鸭类空镜","filename":"C7581.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:01","duration_s":22.1,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7582","category":"鸭类空镜","filename":"C7582.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:01","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7583","category":"鸭类空镜","filename":"C7583.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-17 15:02","duration_s":30.7,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7584","category":"鸭类空镜","filename":"C7584.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:02","duration_s":11.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7585","category":"鸭类空镜","filename":"C7585.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:01","duration_s":8.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7586","category":"鸭类空镜","filename":"C7586.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:02","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7587","category":"鸭类空镜","filename":"C7587.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 15:03","duration_s":24.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7588","category":"鸭类空镜","filename":"C7588.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:03","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7589","category":"鸭类空镜","filename":"C7589.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:04","duration_s":19.7,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7590","category":"鸭类空镜","filename":"C7590.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:04","duration_s":25.4,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7591","category":"鸭类空镜","filename":"C7591.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:03","duration_s":14.9,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7592","category":"鸭类空镜","filename":"C7592.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:04","duration_s":17.3,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7593","category":"鸭类空镜","filename":"C7593.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:04","duration_s":25.4,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7594","category":"鸭类空镜","filename":"C7594.MP4","size_mb":288.3,"size_text":"288.3MB","mtime":"2026-07-17 15:08","duration_s":43.2,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7595","category":"鸭类空镜","filename":"C7595.MP4","size_mb":1504.3,"size_text":"1.47GB","mtime":"2026-07-17 15:20","duration_s":234.2,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7596","category":"鸭类空镜","filename":"C7596.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 15:06","duration_s":26.4,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7597","category":"鸭类空镜","filename":"C7597.MP4","size_mb":1312.3,"size_text":"1.28GB","mtime":"2026-07-17 15:18","duration_s":208.3,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7598","category":"鸭类空镜","filename":"C7598.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:06","duration_s":15.8,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7600","category":"鸭类空镜","filename":"C7600.MP4","size_mb":288.3,"size_text":"288.3MB","mtime":"2026-07-17 15:08","duration_s":43.2,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7601","category":"鸭类空镜","filename":"C7601.MP4","size_mb":960.3,"size_text":"960.3MB","mtime":"2026-07-17 15:16","duration_s":147.8,"width":1920,"height":1080,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7636","category":"鸭类空镜","filename":"C7636.MP4","size_mb":192.3,"size_text":"192.3MB","mtime":"2026-07-17 15:11","duration_s":24.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7637","category":"鸭类空镜","filename":"C7637.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:11","duration_s":22.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7638","category":"鸭类空镜","filename":"C7638.MP4","size_mb":224.3,"size_text":"224.3MB","mtime":"2026-07-17 15:13","duration_s":31.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7639","category":"鸭类空镜","filename":"C7639.MP4","size_mb":288.3,"size_text":"288.3MB","mtime":"2026-07-17 15:14","duration_s":41.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7640","category":"鸭类空镜","filename":"C7640.MP4","size_mb":32.3,"size_text":"32.3MB","mtime":"2026-07-17 15:14","duration_s":3.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7641","category":"鸭类空镜","filename":"C7641.MP4","size_mb":256.3,"size_text":"256.3MB","mtime":"2026-07-17 15:18","duration_s":36.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7642","category":"鸭类空镜","filename":"C7642.MP4","size_mb":288.3,"size_text":"288.3MB","mtime":"2026-07-17 15:19","duration_s":40.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7643","category":"鸭类空镜","filename":"C7643.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:18","duration_s":6.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7644","category":"鸭类空镜","filename":"C7644.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:20","duration_s":17.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7645","category":"鸭类空镜","filename":"C7645.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:20","duration_s":13.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7646","category":"鸭类空镜","filename":"C7646.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:19","duration_s":6.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7647","category":"鸭类空镜","filename":"C7647.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:20","duration_s":5.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7648","category":"鸭类空镜","filename":"C7648.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:20","duration_s":6.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7649","category":"鸭类空镜","filename":"C7649.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:21","duration_s":6.7,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7650","category":"鸭类空镜","filename":"C7650.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:22","duration_s":13.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7651","category":"鸭类空镜","filename":"C7651.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:21","duration_s":9.1,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7652","category":"鸭类空镜","filename":"C7652.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:23","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7653","category":"鸭类空镜","filename":"C7653.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:23","duration_s":14.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7654","category":"鸭类空镜","filename":"C7654.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:22","duration_s":10.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7655","category":"鸭类空镜","filename":"C7655.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:23","duration_s":17.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7656","category":"鸭类空镜","filename":"C7656.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:23","duration_s":9.1,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7657","category":"鸭类空镜","filename":"C7657.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:24","duration_s":23.0,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7658","category":"鸭类空镜","filename":"C7658.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:26","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7659","category":"鸭类空镜","filename":"C7659.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:25","duration_s":6.7,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7660","category":"鸭类空镜","filename":"C7660.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:26","duration_s":19.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7661","category":"鸭类空镜","filename":"C7661.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:26","duration_s":17.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7662","category":"鸭类空镜","filename":"C7662.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:27","duration_s":17.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7663","category":"鸭类空镜","filename":"C7663.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:27","duration_s":9.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7664","category":"鸭类空镜","filename":"C7664.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:29","duration_s":20.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7665","category":"鸭类空镜","filename":"C7665.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:27","duration_s":6.7,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7666","category":"鸭类空镜","filename":"C7666.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:29","duration_s":22.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7667","category":"鸭类空镜","filename":"C7667.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:28","duration_s":12.5,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7703","category":"鸭类空镜","filename":"C7703.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:30","duration_s":16.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7704","category":"鸭类空镜","filename":"C7704.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:30","duration_s":17.3,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7705","category":"鸭类空镜","filename":"C7705.MP4","size_mb":160.3,"size_text":"160.3MB","mtime":"2026-07-17 15:32","duration_s":20.6,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7706","category":"鸭类空镜","filename":"C7706.MP4","size_mb":128.3,"size_text":"128.3MB","mtime":"2026-07-17 15:32","duration_s":17.8,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7707","category":"鸭类空镜","filename":"C7707.MP4","size_mb":64.3,"size_text":"64.3MB","mtime":"2026-07-17 15:31","duration_s":6.2,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__C7708","category":"鸭类空镜","filename":"C7708.MP4","size_mb":96.3,"size_text":"96.3MB","mtime":"2026-07-17 15:32","duration_s":13.4,"width":1920,"height":1080,"fps":50.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0386","category":"鸭类空镜","filename":"DJI_0386.MP4","size_mb":47.2,"size_text":"47.2MB","mtime":"2026-07-17 15:32","duration_s":7.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0387","category":"鸭类空镜","filename":"DJI_0387.MP4","size_mb":76.0,"size_text":"76.0MB","mtime":"2026-07-17 15:32","duration_s":12.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0388","category":"鸭类空镜","filename":"DJI_0388.MP4","size_mb":59.1,"size_text":"59.1MB","mtime":"2026-07-17 15:33","duration_s":9.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0389","category":"鸭类空镜","filename":"DJI_0389.MP4","size_mb":82.0,"size_text":"82.0MB","mtime":"2026-07-17 15:33","duration_s":13.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0401","category":"鸭类空镜","filename":"DJI_0401.MP4","size_mb":101.9,"size_text":"101.9MB","mtime":"2026-07-17 15:34","duration_s":16.9,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0402","category":"鸭类空镜","filename":"DJI_0402.MP4","size_mb":4.2,"size_text":"4.2MB","mtime":"2026-07-17 15:32","duration_s":0.7,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0403","category":"鸭类空镜","filename":"DJI_0403.MP4","size_mb":57.1,"size_text":"57.1MB","mtime":"2026-07-17 15:34","duration_s":9.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0404","category":"鸭类空镜","filename":"DJI_0404.MP4","size_mb":60.6,"size_text":"60.6MB","mtime":"2026-07-17 15:34","duration_s":9.9,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0405","category":"鸭类空镜","filename":"DJI_0405.MP4","size_mb":78.5,"size_text":"78.5MB","mtime":"2026-07-17 15:34","duration_s":13.0,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0406","category":"鸭类空镜","filename":"DJI_0406.MP4","size_mb":135.6,"size_text":"135.6MB","mtime":"2026-07-17 15:36","duration_s":22.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0407","category":"鸭类空镜","filename":"DJI_0407.MP4","size_mb":21.4,"size_text":"21.4MB","mtime":"2026-07-17 15:34","duration_s":3.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0408","category":"鸭类空镜","filename":"DJI_0408.MP4","size_mb":113.0,"size_text":"113.0MB","mtime":"2026-07-17 15:36","duration_s":18.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0409","category":"鸭类空镜","filename":"DJI_0409.MP4","size_mb":117.8,"size_text":"117.8MB","mtime":"2026-07-17 15:37","duration_s":19.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0410","category":"鸭类空镜","filename":"DJI_0410.MP4","size_mb":63.3,"size_text":"63.3MB","mtime":"2026-07-17 15:37","duration_s":10.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0411","category":"鸭类空镜","filename":"DJI_0411.MP4","size_mb":81.7,"size_text":"81.7MB","mtime":"2026-07-17 15:38","duration_s":13.5,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0412","category":"鸭类空镜","filename":"DJI_0412.MP4","size_mb":88.8,"size_text":"88.8MB","mtime":"2026-07-17 15:37","duration_s":14.7,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0413","category":"鸭类空镜","filename":"DJI_0413.MP4","size_mb":160.2,"size_text":"160.2MB","mtime":"2026-07-17 15:39","duration_s":26.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0414","category":"鸭类空镜","filename":"DJI_0414.MP4","size_mb":45.5,"size_text":"45.5MB","mtime":"2026-07-17 15:38","duration_s":7.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0415","category":"鸭类空镜","filename":"DJI_0415.MP4","size_mb":76.6,"size_text":"76.6MB","mtime":"2026-07-17 15:39","duration_s":12.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0416","category":"鸭类空镜","filename":"DJI_0416.MP4","size_mb":166.8,"size_text":"166.8MB","mtime":"2026-07-17 15:40","duration_s":27.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0417","category":"鸭类空镜","filename":"DJI_0417.MP4","size_mb":271.2,"size_text":"271.2MB","mtime":"2026-07-17 15:42","duration_s":45.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0418","category":"鸭类空镜","filename":"DJI_0418.MP4","size_mb":212.0,"size_text":"212.0MB","mtime":"2026-07-17 15:42","duration_s":35.5,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0419","category":"鸭类空镜","filename":"DJI_0419.MP4","size_mb":108.9,"size_text":"108.9MB","mtime":"2026-07-17 15:41","duration_s":18.1,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0420","category":"鸭类空镜","filename":"DJI_0420.MP4","size_mb":227.5,"size_text":"227.5MB","mtime":"2026-07-17 15:44","duration_s":38.0,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0421","category":"鸭类空镜","filename":"DJI_0421.MP4","size_mb":27.9,"size_text":"27.9MB","mtime":"2026-07-17 15:41","duration_s":4.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0422","category":"鸭类空镜","filename":"DJI_0422.MP4","size_mb":221.4,"size_text":"221.4MB","mtime":"2026-07-17 15:44","duration_s":37.0,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0423","category":"鸭类空镜","filename":"DJI_0423.MP4","size_mb":66.7,"size_text":"66.7MB","mtime":"2026-07-17 15:43","duration_s":11.0,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0424","category":"鸭类空镜","filename":"DJI_0424.MP4","size_mb":61.1,"size_text":"61.1MB","mtime":"2026-07-17 15:43","duration_s":10.1,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0425","category":"鸭类空镜","filename":"DJI_0425.MP4","size_mb":120.5,"size_text":"120.5MB","mtime":"2026-07-17 15:44","duration_s":20.1,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0426","category":"鸭类空镜","filename":"DJI_0426.MP4","size_mb":79.1,"size_text":"79.1MB","mtime":"2026-07-17 15:43","duration_s":13.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0427","category":"鸭类空镜","filename":"DJI_0427.MP4","size_mb":57.0,"size_text":"57.0MB","mtime":"2026-07-17 15:44","duration_s":9.5,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0428","category":"鸭类空镜","filename":"DJI_0428.MP4","size_mb":5.1,"size_text":"5.1MB","mtime":"2026-07-17 15:44","duration_s":0.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0429","category":"鸭类空镜","filename":"DJI_0429.MP4","size_mb":111.8,"size_text":"111.8MB","mtime":"2026-07-17 15:45","duration_s":18.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0430","category":"鸭类空镜","filename":"DJI_0430.MP4","size_mb":16.2,"size_text":"16.2MB","mtime":"2026-07-17 15:44","duration_s":2.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0431","category":"鸭类空镜","filename":"DJI_0431.MP4","size_mb":32.0,"size_text":"32.0MB","mtime":"2026-07-17 15:44","duration_s":5.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0432","category":"鸭类空镜","filename":"DJI_0432.MP4","size_mb":74.6,"size_text":"74.6MB","mtime":"2026-07-17 15:45","duration_s":12.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0433","category":"鸭类空镜","filename":"DJI_0433.MP4","size_mb":128.6,"size_text":"128.6MB","mtime":"2026-07-17 15:46","duration_s":21.5,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0434","category":"鸭类空镜","filename":"DJI_0434.MP4","size_mb":47.1,"size_text":"47.1MB","mtime":"2026-07-17 15:46","duration_s":7.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0460","category":"鸭类空镜","filename":"DJI_0460.MP4","size_mb":50.1,"size_text":"50.1MB","mtime":"2026-07-17 15:46","duration_s":8.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0461","category":"鸭类空镜","filename":"DJI_0461.MP4","size_mb":114.2,"size_text":"114.2MB","mtime":"2026-07-17 15:47","duration_s":19.1,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0462","category":"鸭类空镜","filename":"DJI_0462.MP4","size_mb":85.5,"size_text":"85.5MB","mtime":"2026-07-17 15:47","duration_s":14.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0463","category":"鸭类空镜","filename":"DJI_0463.MP4","size_mb":133.8,"size_text":"133.8MB","mtime":"2026-07-17 15:48","duration_s":22.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0464","category":"鸭类空镜","filename":"DJI_0464.MP4","size_mb":49.6,"size_text":"49.6MB","mtime":"2026-07-17 15:46","duration_s":8.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0465","category":"鸭类空镜","filename":"DJI_0465.MP4","size_mb":62.0,"size_text":"62.0MB","mtime":"2026-07-17 15:47","duration_s":10.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0466","category":"鸭类空镜","filename":"DJI_0466.MP4","size_mb":17.6,"size_text":"17.6MB","mtime":"2026-07-17 15:47","duration_s":2.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0467","category":"鸭类空镜","filename":"DJI_0467.MP4","size_mb":112.0,"size_text":"112.0MB","mtime":"2026-07-17 15:48","duration_s":18.7,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0468","category":"鸭类空镜","filename":"DJI_0468.MP4","size_mb":78.5,"size_text":"78.5MB","mtime":"2026-07-17 15:48","duration_s":13.1,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0469","category":"鸭类空镜","filename":"DJI_0469.MP4","size_mb":220.1,"size_text":"220.1MB","mtime":"2026-07-17 15:50","duration_s":36.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0470","category":"鸭类空镜","filename":"DJI_0470.MP4","size_mb":34.0,"size_text":"34.0MB","mtime":"2026-07-17 15:48","duration_s":5.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0471","category":"鸭类空镜","filename":"DJI_0471.MP4","size_mb":119.4,"size_text":"119.4MB","mtime":"2026-07-17 15:50","duration_s":19.9,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0472","category":"鸭类空镜","filename":"DJI_0472.MP4","size_mb":74.1,"size_text":"74.1MB","mtime":"2026-07-17 15:49","duration_s":12.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0473","category":"鸭类空镜","filename":"DJI_0473.MP4","size_mb":74.8,"size_text":"74.8MB","mtime":"2026-07-17 15:50","duration_s":12.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0474","category":"鸭类空镜","filename":"DJI_0474.MP4","size_mb":93.0,"size_text":"93.0MB","mtime":"2026-07-17 15:52","duration_s":15.5,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0475","category":"鸭类空镜","filename":"DJI_0475.MP4","size_mb":4.9,"size_text":"4.9MB","mtime":"2026-07-17 15:50","duration_s":0.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0476","category":"鸭类空镜","filename":"DJI_0476.MP4","size_mb":14.4,"size_text":"14.4MB","mtime":"2026-07-17 15:49","duration_s":2.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0477","category":"鸭类空镜","filename":"DJI_0477.MP4","size_mb":26.1,"size_text":"26.1MB","mtime":"2026-07-17 15:50","duration_s":4.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0478","category":"鸭类空镜","filename":"DJI_0478.MP4","size_mb":49.0,"size_text":"49.0MB","mtime":"2026-07-17 15:50","duration_s":8.1,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0479","category":"鸭类空镜","filename":"DJI_0479.MP4","size_mb":75.0,"size_text":"75.0MB","mtime":"2026-07-17 15:51","duration_s":12.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0480","category":"鸭类空镜","filename":"DJI_0480.MP4","size_mb":38.8,"size_text":"38.8MB","mtime":"2026-07-17 15:50","duration_s":6.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0481","category":"鸭类空镜","filename":"DJI_0481.MP4","size_mb":74.3,"size_text":"74.3MB","mtime":"2026-07-17 15:52","duration_s":12.2,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0482","category":"鸭类空镜","filename":"DJI_0482.MP4","size_mb":26.8,"size_text":"26.8MB","mtime":"2026-07-17 15:51","duration_s":4.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0483","category":"鸭类空镜","filename":"DJI_0483.MP4","size_mb":62.5,"size_text":"62.5MB","mtime":"2026-07-17 15:51","duration_s":10.3,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0484","category":"鸭类空镜","filename":"DJI_0484.MP4","size_mb":11.9,"size_text":"11.9MB","mtime":"2026-07-17 15:51","duration_s":1.8,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0485","category":"鸭类空镜","filename":"DJI_0485.MP4","size_mb":138.4,"size_text":"138.4MB","mtime":"2026-07-17 15:53","duration_s":23.0,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0486","category":"鸭类空镜","filename":"DJI_0486.MP4","size_mb":94.9,"size_text":"94.9MB","mtime":"2026-07-17 15:53","duration_s":15.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0487","category":"鸭类空镜","filename":"DJI_0487.MP4","size_mb":90.0,"size_text":"90.0MB","mtime":"2026-07-17 15:53","duration_s":14.9,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0488","category":"鸭类空镜","filename":"DJI_0488.MP4","size_mb":183.6,"size_text":"183.6MB","mtime":"2026-07-17 15:55","duration_s":30.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0489","category":"鸭类空镜","filename":"DJI_0489.MP4","size_mb":225.8,"size_text":"225.8MB","mtime":"2026-07-17 15:55","duration_s":37.6,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0490","category":"鸭类空镜","filename":"DJI_0490.MP4","size_mb":135.7,"size_text":"135.7MB","mtime":"2026-07-17 15:55","duration_s":22.7,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""},{"id":"鸭类空镜__DJI_0491","category":"鸭类空镜","filename":"DJI_0491.MP4","size_mb":134.0,"size_text":"134.0MB","mtime":"2026-07-17 15:55","duration_s":22.4,"width":2688,"height":1512,"fps":25.0,"description":"鸭类空镜（鸭群/特写/水面）（待补充细节）","reuse_count":0,"last_used":"","tags":[],"note":""}]};
+let baseData = { items: [] };
+let userData = {};
+let currentCat = '';
+let bulkMode = false;
+let bulkSel = new Set();
+
+const STORAGE_KEY = 'maniu_kao_v1';
+
+function loadUser() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) userData = JSON.parse(s);
+  } catch (e) { userData = {}; }
+}
+function saveUser() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(userData)); }
+  catch (e) { toast('保存失败：' + e.message, 'error'); }
+}
+
+function getItem(id) {
+  const base = baseData.items.find(x => x.id === id);
+  if (!base) return null;
+  return { ...base, ...(userData[id] || {}) };
+}
+
+function setUserField(id, field, value) {
+  if (!userData[id]) userData[id] = {};
+  userData[id][field] = value;
+  saveUser();
+}
+
+async function reload() {
+  // 优先用内嵌数据（双击打开也能用）
+  if (INVENTORY_EMBEDDED && INVENTORY_EMBEDDED.items && INVENTORY_EMBEDDED.items.length) {
+    baseData = INVENTORY_EMBEDDED;
+  } else {
+    // 回退：尝试 fetch（http 服务模式下）
+    try {
+      const r = await fetch('./.workbuddy/data/inventory.json?_=' + Date.now());
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      baseData = await r.json();
+    } catch (e) {
+      showEmpty('无法读取素材数据\n\n原因：' + e.message + '\n\n解决方法：\n双击运行 .workbuddy\\scan_inventory.py 重新扫描\n它会自动把数据写进这个HTML文件');
+      return;
+    }
+  }
+  loadUser();
+  // 标记新增（base里有但user里没有的）
+  for (const it of baseData.items) {
+    if (!userData[it.id]) {
+      userData[it.id] = { _new: true, status: 'local', reuse_count: 0, tags: [], note: '', last_used: '' };
+    }
+  }
+  saveUser();
+  buildTabs();
+  render();
+  toast('已加载 ' + baseData.items.length + ' 个视频', 'success');
+}
+
+function showEmpty(msg) {
+  document.getElementById('tbody').innerHTML = `<tr><td colspan="10"><div class="empty"><h2>还没数据</h2><pre>${msg}</pre></div></td></tr>`;
+  document.getElementById('tabs').innerHTML = '';
+  document.getElementById('stats').innerHTML = '';
+}
+
+function buildTabs() {
+  const cats = {};
+  for (const it of baseData.items) {
+    if (!cats[it.category]) cats[it.category] = { total: 0, used: 0, deleted: 0 };
+    cats[it.category].total++;
+    const u = userData[it.id] || {};
+    if ((u.reuse_count || 0) > 0) cats[it.category].used++;
+    if (u.status === 'deleted') cats[it.category].deleted++;
+  }
+  const tabs = document.getElementById('tabs');
+  const catsSorted = Object.keys(cats).sort((a, b) => cats[b].total - cats[a].total);
+  const total = baseData.items.length;
+  const totalUsed = baseData.items.filter(x => (userData[x.id]?.reuse_count || 0) > 0).length;
+  const totalReuse = baseData.items.reduce((s, x) => s + (userData[x.id]?.reuse_count || 0), 0);
+  const totalDeleted = baseData.items.filter(x => userData[x.id]?.status === 'deleted').length;
+  document.getElementById('stats').innerHTML = `
+    <span>共 <b>${total}</b> 个</span>
+    <span>已用 <b>${totalUsed}</b> 个</span>
+    <span>累计复用 <b>${totalReuse}</b> 次</span>
+    <span>已删本地 <b style="color:var(--bad)">${totalDeleted}</b> 个</span>
+  `;
+  let html = `<button class="tab ${currentCat===''?'active':''}" onclick="selectCat('')">全部<span class="cnt">${total}</span></button>`;
+  for (const c of catsSorted) {
+    const cl = cats[c];
+    const delTag = cl.deleted > 0 ? `·删${cl.deleted}` : '';
+    html += `<button class="tab ${currentCat===c?'active':''}" onclick="selectCat('${c}')">${c}<span class="cnt">${cl.total}·用${cl.used}${delTag}</span></button>`;
+  }
+  tabs.innerHTML = html;
+}
+
+function selectCat(c) {
+  currentCat = c;
+  buildTabs();
+  render();
+}
+
+function fmtDur(s) {
+  if (!s) return '-';
+  s = +s;
+  const m = Math.floor(s / 60);
+  const sec = Math.round(s % 60);
+  return m > 0 ? `${m}分${sec.toString().padStart(2,'0')}秒` : `${sec}秒`;
+}
+
+function applyFilter(items) {
+  const q = (document.getElementById('search').value || '').toLowerCase().trim();
+  const dur = document.getElementById('filter-dur').value;
+  const reu = document.getElementById('filter-reuse').value;
+  const sta = document.getElementById('filter-status').value;
+  const sort = document.getElementById('sort').value;
+  let r = items;
+  if (currentCat) r = r.filter(x => x.category === currentCat);
+  if (q) {
+    r = r.filter(x => {
+      const u = userData[x.id] || {};
+      const desc = u.description || x.description || '';
+      const tags = (u.tags || []).join(' ');
+      return x.filename.toLowerCase().includes(q) ||
+             desc.toLowerCase().includes(q) ||
+             tags.toLowerCase().includes(q) ||
+             x.category.toLowerCase().includes(q);
+    });
+  }
+  if (dur) {
+    const [a, b] = dur.split('-').map(Number);
+    r = r.filter(x => {
+      const d = +x.duration_s;
+      if (a === 0) return d < b;
+      if (b === 99999) return d >= a;
+      return d >= a && d < b;
+    });
+  }
+  if (reu) {
+    const [a, b] = reu.split('-').map(Number);
+    r = r.filter(x => {
+      const n = (userData[x.id]?.reuse_count || 0);
+      if (a === 0) return n === 0;
+      if (b === 99999) return n >= a;
+      return n >= a && n <= b;
+    });
+  }
+  if (sta) {
+    if (sta === 'new') r = r.filter(x => userData[x.id]?._new);
+    else if (sta === 'empty') r = r.filter(x => {
+      const d = userData[x.id]?.description ?? x.description ?? '';
+      return d.includes('待补充') || d.trim() === '';
+    });
+    else r = r.filter(x => (userData[x.id]?.status || 'local') === sta);
+  }
+  r.sort((a, b) => {
+    const ua = userData[a.id] || {}, ub = userData[b.id] || {};
+    switch (sort) {
+      case 'duration': return (+b.duration_s) - (+a.duration_s);
+      case 'size': return (+b.size_mb) - (+a.size_mb);
+      case 'reuse_desc': return (ub.reuse_count||0) - (ua.reuse_count||0);
+      case 'reuse_asc': return (ua.reuse_count||0) - (ub.reuse_count||0);
+      case 'mtime': return (b.mtime || '').localeCompare(a.mtime || '');
+      case 'last_used': return (ub.last_used || '').localeCompare(ua.last_used || '');
+      default: return a.filename.localeCompare(b.filename);
+    }
+  });
+  return r;
+}
+
+function render() {
+  const items = applyFilter([...baseData.items]);
+  document.getElementById('filter-cnt').textContent = `显示 ${items.length} 条`;
+  if (items.length === 0) {
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="10"><div class="empty"><h2>没数据</h2><p>切其他分类或改筛选条件</p></div></td></tr>`;
+    return;
+  }
+  const showCB = bulkMode;
+  const html = items.map(it => {
+    const u = userData[it.id] || {};
+    const desc = u.description ?? it.description ?? '';
+    const empty = !desc || desc.includes('待补充');
+    const reuse = u.reuse_count || 0;
+    const tags = u.tags || [];
+    const lastUsed = u.last_used || '';
+    const note = u.note || '';
+    const isNew = u._new;
+    const status = u.status || 'local';
+    const isDeleted = status === 'deleted';
+    const checked = bulkSel.has(it.id) ? 'checked' : '';
+    const statusPill = `<span class="status-pill ${status}" onclick="cycleStatus('${it.id}')" title="点击切换状态">${{local:'本地',cloud:'已传云',deleted:'已删'}[status]}</span>`;
+    const cb = showCB ? `<td class="row-cb"><input type="checkbox" ${checked} onchange="toggleRow('${it.id}', this.checked)"></td>` : '';
+    return `<tr class="${isNew?'new':''} ${isDeleted?'deleted':''}" data-id="${it.id}">
+      ${cb}
+      <td><div class="fname">${it.filename}</div><div class="fname"><span class="cat">${it.category}</span></div></td>
+      <td class="meta-col"><b>${fmtDur(it.duration_s)}</b><br>${it.width?it.width+'×'+it.height:'-'} · ${it.fps||'-'}fps</td>
+      <td class="meta-col">${it.size_text}</td>
+      <td>${statusPill}</td>
+      <td class="desc-cell"><div class="desc" contenteditable="true" data-empty="${empty}" onblur="onDescBlur('${it.id}', this)" onkeydown="onDescKey(event, this)">${escapeHtml(desc)}</div></td>
+      <td>${renderTags(it.id, tags)}</td>
+      <td><div class="reuse ${reuse===0?'zero':reuse>=5?'hot':''}">
+        <button onclick="adjReuse('${it.id}', -1)">−</button>
+        <span class="cnt">${reuse}</span>
+        <button onclick="adjReuse('${it.id}', 1)">+</button>
+      </div></td>
+      <td class="meta-col">${lastUsed || '<span style="color:var(--text-dim)">—</span>'}</td>
+      <td><div class="note" contenteditable="true" onblur="onNoteBlur('${it.id}', this)" data-placeholder="备注…">${escapeHtml(note)}</div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tbody').innerHTML = html;
+  // 显示/隐藏表头checkbox列
+  document.getElementById('th-cb').style.display = showCB ? '' : 'none';
+}
+
+function renderTags(id, tags) {
+  let html = tags.map((t, i) => `<span class="tag" onclick="removeTag('${id}', ${i})" title="点击删除">${escapeHtml(t)}</span>`).join('');
+  html += `<span class="tag add" onclick="addTag('${id}')">+ 标签</span>`;
+  return html;
+}
+
+function escapeHtml(s) {
+  return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* === 编辑事件 === */
+function onDescBlur(id, el) {
+  const v = el.innerText.trim();
+  setUserField(id, 'description', v);
+  el.dataset.empty = (!v || v.includes('待补充')) ? 'true' : 'false';
+  if (userData[id]?._new) { delete userData[id]._new; saveUser(); buildTabs(); }
+  toast('描述已保存', 'success');
+}
+function onDescKey(e, el) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); el.blur(); }
+  if (e.key === 'Escape') { e.preventDefault(); el.blur(); }
+}
+function onNoteBlur(id, el) {
+  setUserField(id, 'note', el.innerText.trim());
+  toast('备注已存', 'success');
+}
+
+function adjReuse(id, delta) {
+  const u = userData[id] || {};
+  const cur = u.reuse_count || 0;
+  const next = Math.max(0, cur + delta);
+  setUserField(id, 'reuse_count', next);
+  if (delta > 0) {
+    setUserField(id, 'last_used', new Date().toISOString().slice(0, 10));
+  }
+  buildTabs();
+  render();
+}
+
+function cycleStatus(id) {
+  const order = ['local', 'cloud', 'deleted'];
+  const cur = userData[id]?.status || 'local';
+  const next = order[(order.indexOf(cur) + 1) % order.length];
+  setUserField(id, 'status', next);
+  buildTabs();
+  render();
+  const labels = { local: '本地', cloud: '已传云', deleted: '已删本地' };
+  toast(`状态：${labels[next]}`, 'success');
+}
+
+function addTag(id) {
+  const t = prompt('输入标签（多个用逗号分隔）：');
+  if (!t) return;
+  const u = userData[id] || {};
+  const newTags = t.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+  setUserField(id, 'tags', [...(u.tags || []), ...newTags]);
+  render();
+}
+function removeTag(id, i) {
+  const u = userData[id] || {};
+  const tags = [...(u.tags || [])];
+  tags.splice(i, 1);
+  setUserField(id, 'tags', tags);
+  render();
+}
+
+/* === 批量操作 === */
+function toggleBulk() {
+  bulkMode = !bulkMode;
+  if (!bulkMode) bulkSel.clear();
+  document.getElementById('bulk-bar').classList.toggle('show', bulkMode);
+  document.getElementById('bulk-btn').textContent = bulkMode ? '退出批量' : '批量操作';
+  render();
+}
+function toggleRow(id, checked) {
+  if (checked) bulkSel.add(id); else bulkSel.delete(id);
+  updateBulkCnt();
+}
+function toggleAll(cb) {
+  const items = applyFilter([...baseData.items]);
+  if (cb.checked) items.forEach(it => bulkSel.add(it.id));
+  else items.forEach(it => bulkSel.delete(it.id));
+  render();
+  updateBulkCnt();
+}
+function updateBulkCnt() {
+  document.getElementById('bulk-cnt').textContent = `已选 ${bulkSel.size} 项`;
+}
+function bulkStatus(status) {
+  if (bulkSel.size === 0) return toast('没选任何项', 'error');
+  for (const id of bulkSel) setUserField(id, 'status', status);
+  buildTabs();
+  render();
+  toast(`已批量设置 ${bulkSel.size} 项`, 'success');
+}
+function bulkReuse(delta) {
+  if (bulkSel.size === 0) return toast('没选任何项', 'error');
+  const today = new Date().toISOString().slice(0, 10);
+  for (const id of bulkSel) {
+    const cur = userData[id]?.reuse_count || 0;
+    setUserField(id, 'reuse_count', Math.max(0, cur + delta));
+    if (delta > 0) setUserField(id, 'last_used', today);
+  }
+  buildTabs();
+  render();
+  toast(`复用 ${delta > 0 ? '+' : ''}${delta} × ${bulkSel.size} 项`, 'success');
+}
+function bulkClear() {
+  bulkSel.clear();
+  render();
+  updateBulkCnt();
+}
+
+/* === 导入导出 === */
+function exportJSON() {
+  const out = {
+    exported: new Date().toISOString(),
+    base_generated: baseData.generated,
+    user: userData,
+  };
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `曼纽考_素材数据_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('已导出JSON备份', 'success');
+}
+
+function showImport() {
+  const m = document.getElementById('modal');
+  m.innerHTML = `
+    <h3>导入数据</h3>
+    <p style="color:var(--text-soft);margin-bottom:12px">导入前请先导出当前数据作为备份。合并模式会保留现有数据，仅补充新内容。</p>
+    <input type="file" id="imp-file" accept=".json">
+    <div class="row"><label><input type="radio" name="imp-mode" value="merge" checked> 合并（推荐）</label></div>
+    <div class="row"><label><input type="radio" name="imp-mode" value="overwrite"> 覆盖（清空当前）</label></div>
+    <div class="btns">
+      <button onclick="closeModal()">取消</button>
+      <button class="primary" onclick="doImport()">导入</button>
+    </div>
+  `;
+  document.getElementById('modal-bg').classList.add('show');
+}
+function doImport() {
+  const f = document.getElementById('imp-file').files[0];
+  if (!f) return toast('请选文件', 'error');
+  const mode = document.querySelector('input[name="imp-mode"]:checked').value;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      const incoming = d.user || {};
+      if (mode === 'overwrite') userData = { ...incoming };
+      else userData = { ...userData, ...incoming };
+      saveUser();
+      buildTabs(); render();
+      closeModal();
+      toast('导入成功', 'success');
+    } catch (err) { toast('导入失败：' + err.message, 'error'); }
+  };
+  r.readAsText(f);
+}
+function closeModal() { document.getElementById('modal-bg').classList.remove('show'); }
+
+function showHelp() {
+  const m = document.getElementById('modal');
+  m.innerHTML = `
+    <h3>使用说明</h3>
+    <div style="line-height:1.8;max-height:60vh;overflow-y:auto;font-size:13px">
+      <p><b>表格操作：</b></p>
+      <ul style="padding-left:20px;color:var(--text-soft)">
+        <li><b>描述</b>列：点击直接编辑，回车保存，Esc取消</li>
+        <li><b>状态</b>列：点击切换 本地 → 已传云 → 已删本地 → 本地…</li>
+        <li><b>复用次数</b>：点 +/− 调整，+1 自动记今天使用</li>
+        <li><b>标签</b>：点 + 添加（逗号分隔多个），点已有标签删除</li>
+        <li><b>备注</b>：点击直接编辑</li>
+      </ul>
+      <p style="margin-top:12px"><b>视频生命周期管理：</b></p>
+      <ul style="padding-left:20px;color:var(--text-soft)">
+        <li>视频传剪映云后，点状态列改为「已传云」</li>
+        <li>本地删了视频文件后，改为「已删本地」</li>
+        <li>数据不会因为视频删了而丢失——描述/复用次数/标签全保留</li>
+        <li>已删的行会变灰，方便区分</li>
+      </ul>
+      <p style="margin-top:12px"><b>批量操作：</b></p>
+      <ul style="padding-left:20px;color:var(--text-soft)">
+        <li>点「批量操作」进入多选模式</li>
+        <li>勾选多行后，可批量改状态、批量复用+1</li>
+      </ul>
+      <p style="margin-top:12px"><b>筛选/搜索：</b></p>
+      <ul style="padding-left:20px;color:var(--text-soft)">
+        <li>搜索框：文件名/描述/标签/分类 模糊匹配</li>
+        <li>状态筛选：新增未编辑 / 描述为空 / 本地 / 已传云 / 已删</li>
+      </ul>
+      <p style="margin-top:12px"><b>持续更新：</b></p>
+      <ul style="padding-left:20px;color:var(--text-soft)">
+        <li>新视频扔进对应分类文件夹</li>
+        <li>双击 <code style="background:#000;padding:1px 4px">.workbuddy\\scan_inventory.py</code> 重新扫描</li>
+        <li>回工具点 ↻ 重新加载，新文件会高亮显示</li>
+        <li><b>每周导出一份JSON备份</b>（右上角按钮）</li>
+      </ul>
+      <p style="margin-top:12px"><b>数据存哪：</b></p>
+      <ul style="padding-left:20px;color:var(--text-soft)">
+        <li>基础数据：<code>.workbuddy/data/inventory.json</code></li>
+        <li>你的编辑：浏览器 localStorage（<b style="color:var(--warn)">换浏览器/清缓存会丢！定期导出</b>）</li>
+      </ul>
+    </div>
+    <div class="btns"><button class="primary" onclick="closeModal()">知道了</button></div>
+  `;
+  document.getElementById('modal-bg').classList.add('show');
+}
+
+let toastTimer = null;
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+['search', 'filter-dur', 'filter-reuse', 'filter-status', 'sort'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+  document.getElementById(id).addEventListener('change', render);
+});
+
+reload();
+</script>
+</body>
+</html>
