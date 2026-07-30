@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHA鸭蛋 & 连城白鸭 · 首次直播稿</title>
+<style>
+  :root { --red:#cc2200; --gray:#999; --black:#222; --blue:#0055aa; --bg:#fafaf8; --card:#fff; --divider:#e8e8e4; --yel:#fff8e8; --nav-w:200px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top: 16px; }
+
+  body {
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--black);
+    font-size:17px; line-height:1.7;
+  }
+
+  /* ═══════════ SIDEBAR ═══════════ */
+  .sidebar {
+    position:fixed; top:0; left:0;
+    width:var(--nav-w); height:100vh;
+    background:#fff; z-index:100;
+    overflow-y:auto; padding:14px 10px 20px;
+    box-shadow:2px 0 10px rgba(0,0,0,.05);
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .sidebar .side-title {
+    font-size:13px; font-weight:900; color:var(--red);
+    line-height:1.3; padding-bottom:6px;
+    border-bottom:2px solid var(--red); margin-bottom:4px;
+  }
+  .sidebar .side-label {
+    font-size:10px; color:var(--gray); letter-spacing:1px;
+    margin:6px 0 0 0; padding-top:4px;
+    border-top:1px solid var(--divider);
+  }
+  .sidebar a {
+    display:block; font-size:14px; font-weight:700;
+    color:var(--red); text-decoration:none;
+    padding:4px 8px; border-radius:4px;
+    transition:background .12s; line-height:1.3;
+  }
+  .sidebar a:hover,.sidebar a:active { background:#ffe8e0; }
+  .sidebar .callout {
+    background:var(--yel); border-radius:4px;
+    padding:5px 7px; margin:1px 0;
+    font-size:11px; font-weight:700; color:var(--red);
+    line-height:1.4;
+  }
+  .sidebar .callout .cl-title {
+    font-size:10px; color:var(--gray); letter-spacing:1px; margin-bottom:1px;
+  }
+  .sidebar .ops-mini {
+    font-size:11px; color:var(--gray); line-height:1.5;
+    padding-top:4px; border-top:1px solid var(--divider); margin-top:6px;
+  }
+  .sidebar .ops-mini b { color:var(--red); }
+
+  /* ═══════════ MAIN ═══════════ */
+  .main {
+    margin-left:var(--nav-w);
+    padding:20px 28px 60px;
+  }
+  .main h1 { font-size:22px; font-weight:900; color:var(--red); margin-bottom:2px; }
+  .main .subtitle { font-size:13px; color:var(--gray); margin-bottom:10px; }
+  .mission { background:#fff; border-left:5px solid var(--red); padding:10px 14px; margin:10px 0; font-size:18px; font-weight:800; color:var(--red); border-radius:4px; }
+  .role-card { background:var(--card); border-radius:8px; padding:10px 14px; margin:8px 0; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .role-card h3 { font-size:17px; color:var(--blue); margin-bottom:3px; }
+  .role-card .item { font-size:15px; font-weight:700; color:var(--blue); margin:1px 0; }
+  .role-card .hint { font-size:14px; color:var(--gray); font-style:italic; }
+  .role-card .ops { font-size:16px; }
+  hr { border:none; border-top:1px solid var(--divider); margin:12px 0; }
+
+  .section { background:var(--card); border-radius:8px; padding:16px 20px; margin:12px 0; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .section .sec-title { font-size:21px; font-weight:900; color:var(--red); margin-bottom:6px; }
+  .section .sec-time { font-size:14px; color:var(--gray); font-weight:400; margin-left:6px; }
+  .speak { font-size:18px; color:var(--black); margin:4px 0; }
+  .key { font-size:20px; font-weight:800; color:var(--red); margin:4px 0; }
+  .note { font-size:15px; color:var(--gray); font-style:italic; margin:2px 0; padding-left:6px; border-left:3px solid var(--divider); }
+  .sub { font-size:17px; font-weight:700; color:var(--blue); margin:4px 0; }
+  .sell-box { background:var(--yel); border-radius:6px; padding:10px 14px; margin:8px 0; }
+  .sell-box .sb-title { font-size:13px; color:var(--gray); letter-spacing:1px; margin-bottom:2px; }
+  .sell-box .sb-text { font-size:17px; font-weight:800; color:var(--red); line-height:1.5; }
+  table.mini { width:100%; border-collapse:collapse; font-size:14px; margin:6px 0; }
+  table.mini th,table.mini td { border:1px solid #e0e0e0; padding:5px 8px; text-align:left; }
+  table.mini th { background:#f5f5f5; font-weight:700; }
+  table.mini td { color:var(--gray); }
+  .checklist { font-size:15px; color:var(--gray); margin:3px 0; }
+  .footer-note { font-size:14px; color:var(--gray); text-align:center; margin-top:24px; }
+
+  @media (max-width:860px) {
+    .sidebar {
+      position:fixed; top:0; left:0; right:0;
+      width:100%; height:auto; max-height:38vh;
+      flex-direction:row; flex-wrap:wrap; gap:2px 5px;
+      padding:6px 8px; box-shadow:0 2px 6px rgba(0,0,0,.06);
+      align-items:center;
+    }
+    .sidebar .side-title { width:100%; font-size:11px; border-bottom:none; padding-bottom:1px; }
+    .sidebar .side-label { display:none; }
+    .sidebar a { font-size:11px; padding:2px 4px; white-space:nowrap; }
+    .sidebar .callout { display:none; }
+    .sidebar .ops-mini { display:none; }
+    .main { margin-left:0; margin-top:110px; padding:10px 10px 30px; }
+    .speak { font-size:17px; } .key { font-size:19px; }
+    .section { padding:12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+  <div class="side-title">DHA鸭蛋 & 连城白鸭<br>首次直播 · 15分钟</div>
+
+  <a href="#sec1">&#x2B50; 一、开场 + 剥蛋 + 蛋黄</a>
+  <a href="#sec2">&#x1F4CB; 二、为什么不一样</a>
+  <a href="#sec3">&#x1F4B0; 三、报价 + 礼盒 + 三角</a>
+  <a href="#sec4">&#x1F986; 四、连城白鸭</a>
+  <a href="#sec5">&#x1F525; 五、逼单 + 券 + 踢单</a>
+
+  <div class="side-label">卖点速记</div>
+  <div class="callout">
+    <div class="cl-title">蛋</div>
+    螺纹蛋黄 = DHA天然富集<br>
+    蛋黄紧实不散 / 无腥味<br>
+    蛋白Q弹 蛋黄起沙回甘
+  </div>
+  <div class="callout">
+    <div class="cl-title">信任</div>
+    丁酸钠国标 + 26项专利<br>
+    出口36国 + 院士合作<br>
+    DHA>=200 颗颗检测
+  </div>
+  <div class="callout">
+    <div class="cl-title">鸭</div>
+    皮薄无肥油 / 肉紧一丝丝<br>
+    炖汤不用放姜<br>
+    清水+枸杞就鲜甜
+  </div>
+  <div class="callout">
+    <div class="cl-title">价格</div>
+    单颗6块 / 礼盒40颗198<br>
+    白鸭128一只够两顿
+  </div>
+
+  <div class="side-label">逼单话术</div>
+  <div class="callout">
+    "蛋破了赔鸭坏了赔。<br>腥了散了蛋不用退，<br>钱照赔。我就赌你吃完不退。"
+  </div>
+  <div class="callout">
+    "你唯一的风险不是产品不好，<br>是你犹豫了一下没抢到。"
+  </div>
+
+  <div class="ops-mini">
+    <b>副播：</b>剥蛋+切开 / 闻 / 端鸭肉 / 试吃 / 接茬<br>
+    <b>运营：</b>&#x270A;开始 &#x261D;加速 &#x270B;减速 &#x1F44C;上链接
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+<h1>DHA鸭蛋 & 连城白鸭 · 首次直播稿</h1>
+<div class="subtitle">一人主讲 + 一人旁边配合（剥蛋/切蛋/端肉/试吃/接茬）+ 公屏气氛组 + 助理上链接</div>
+
+<div class="mission">&#x1F3AF; 首播任务：让人认识你 &#x2192; 剥蛋验货 &#x2192; 信任 &#x2192; 成交 &#x2192; 循环</div>
+
+<div class="role-card">
+  <h3>&#x1F469;&#x200D;&#x1F373; 副播 —— 只做5个动作</h3>
+  <div class="item">&#x2776; 剥蛋+切开 &nbsp; &#x2777; 凑近闻："真的不腥诶" &nbsp; &#x2778; 端鸭肉盘慢转一圈</div>
+  <div class="item">&#x2779; 试吃鸭肉："肉紧实，回去炖汤老人孩子肯定爱喝" &nbsp; &#x277A; 接茬："好吃""想要"</div>
+  <div class="hint">心法：不用演，平时在家怎么试菜就怎么做。越自然越可信。</div>
+</div>
+
+<div class="role-card">
+  <h3>&#x2699;&#xFE0F; 运营控场暗号</h3>
+  <div class="ops">&#x270A; = 开始 &nbsp; &#x261D; = 加速 &nbsp; &#x270B; = 减速 &nbsp; &#x1F44C; = 上链接 &nbsp; 指手表 = 注意时间</div>
+</div>
+
+<hr>
+
+<!-- ═══ SEC 1 ═══ -->
+<div class="section" id="sec1">
+<div class="sec-title">一、开场 + 剥蛋 + 蛋黄特写<span class="sec-time">0:00–4:00</span></div>
+<br>
+
+<div class="speak">新进直播间的家人们，欢迎欢迎！</div>
+<div class="speak">咱们是福建龙岩连城新泉镇的源头养殖基地——今天第一天做线上直播。没有中间商、没有门店费、没有品牌溢价，基地直发。全场只做宠粉福利。</div>
+
+<div class="key">进来的朋友，左上角关注点一点，灯牌亮一亮。今天只要你在直播间停留，福利一波接一波，蹲到你想要的。</div>
+
+<br>
+<div class="speak">来，公屏上扣个"1"，让我看看有多少家人是第一次刷到咱们的。</div>
+<div class="note">（稍停，看公屏）</div>
+<div class="speak">好，欢迎欢迎。家里有孩子的、有老人的、注重食品安全的家人，公屏上再扣个"想要"。</div>
+<div class="note">（稍停）</div>
+<div class="speak">好嘞！满屏想要，来对地方了。</div>
+<br>
+
+<div class="speak">我先问你一个问题——</div>
+<div class="key">你有没有见过蛋黄像螺纹一样、一圈一圈的鸭蛋？</div>
+<div class="speak">没见过是吧。想不想看？想看的公屏再扣个"1"。</div>
+<div class="note">（停2秒看公屏。）</div>
+<div class="speak">好，满屏1。今天现场剥给你看。不光鸭蛋——还有一只炖汤不用放姜的连城白鸭，等会儿也端上来。</div>
+<br>
+
+<div class="note">（旁边的人开始剥蛋。镜头推近。主讲人对着正在剥的蛋聊。）</div>
+<br>
+
+<div class="speak">咱们这个鸭蛋，跟你平时买到的不一样。平时买鸭蛋最怕什么？腥。煮出来蛋白发硬、蛋黄发干，孩子闻一下就把碗推了。</div>
+<div class="speak">其实不是鸭的问题。鸭子吃什么，蛋就是什么味。你给它吃脏东西，蛋就腥。你给它吃好东西，蛋就香。</div>
+<div class="key">这个蛋背后有个人——赖博士。丁酸钠国家标准是他写的，26项专利，产品出口36国。他把二十几年的脂质营养技术用到鸭子上，等于给每只鸭子开了一份营养处方。</div>
+<div class="speak">所以今天你看到的不是普通农产品。是技术喂出来的东西。</div>
+<br>
+
+<div class="note">（蛋剥好，对半切开。镜头特写蛋黄——停2秒，让画面说话。）</div>
+<br>
+
+<div class="key">来，看这个蛋黄——是不是一圈一圈的，跟螺纹一样？公屏打"不一样"让我看看有多少人第一次见。</div>
+<div class="note">（停2秒看公屏。）</div>
+<div class="speak">满屏不一样，好。这种螺纹状蛋黄，是因为DHA在蛋黄里一层一层富集沉淀，天然的才长这样。不是添加剂调出来的颜色。</div>
+<div class="speak">筷子戳一下——紧实到能夹起来、不散黄。橙红色的，油亮亮的，像咸鸭蛋黄一样饱满。但它不咸，是新鲜鸭蛋本来的颜色。随便开一颗都是这个状态。</div>
+<div class="speak">来，闻一下——</div>
+
+<div class="sub">副播：嗯，真的不腥诶。我平时买的鸭蛋一剥开那味就不行了。这个没有。</div>
+
+<div class="speak">听到了吗？天天买菜做饭的人说的——不腥。</div>
+<br>
+
+<div class="note">（拿起一半，咬一口，慢慢嚼。让观众看到你的表情。）</div>
+<br>
+
+<div class="key">蛋白Q弹、滑，不硬不粗。蛋黄绵密、起沙，沙沙的像咸蛋黄，但它不咸，是鲜甜的回甘。吃完嘴里全是蛋香，没有腥味。过五分钟呼口气，还是香的。</div>
+<div class="speak">这就是饲料干净的证明——鸭子吃的对，蛋才对。</div>
+
+<div class="sell-box">
+  <div class="sb-title">卖点速记</div>
+  <div class="sb-text">螺纹蛋黄 = DHA天然富集 / 蛋黄紧实不散 / 无腥味 / 蛋白Q弹 蛋黄起沙回甘</div>
+</div>
+</div>
+
+<!-- ═══ SEC 2 ═══ -->
+<div class="section" id="sec2">
+<div class="sec-title">二、为什么不一样 + 检测报告<span class="sec-time">4:00–7:30</span></div>
+<br>
+
+<div class="speak">为什么能做到？三条给你讲清楚。</div>
+<br>
+<div class="speak"><b>第一，吃的。</b>外面鸭子吃商品饲料，玉米豆粕一混就喂了。我们一只鸭一天的伙食，比你花十几块在路边吃碗面还贵。脂质营养配方加藻饵——赖博士做了二十几年的脂质营养，这是他的看家本事。</div>
+<br>
+<div class="speak"><b>第二，住的。</b>我们不是水面上一大片鸭子挤在一起那种。立体笼舍，干爽通风。你到我们基地去，6万只鸭，闻不到什么臭味。去过养殖场的都知道，这有多难。</div>
+<div class="speak">而且我们搞了一个循环——微藻喂鸭，鸭粪收集起来养藻，藻长好了再喂鸭。一条闭环，零排放。鸭子住得干净、吃得干净，蛋就干净。</div>
+<br>
+<div class="speak"><b>第三，不用药。</b>鸭子挤在一起才容易生病，生病才需要抗生素。我们密度低、环境干净、营养均衡，靠这三样防病。</div>
+<div class="key">5年0疫病。全程无抗。</div>
+<div class="speak">孩子、孕妇、老人——放心吃。不需要担心吃到抗生素。</div>
+<br>
+
+<div class="note">（拿起检测报告，对着镜头展示。）</div>
+<br>
+
+<div class="key">DHA含量：每100克超过200毫克。白纸黑字，每批都测。</div>
+<div class="speak">DHA是什么？二十二碳六烯酸，大脑和视网膜的重要组成物质。超市鸡蛋你翻过来看背面，大部分连DHA这一栏都没有。我们一颗蛋的DHA顶人家一筐。</div>
+<div class="speak">再看配料表——这上面就写了两个字：鸭蛋。没有任何别的。</div>
+<br>
+
+<div class="key">中国工程院院士李德发，动物营养领域的顶级专家，主动找赖博士合作，成立了动物脂质营养健康研究院。院士为什么找他？因为脂质营养这个细分领域，他做到国内最深。</div>
+<div class="speak">所以这个蛋不是一个蛋场随便养出来的。是一个做了二十几年脂质营养的博士，用科研的方式养出来的。</div>
+
+<div class="sell-box">
+  <div class="sb-title">信任速记</div>
+  <div class="sb-text">丁酸钠国标 + 26项专利 + 出口36国 + 院士合作 + DHA>=200 颗颗检测</div>
+</div>
+</div>
+
+<!-- ═══ SEC 3 ═══ -->
+<div class="section" id="sec3">
+<div class="sec-title">三、报价 + 礼盒 + 不可能三角<span class="sec-time">7:30–10:30</span></div>
+<br>
+
+<div class="speak">好，不讲虚的了。这个蛋，单颗6块钱。自己吃——早上煮两颗，DHA补了早餐也解决了。比吃鱼油方便、比吃面包有营养。</div>
+<br>
+
+<div class="key">今天第一次开播，我还带了一个礼盒装——40颗一箱，198块钱。原价240的，今天活动价。算下来一颗不到5块。</div>
+<div class="speak">你想想——马上中秋了。送烟送酒，人家收了还不一定抽不一定喝。送一箱DHA鸭蛋——老人补脑、孩子补营养、孕妈吃了好。</div>
+<div class="key">礼盒红底金字，拎出去体面，收的人觉得你用心。这个价格送健康，不出错。</div>
+<br>
+
+<div class="key">觉得贵的，公屏打个"贵"让我看看。</div>
+<div class="note">（停3秒，让公屏跑起来。）</div>
+<div class="speak">行，有人打贵。那我问你——</div>
+<div class="key">菜市场鸭蛋两三块一个，上千只鸭挤在一起，水里漂着鸭粪，一只有病全群喂抗生素。你省3块钱，孩子吃进嘴里的东西，你敢省吗？</div>
+<br>
+
+<div class="key">食品行业有个"不可能三角"——安全营养、好吃、便宜，这三样东西，你最多只能要两个。</div>
+<div class="speak">要安全又好吃？一定不便宜。要便宜又好吃？安全一定打折扣。要安全又便宜？大概率不好吃。三个同时做到，在食品行业基本不可能。</div>
+<br>
+
+<div class="speak">但是你看咱们这个蛋——</div>
+<div class="speak">DHA>=200、全程无抗、5年0疫病——这叫安全营养。</div>
+<div class="speak">白水煮没腥味、蛋黄绵密起沙、蛋白Q弹——这叫好吃。</div>
+<div class="speak">单颗6块、礼盒一颗不到5块——你去超市买有DHA概念的功能蛋，一颗也要五六块，还不是全程无抗的。</div>
+<div class="key">安全、好吃、不贵——三角全占。</div>
+<br>
+
+<div class="speak">凭什么？不是因为我们赔钱赚吆喝。是因为技术把成本摊薄了。</div>
+<div class="key">饲料自己工厂配的、养殖是自己研发的立体生态闭环。技术是二十几年攒下来的家底，不是一两年能抄的。你换任何一家普通养殖户，想同时做到这三个——做不到。不是不想，是没这个技术家底。</div>
+<br>
+
+<div class="speak">还没点关注的家人，左上角点一下关注。下次开播第一时间找到我。</div>
+
+<div class="sell-box">
+  <div class="sb-title">卖点速记</div>
+  <div class="sb-text">单颗6块自吃 / 礼盒198送礼 / 不可能三角全占 / 技术摊薄成本</div>
+</div>
+</div>
+
+<!-- ═══ SEC 4 ═══ -->
+<div class="section" id="sec4">
+<div class="sec-title">四、连城白鸭展示<span class="sec-time">10:30–13:00</span></div>
+<br>
+
+<div class="key">好，蛋讲完了。接下来这个东西更狠——想看连城白鸭的公屏打"想看"。</div>
+<div class="note">（停2秒看公屏。）</div>
+<div class="speak">好，端上来——</div>
+<br>
+
+<div class="note">（旁边的人端上鸭肉盘。镜头特写。主讲人拿筷子翻肉展示。）</div>
+<br>
+
+<div class="speak">连城白鸭，店长下午现蒸的，蒸了半小时切块。现在还冒着热气。</div>
+<br>
+
+<div class="key">你看这个皮——薄薄一层，翻开底下直接就是肉，中间没有那种厚厚的、白花花的肥油层。</div>
+<div class="speak">鸭子腥不腥，你翻皮看就知道了。皮下一层厚肥油的，那炖出来整锅汤都是油腥味。我们这个，翻开皮就是肉。</div>
+<br>
+
+<div class="key">再看这个肉——筷子一扯，一丝一丝地撕开。不是一夹就碎的那种速成鸭。</div>
+<div class="speak">肉紧、纹理分明，说明鸭子有活动空间、不是笼子里填出来的。瘦肉是深粉红色的——跟好牛肉好羊肉一个道理，活动量够、肉色才深。</div>
+<br>
+
+<div class="key">这个鸭，最厉害的是——炖汤不用放姜。</div>
+<div class="speak">清水加几颗枸杞，炖40分钟。汤是清亮亮的，喝一口是甜的。不是味精的甜，是鸭肉自己的鲜甜。</div>
+<div class="speak">你在外面炖鸭汤怎么炖？姜片、料酒、花椒、八角往上堆。为什么？盖腥味。我们这个不用盖——压根就没有腥味。</div>
+<div class="speak">红烧也行，白切也行，药膳、干蒸都行。一只鸭128，够全家人吃两顿。</div>
+<br>
+
+<div class="speak">好不好吃？</div>
+<div class="sub">副播：好吃！</div>
+<div class="speak">想不想要？</div>
+<div class="sub">副播：想要！</div>
+<div class="speak">来，尝一块——</div>
+<div class="sub">副播：嗯，肉紧实，一点不腥。回去炖汤，老人孩子肯定爱喝。</div>
+<br>
+
+<div class="key">天天买菜做饭的人说好吃——那才是真好吃。不是我说的，是验货的人说的。</div>
+
+<div class="sell-box">
+  <div class="sb-title">卖点速记</div>
+  <div class="sb-text">皮薄无肥油 / 肉紧一丝丝 / 炖汤不用姜 / 清水+枸杞就鲜甜 / 128一只够两顿</div>
+</div>
+</div>
+
+<!-- ═══ SEC 5 ═══ -->
+<div class="section" id="sec5">
+<div class="sec-title">五、逼单 + 券的戏剧性 + 踢单<span class="sec-time">13:00–15:00</span></div>
+<br>
+
+<div class="note">（节奏加快，制造紧张感。上链接 → 券抢光 → 清退未付款 → 释放库存 → 抢 → 倒计时踢单。）</div>
+<br>
+
+<div class="key">1号链接——DHA鸭蛋，6块一颗。自己吃拍这个，早上两颗，营养早餐。</div>
+<div class="key">2号链接——礼盒装，40颗198。送礼拍这个。原价240，今天活动价，中秋送健康，体面不出错。</div>
+<div class="key">3号链接——连城白鸭，128一只。现杀急冻，冷链送到家。一只够全家两顿。</div>
+<br>
+
+<div class="speak">蛋和鸭一起拍——早上一个蛋，晚上一锅汤。一天都给你安排明白了。</div>
+<div class="speak">也可以蛋和礼盒一起拍——自己吃 + 送人，都齐了。</div>
+<br>
+
+<div class="key">售后我再说一遍：蛋破了，赔。鸭坏了，赔。你收到打开，腥了、蛋黄散了——蛋不用退回来，钱我照赔。</div>
+<div class="speak">我就赌你吃完不退。因为你只要尝了，就知道这东西跟外面的不一样。</div>
+<br>
+
+<div class="speak">来，库存还有多少？</div>
+<div class="note">助理：1号散装剩X份，2号礼盒剩X份，3号白鸭剩X份。</div>
+<div class="speak">就这些了。这个价格仅限本场直播。卖完恢复原价。倒计时30秒——</div>
+<br>
+
+<div class="note">（20秒后，助理举手示意。）</div>
+<br>
+
+<div class="key">等一下！2号礼盒拍不了了？券发完了？</div>
+<div class="note">助理：对，礼盒的券领完了。</div>
+<div class="key">这才几分钟？你看一下后台，有没有拍了没付款的——全部踢出来！券释放出来！</div>
+<div class="note">助理：有X单没付！踢了！又释放了X张！</div>
+<div class="key">最后X张券！抢完真的没了！还在犹豫的——你先拍，收到你打开、你做、你吃。不对，退给我。你唯一的风险不是产品好不好，是你犹豫的那一下，被别人抢完了！</div>
+<br>
+
+<div class="speak">没点关注的左上角点一下。下次卖药膳鸭——一年老鸭，那才叫真正的硬菜。</div>
+<br>
+
+<div class="key">来——倒计时——5！4！3！2！1！踢单！</div>
+<div class="speak">拍到的好好在公屏打"已拍"。没拍到的关注我，下次开播第一个通知你。</div>
+<br>
+
+<div class="speak">不放心的话，咱们龙岩有体验馆。产品进了朴朴超市和线下商超——先去线下试，试完觉得好，再来直播间买。</div>
+<div class="key">中国工程院院士都认可的技术，你吃到嘴里——放心就两个字。</div>
+
+<div class="speak">我是大师兄。下播，拜拜！</div>
+<br>
+
+<div class="note">（副播左手蛋右手鸭肉盘，跟着挥手到结束。）</div>
+<div class="note">（助理：1号下架！2号礼盒下架！3号下架！）</div>
+
+<div class="sell-box">
+  <div class="sb-title">逼单话术速记</div>
+  <div class="sb-text">"蛋破了赔鸭坏了赔。腥了散了蛋不用退，钱照赔。我就赌你吃完不退。"<br>"你唯一的风险不是产品不好，是你犹豫了一下没抢到。"<br>"院士都认可的技术，吃到嘴里放心就两个字。"</div>
+</div>
+</div>
+
+<hr>
+
+<!-- ═══ APPENDIX ═══ -->
+<div class="section">
+<div class="sec-title">附录一：气氛组配合表</div>
+<br>
+<table class="mini">
+<tr><th>时机</th><th>质疑 / 互动</th><th>捧场 / 刷屏</th></tr>
+<tr><td>开场欢迎</td><td>鸭蛋不腥？假的吧</td><td>来了来了！</td></tr>
+<tr><td>扣"1"</td><td>111111</td><td>111</td></tr>
+<tr><td>扣"想要"</td><td>想要！</td><td>想要想要</td></tr>
+<tr><td>螺纹蛋黄扣"1"</td><td>没见过！想看！</td><td>111111</td></tr>
+<tr><td>剥蛋中</td><td>蛋黄颜色好深</td><td>第一次见这种</td></tr>
+<tr><td>蛋黄特写</td><td>这蛋黄绝了！！</td><td>像咸蛋黄！螺纹的！</td></tr>
+<tr><td>副播说"不腥"</td><td>真的不腥？那我信你</td><td>不腥就下单</td></tr>
+<tr><td>打"不一样"</td><td>不一样！</td><td>不一样不一样</td></tr>
+<tr><td>提到赖博士</td><td>丁酸钠国标？硬核</td><td>院士都找他合作？</td></tr>
+<tr><td>三条——吃的</td><td>吃得比我还好？？</td><td>一只鸭伙食比人贵</td></tr>
+<tr><td>三条——住的</td><td>循环零排放牛</td><td>6万只鸭没味道？</td></tr>
+<tr><td>三条——不用药</td><td>5年0疫病？？</td><td>无抗放心了</td></tr>
+<tr><td>检测报告</td><td>200mg！这么高</td><td>一颗顶一筐</td></tr>
+<tr><td>院士合作</td><td>这背书硬</td><td>院士认可的</td></tr>
+<tr><td>打"贵"</td><td>贵贵贵</td><td></td></tr>
+<tr><td>礼盒198</td><td>送礼可以！</td><td>中秋有着落了</td></tr>
+<tr><td>不可能三角</td><td>第一次听有道理</td><td>三角全占=技术牛</td></tr>
+<tr><td>关注提醒</td><td>关注了</td><td>关注了关注了</td></tr>
+<tr><td>打"想看"</td><td>想看白鸭！！</td><td>想看！想看！</td></tr>
+<tr><td>端上鸭肉</td><td>这肉可以啊</td><td>皮也太薄了</td></tr>
+<tr><td>炖汤不用姜</td><td>不放姜？？认真的？</td><td>心动了心动了</td></tr>
+<tr><td>副播接茬</td><td>好吃好吃！</td><td>想要！想要！</td></tr>
+<tr><td>试吃鸭肉</td><td>大姐说好那真不错</td><td>蛋鸭都加购了</td></tr>
+<tr><td>三个链接报价</td><td>128可以可以</td><td>全拍了！</td></tr>
+<tr><td>券没了</td><td>？？？我正准备拍</td><td>啊？？</td></tr>
+<tr><td>清退释放</td><td>抢到了！！手速</td><td>已拍！还好没犹豫</td></tr>
+<tr><td>倒计时踢单</td><td>已拍已拍已拍！</td><td>已拍！等追评</td></tr>
+</table>
+</div>
+
+<div class="section">
+<div class="sec-title">附录二：开播前检查清单</div>
+<br>
+<div class="checklist">o  鸭蛋实物 x4-5颗（别只带3颗，万一剥坏一颗）+ 盘子 + 切蛋小刀</div>
+<div class="checklist">o  鸭肉一盘（提前蒸好切块，保鲜膜包好，温水隔着盘子温着）</div>
+<div class="checklist">o  检测报告打印版（DHA 200mg那页）+ 配料表打印</div>
+<div class="checklist">o  价格牌：单颗6元 | 礼盒198元/40颗 | 白鸭128元/只</div>
+<div class="checklist">o  1号（散装蛋）、2号（礼盒）、3号（白鸭）全部上架、价格正确</div>
+<div class="checklist">o  手机支架 + 灯光 + 网络测速</div>
+<div class="checklist">o  速记卡打印放手边（卖点 + 逼单话术）</div>
+<div class="checklist">o  气氛组手机登录、话术表放手边</div>
+<div class="checklist">o  提前在公屏测一下扣字能不能发出去</div>
+</div>
+
+<div class="footer-note">2026-07-31 · 首次直播 · 约15分钟一轮 · 播完从头循环</div>
+
+</div>
+</body>
+</html>
